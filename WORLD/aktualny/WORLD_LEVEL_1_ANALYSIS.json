@@ -1,0 +1,2612 @@
+{
+    "poziom6": {
+        "poziom": "poziom6",
+        "analiza": {
+            "ilosc_przypadkow": 4033,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 486,
+                    "procent": 12.05
+                },
+                "2:0": {
+                    "ilosc": 288,
+                    "procent": 7.14
+                },
+                "3:0": {
+                    "ilosc": 125,
+                    "procent": 3.1
+                },
+                "2:1": {
+                    "ilosc": 412,
+                    "procent": 10.22
+                },
+                "3:1": {
+                    "ilosc": 179,
+                    "procent": 4.44
+                },
+                "3:2": {
+                    "ilosc": 97,
+                    "procent": 2.41
+                },
+                "0:1": {
+                    "ilosc": 318,
+                    "procent": 7.88
+                },
+                "0:2": {
+                    "ilosc": 149,
+                    "procent": 3.69
+                },
+                "0:3": {
+                    "ilosc": 64,
+                    "procent": 1.59
+                },
+                "1:2": {
+                    "ilosc": 258,
+                    "procent": 6.4
+                },
+                "1:3": {
+                    "ilosc": 104,
+                    "procent": 2.58
+                },
+                "2:3": {
+                    "ilosc": 71,
+                    "procent": 1.76
+                },
+                "0:0": {
+                    "ilosc": 328,
+                    "procent": 8.13
+                },
+                "1:1": {
+                    "ilosc": 488,
+                    "procent": 12.1
+                },
+                "2:2": {
+                    "ilosc": 231,
+                    "procent": 5.73
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 1839,
+                    "procent": 45.6
+                },
+                "remis": {
+                    "ilosc": 1104,
+                    "procent": 27.37
+                },
+                "goscie": {
+                    "ilosc": 1090,
+                    "procent": 27.03
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.498,
+                "srednia_gole_wyj": 1.145,
+                "srednia_goli_mecz": 2.643
+            }
+        }
+    },
+    "poziom12": {
+        "poziom": "poziom12",
+        "analiza": {
+            "ilosc_przypadkow": 944,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 79,
+                    "procent": 8.37
+                },
+                "2:0": {
+                    "ilosc": 44,
+                    "procent": 4.66
+                },
+                "3:0": {
+                    "ilosc": 14,
+                    "procent": 1.48
+                },
+                "2:1": {
+                    "ilosc": 65,
+                    "procent": 6.89
+                },
+                "3:1": {
+                    "ilosc": 21,
+                    "procent": 2.22
+                },
+                "3:2": {
+                    "ilosc": 19,
+                    "procent": 2.01
+                },
+                "0:1": {
+                    "ilosc": 107,
+                    "procent": 11.33
+                },
+                "0:2": {
+                    "ilosc": 63,
+                    "procent": 6.67
+                },
+                "0:3": {
+                    "ilosc": 35,
+                    "procent": 3.71
+                },
+                "1:2": {
+                    "ilosc": 83,
+                    "procent": 8.79
+                },
+                "1:3": {
+                    "ilosc": 46,
+                    "procent": 4.87
+                },
+                "2:3": {
+                    "ilosc": 32,
+                    "procent": 3.39
+                },
+                "0:0": {
+                    "ilosc": 70,
+                    "procent": 7.42
+                },
+                "1:1": {
+                    "ilosc": 106,
+                    "procent": 11.23
+                },
+                "2:2": {
+                    "ilosc": 60,
+                    "procent": 6.36
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 259,
+                    "procent": 27.44
+                },
+                "remis": {
+                    "ilosc": 254,
+                    "procent": 26.91
+                },
+                "goscie": {
+                    "ilosc": 431,
+                    "procent": 45.66
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.153,
+                "srednia_gole_wyj": 1.575,
+                "srednia_goli_mecz": 2.728
+            }
+        }
+    },
+    "poziom14": {
+        "poziom": "poziom14",
+        "analiza": {
+            "ilosc_przypadkow": 638,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 45,
+                    "procent": 7.05
+                },
+                "2:0": {
+                    "ilosc": 14,
+                    "procent": 2.19
+                },
+                "3:0": {
+                    "ilosc": 5,
+                    "procent": 0.78
+                },
+                "2:1": {
+                    "ilosc": 30,
+                    "procent": 4.7
+                },
+                "3:1": {
+                    "ilosc": 11,
+                    "procent": 1.72
+                },
+                "3:2": {
+                    "ilosc": 18,
+                    "procent": 2.82
+                },
+                "0:1": {
+                    "ilosc": 70,
+                    "procent": 10.97
+                },
+                "0:2": {
+                    "ilosc": 56,
+                    "procent": 8.78
+                },
+                "0:3": {
+                    "ilosc": 25,
+                    "procent": 3.92
+                },
+                "1:2": {
+                    "ilosc": 65,
+                    "procent": 10.19
+                },
+                "1:3": {
+                    "ilosc": 33,
+                    "procent": 5.17
+                },
+                "2:3": {
+                    "ilosc": 14,
+                    "procent": 2.19
+                },
+                "0:0": {
+                    "ilosc": 43,
+                    "procent": 6.74
+                },
+                "1:1": {
+                    "ilosc": 86,
+                    "procent": 13.48
+                },
+                "2:2": {
+                    "ilosc": 26,
+                    "procent": 4.08
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 142,
+                    "procent": 22.26
+                },
+                "remis": {
+                    "ilosc": 166,
+                    "procent": 26.02
+                },
+                "goscie": {
+                    "ilosc": 330,
+                    "procent": 51.72
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.067,
+                "srednia_gole_wyj": 1.774,
+                "srednia_goli_mecz": 2.842
+            }
+        }
+    },
+    "poziom26": {
+        "poziom": "poziom26",
+        "analiza": {
+            "ilosc_przypadkow": 122,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 3,
+                    "procent": 2.46
+                },
+                "2:0": {
+                    "ilosc": 3,
+                    "procent": 2.46
+                },
+                "3:0": {
+                    "ilosc": 1,
+                    "procent": 0.82
+                },
+                "2:1": {
+                    "ilosc": 2,
+                    "procent": 1.64
+                },
+                "3:1": {
+                    "ilosc": 2,
+                    "procent": 1.64
+                },
+                "3:2": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "0:1": {
+                    "ilosc": 15,
+                    "procent": 12.3
+                },
+                "0:2": {
+                    "ilosc": 16,
+                    "procent": 13.11
+                },
+                "0:3": {
+                    "ilosc": 9,
+                    "procent": 7.38
+                },
+                "1:2": {
+                    "ilosc": 17,
+                    "procent": 13.93
+                },
+                "1:3": {
+                    "ilosc": 6,
+                    "procent": 4.92
+                },
+                "2:3": {
+                    "ilosc": 6,
+                    "procent": 4.92
+                },
+                "0:0": {
+                    "ilosc": 10,
+                    "procent": 8.2
+                },
+                "1:1": {
+                    "ilosc": 15,
+                    "procent": 12.3
+                },
+                "2:2": {
+                    "ilosc": 4,
+                    "procent": 3.28
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 12,
+                    "procent": 9.84
+                },
+                "remis": {
+                    "ilosc": 29,
+                    "procent": 23.77
+                },
+                "goscie": {
+                    "ilosc": 81,
+                    "procent": 66.39
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.803,
+                "srednia_gole_wyj": 1.984,
+                "srednia_goli_mecz": 2.787
+            }
+        }
+    },
+    "poziom9": {
+        "poziom": "poziom9",
+        "analiza": {
+            "ilosc_przypadkow": 2065,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 209,
+                    "procent": 10.12
+                },
+                "2:0": {
+                    "ilosc": 96,
+                    "procent": 4.65
+                },
+                "3:0": {
+                    "ilosc": 38,
+                    "procent": 1.84
+                },
+                "2:1": {
+                    "ilosc": 173,
+                    "procent": 8.38
+                },
+                "3:1": {
+                    "ilosc": 55,
+                    "procent": 2.66
+                },
+                "3:2": {
+                    "ilosc": 44,
+                    "procent": 2.13
+                },
+                "0:1": {
+                    "ilosc": 215,
+                    "procent": 10.41
+                },
+                "0:2": {
+                    "ilosc": 135,
+                    "procent": 6.54
+                },
+                "0:3": {
+                    "ilosc": 41,
+                    "procent": 1.99
+                },
+                "1:2": {
+                    "ilosc": 170,
+                    "procent": 8.23
+                },
+                "1:3": {
+                    "ilosc": 65,
+                    "procent": 3.15
+                },
+                "2:3": {
+                    "ilosc": 47,
+                    "procent": 2.28
+                },
+                "0:0": {
+                    "ilosc": 168,
+                    "procent": 8.14
+                },
+                "1:1": {
+                    "ilosc": 277,
+                    "procent": 13.41
+                },
+                "2:2": {
+                    "ilosc": 120,
+                    "procent": 5.81
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 693,
+                    "procent": 33.56
+                },
+                "remis": {
+                    "ilosc": 599,
+                    "procent": 29.01
+                },
+                "goscie": {
+                    "ilosc": 773,
+                    "procent": 37.43
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.258,
+                "srednia_gole_wyj": 1.352,
+                "srednia_goli_mecz": 2.609
+            }
+        }
+    },
+    "poziom30": {
+        "poziom": "poziom30",
+        "analiza": {
+            "ilosc_przypadkow": 1508,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 47,
+                    "procent": 3.12
+                },
+                "2:0": {
+                    "ilosc": 15,
+                    "procent": 0.99
+                },
+                "3:0": {
+                    "ilosc": 3,
+                    "procent": 0.2
+                },
+                "2:1": {
+                    "ilosc": 35,
+                    "procent": 2.32
+                },
+                "3:1": {
+                    "ilosc": 9,
+                    "procent": 0.6
+                },
+                "3:2": {
+                    "ilosc": 16,
+                    "procent": 1.06
+                },
+                "0:1": {
+                    "ilosc": 156,
+                    "procent": 10.34
+                },
+                "0:2": {
+                    "ilosc": 167,
+                    "procent": 11.07
+                },
+                "0:3": {
+                    "ilosc": 149,
+                    "procent": 9.88
+                },
+                "1:2": {
+                    "ilosc": 146,
+                    "procent": 9.68
+                },
+                "1:3": {
+                    "ilosc": 82,
+                    "procent": 5.44
+                },
+                "2:3": {
+                    "ilosc": 46,
+                    "procent": 3.05
+                },
+                "0:0": {
+                    "ilosc": 58,
+                    "procent": 3.85
+                },
+                "1:1": {
+                    "ilosc": 85,
+                    "procent": 5.64
+                },
+                "2:2": {
+                    "ilosc": 40,
+                    "procent": 2.65
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 138,
+                    "procent": 9.15
+                },
+                "remis": {
+                    "ilosc": 191,
+                    "procent": 12.67
+                },
+                "goscie": {
+                    "ilosc": 1179,
+                    "procent": 78.18
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.704,
+                "srednia_gole_wyj": 2.7,
+                "srednia_goli_mecz": 3.404
+            }
+        }
+    },
+    "poziom13": {
+        "poziom": "poziom13",
+        "analiza": {
+            "ilosc_przypadkow": 745,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 59,
+                    "procent": 7.92
+                },
+                "2:0": {
+                    "ilosc": 19,
+                    "procent": 2.55
+                },
+                "3:0": {
+                    "ilosc": 11,
+                    "procent": 1.48
+                },
+                "2:1": {
+                    "ilosc": 43,
+                    "procent": 5.77
+                },
+                "3:1": {
+                    "ilosc": 17,
+                    "procent": 2.28
+                },
+                "3:2": {
+                    "ilosc": 12,
+                    "procent": 1.61
+                },
+                "0:1": {
+                    "ilosc": 91,
+                    "procent": 12.21
+                },
+                "0:2": {
+                    "ilosc": 67,
+                    "procent": 8.99
+                },
+                "0:3": {
+                    "ilosc": 28,
+                    "procent": 3.76
+                },
+                "1:2": {
+                    "ilosc": 56,
+                    "procent": 7.52
+                },
+                "1:3": {
+                    "ilosc": 34,
+                    "procent": 4.56
+                },
+                "2:3": {
+                    "ilosc": 27,
+                    "procent": 3.62
+                },
+                "0:0": {
+                    "ilosc": 48,
+                    "procent": 6.44
+                },
+                "1:1": {
+                    "ilosc": 91,
+                    "procent": 12.21
+                },
+                "2:2": {
+                    "ilosc": 43,
+                    "procent": 5.77
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 179,
+                    "procent": 24.03
+                },
+                "remis": {
+                    "ilosc": 198,
+                    "procent": 26.58
+                },
+                "goscie": {
+                    "ilosc": 368,
+                    "procent": 49.4
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.11,
+                "srednia_gole_wyj": 1.663,
+                "srednia_goli_mecz": 2.773
+            }
+        }
+    },
+    "poziom2": {
+        "poziom": "poziom2",
+        "analiza": {
+            "ilosc_przypadkow": 2562,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 308,
+                    "procent": 12.02
+                },
+                "2:0": {
+                    "ilosc": 307,
+                    "procent": 11.98
+                },
+                "3:0": {
+                    "ilosc": 243,
+                    "procent": 9.48
+                },
+                "2:1": {
+                    "ilosc": 273,
+                    "procent": 10.66
+                },
+                "3:1": {
+                    "ilosc": 164,
+                    "procent": 6.4
+                },
+                "3:2": {
+                    "ilosc": 74,
+                    "procent": 2.89
+                },
+                "0:1": {
+                    "ilosc": 60,
+                    "procent": 2.34
+                },
+                "0:2": {
+                    "ilosc": 25,
+                    "procent": 0.98
+                },
+                "0:3": {
+                    "ilosc": 2,
+                    "procent": 0.08
+                },
+                "1:2": {
+                    "ilosc": 85,
+                    "procent": 3.32
+                },
+                "1:3": {
+                    "ilosc": 18,
+                    "procent": 0.7
+                },
+                "2:3": {
+                    "ilosc": 17,
+                    "procent": 0.66
+                },
+                "0:0": {
+                    "ilosc": 82,
+                    "procent": 3.2
+                },
+                "1:1": {
+                    "ilosc": 208,
+                    "procent": 8.12
+                },
+                "2:2": {
+                    "ilosc": 111,
+                    "procent": 4.33
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 1907,
+                    "procent": 74.43
+                },
+                "remis": {
+                    "ilosc": 430,
+                    "procent": 16.78
+                },
+                "goscie": {
+                    "ilosc": 225,
+                    "procent": 8.78
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 2.391,
+                "srednia_gole_wyj": 0.76,
+                "srednia_goli_mecz": 3.151
+            }
+        }
+    },
+    "poziom3": {
+        "poziom": "poziom3",
+        "analiza": {
+            "ilosc_przypadkow": 3509,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 417,
+                    "procent": 11.88
+                },
+                "2:0": {
+                    "ilosc": 365,
+                    "procent": 10.4
+                },
+                "3:0": {
+                    "ilosc": 230,
+                    "procent": 6.55
+                },
+                "2:1": {
+                    "ilosc": 374,
+                    "procent": 10.66
+                },
+                "3:1": {
+                    "ilosc": 202,
+                    "procent": 5.76
+                },
+                "3:2": {
+                    "ilosc": 119,
+                    "procent": 3.39
+                },
+                "0:1": {
+                    "ilosc": 170,
+                    "procent": 4.84
+                },
+                "0:2": {
+                    "ilosc": 68,
+                    "procent": 1.94
+                },
+                "0:3": {
+                    "ilosc": 28,
+                    "procent": 0.8
+                },
+                "1:2": {
+                    "ilosc": 138,
+                    "procent": 3.93
+                },
+                "1:3": {
+                    "ilosc": 34,
+                    "procent": 0.97
+                },
+                "2:3": {
+                    "ilosc": 41,
+                    "procent": 1.17
+                },
+                "0:0": {
+                    "ilosc": 183,
+                    "procent": 5.22
+                },
+                "1:1": {
+                    "ilosc": 361,
+                    "procent": 10.29
+                },
+                "2:2": {
+                    "ilosc": 191,
+                    "procent": 5.44
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 2219,
+                    "procent": 63.24
+                },
+                "remis": {
+                    "ilosc": 763,
+                    "procent": 21.74
+                },
+                "goscie": {
+                    "ilosc": 527,
+                    "procent": 15.02
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 2.022,
+                "srednia_gole_wyj": 0.918,
+                "srednia_goli_mecz": 2.94
+            }
+        }
+    },
+    "poziom28": {
+        "poziom": "poziom28",
+        "analiza": {
+            "ilosc_przypadkow": 111,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 3,
+                    "procent": 2.7
+                },
+                "2:0": {
+                    "ilosc": 3,
+                    "procent": 2.7
+                },
+                "3:0": {
+                    "ilosc": 1,
+                    "procent": 0.9
+                },
+                "2:1": {
+                    "ilosc": 7,
+                    "procent": 6.31
+                },
+                "3:1": {
+                    "ilosc": 3,
+                    "procent": 2.7
+                },
+                "3:2": {
+                    "ilosc": 2,
+                    "procent": 1.8
+                },
+                "0:1": {
+                    "ilosc": 11,
+                    "procent": 9.91
+                },
+                "0:2": {
+                    "ilosc": 5,
+                    "procent": 4.5
+                },
+                "0:3": {
+                    "ilosc": 9,
+                    "procent": 8.11
+                },
+                "1:2": {
+                    "ilosc": 15,
+                    "procent": 13.51
+                },
+                "1:3": {
+                    "ilosc": 7,
+                    "procent": 6.31
+                },
+                "2:3": {
+                    "ilosc": 3,
+                    "procent": 2.7
+                },
+                "0:0": {
+                    "ilosc": 4,
+                    "procent": 3.6
+                },
+                "1:1": {
+                    "ilosc": 8,
+                    "procent": 7.21
+                },
+                "2:2": {
+                    "ilosc": 7,
+                    "procent": 6.31
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 23,
+                    "procent": 20.72
+                },
+                "remis": {
+                    "ilosc": 21,
+                    "procent": 18.92
+                },
+                "goscie": {
+                    "ilosc": 67,
+                    "procent": 60.36
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.189,
+                "srednia_gole_wyj": 2.198,
+                "srednia_goli_mecz": 3.387
+            }
+        }
+    },
+    "poziom8": {
+        "poziom": "poziom8",
+        "analiza": {
+            "ilosc_przypadkow": 2468,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 249,
+                    "procent": 10.09
+                },
+                "2:0": {
+                    "ilosc": 137,
+                    "procent": 5.55
+                },
+                "3:0": {
+                    "ilosc": 60,
+                    "procent": 2.43
+                },
+                "2:1": {
+                    "ilosc": 196,
+                    "procent": 7.94
+                },
+                "3:1": {
+                    "ilosc": 82,
+                    "procent": 3.32
+                },
+                "3:2": {
+                    "ilosc": 60,
+                    "procent": 2.43
+                },
+                "0:1": {
+                    "ilosc": 251,
+                    "procent": 10.17
+                },
+                "0:2": {
+                    "ilosc": 149,
+                    "procent": 6.04
+                },
+                "0:3": {
+                    "ilosc": 47,
+                    "procent": 1.9
+                },
+                "1:2": {
+                    "ilosc": 198,
+                    "procent": 8.02
+                },
+                "1:3": {
+                    "ilosc": 89,
+                    "procent": 3.61
+                },
+                "2:3": {
+                    "ilosc": 55,
+                    "procent": 2.23
+                },
+                "0:0": {
+                    "ilosc": 215,
+                    "procent": 8.71
+                },
+                "1:1": {
+                    "ilosc": 324,
+                    "procent": 13.13
+                },
+                "2:2": {
+                    "ilosc": 137,
+                    "procent": 5.55
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 867,
+                    "procent": 35.13
+                },
+                "remis": {
+                    "ilosc": 713,
+                    "procent": 28.89
+                },
+                "goscie": {
+                    "ilosc": 888,
+                    "procent": 35.98
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.278,
+                "srednia_gole_wyj": 1.286,
+                "srednia_goli_mecz": 2.564
+            }
+        }
+    },
+    "poziom4": {
+        "poziom": "poziom4",
+        "analiza": {
+            "ilosc_przypadkow": 4164,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 540,
+                    "procent": 12.97
+                },
+                "2:0": {
+                    "ilosc": 427,
+                    "procent": 10.25
+                },
+                "3:0": {
+                    "ilosc": 231,
+                    "procent": 5.55
+                },
+                "2:1": {
+                    "ilosc": 421,
+                    "procent": 10.11
+                },
+                "3:1": {
+                    "ilosc": 210,
+                    "procent": 5.04
+                },
+                "3:2": {
+                    "ilosc": 119,
+                    "procent": 2.86
+                },
+                "0:1": {
+                    "ilosc": 241,
+                    "procent": 5.79
+                },
+                "0:2": {
+                    "ilosc": 94,
+                    "procent": 2.26
+                },
+                "0:3": {
+                    "ilosc": 47,
+                    "procent": 1.13
+                },
+                "1:2": {
+                    "ilosc": 206,
+                    "procent": 4.95
+                },
+                "1:3": {
+                    "ilosc": 71,
+                    "procent": 1.71
+                },
+                "2:3": {
+                    "ilosc": 58,
+                    "procent": 1.39
+                },
+                "0:0": {
+                    "ilosc": 272,
+                    "procent": 6.53
+                },
+                "1:1": {
+                    "ilosc": 446,
+                    "procent": 10.71
+                },
+                "2:2": {
+                    "ilosc": 198,
+                    "procent": 4.76
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 2388,
+                    "procent": 57.35
+                },
+                "remis": {
+                    "ilosc": 974,
+                    "procent": 23.39
+                },
+                "goscie": {
+                    "ilosc": 802,
+                    "procent": 19.26
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.795,
+                "srednia_gole_wyj": 0.975,
+                "srednia_goli_mecz": 2.769
+            }
+        }
+    },
+    "poziom5": {
+        "poziom": "poziom5",
+        "analiza": {
+            "ilosc_przypadkow": 4057,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 518,
+                    "procent": 12.77
+                },
+                "2:0": {
+                    "ilosc": 338,
+                    "procent": 8.33
+                },
+                "3:0": {
+                    "ilosc": 177,
+                    "procent": 4.36
+                },
+                "2:1": {
+                    "ilosc": 418,
+                    "procent": 10.3
+                },
+                "3:1": {
+                    "ilosc": 171,
+                    "procent": 4.21
+                },
+                "3:2": {
+                    "ilosc": 99,
+                    "procent": 2.44
+                },
+                "0:1": {
+                    "ilosc": 243,
+                    "procent": 5.99
+                },
+                "0:2": {
+                    "ilosc": 130,
+                    "procent": 3.2
+                },
+                "0:3": {
+                    "ilosc": 57,
+                    "procent": 1.4
+                },
+                "1:2": {
+                    "ilosc": 244,
+                    "procent": 6.01
+                },
+                "1:3": {
+                    "ilosc": 77,
+                    "procent": 1.9
+                },
+                "2:3": {
+                    "ilosc": 85,
+                    "procent": 2.1
+                },
+                "0:0": {
+                    "ilosc": 313,
+                    "procent": 7.72
+                },
+                "1:1": {
+                    "ilosc": 505,
+                    "procent": 12.45
+                },
+                "2:2": {
+                    "ilosc": 207,
+                    "procent": 5.1
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 2046,
+                    "procent": 50.43
+                },
+                "remis": {
+                    "ilosc": 1080,
+                    "procent": 26.62
+                },
+                "goscie": {
+                    "ilosc": 931,
+                    "procent": 22.95
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.619,
+                "srednia_gole_wyj": 1.061,
+                "srednia_goli_mecz": 2.681
+            }
+        }
+    },
+    "poziom18": {
+        "poziom": "poziom18",
+        "analiza": {
+            "ilosc_przypadkow": 323,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 23,
+                    "procent": 7.12
+                },
+                "2:0": {
+                    "ilosc": 9,
+                    "procent": 2.79
+                },
+                "3:0": {
+                    "ilosc": 2,
+                    "procent": 0.62
+                },
+                "2:1": {
+                    "ilosc": 26,
+                    "procent": 8.05
+                },
+                "3:1": {
+                    "ilosc": 3,
+                    "procent": 0.93
+                },
+                "3:2": {
+                    "ilosc": 3,
+                    "procent": 0.93
+                },
+                "0:1": {
+                    "ilosc": 36,
+                    "procent": 11.15
+                },
+                "0:2": {
+                    "ilosc": 28,
+                    "procent": 8.67
+                },
+                "0:3": {
+                    "ilosc": 19,
+                    "procent": 5.88
+                },
+                "1:2": {
+                    "ilosc": 34,
+                    "procent": 10.53
+                },
+                "1:3": {
+                    "ilosc": 14,
+                    "procent": 4.33
+                },
+                "2:3": {
+                    "ilosc": 12,
+                    "procent": 3.72
+                },
+                "0:0": {
+                    "ilosc": 18,
+                    "procent": 5.57
+                },
+                "1:1": {
+                    "ilosc": 36,
+                    "procent": 11.15
+                },
+                "2:2": {
+                    "ilosc": 12,
+                    "procent": 3.72
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 72,
+                    "procent": 22.29
+                },
+                "remis": {
+                    "ilosc": 73,
+                    "procent": 22.6
+                },
+                "goscie": {
+                    "ilosc": 178,
+                    "procent": 55.11
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.015,
+                "srednia_gole_wyj": 1.827,
+                "srednia_goli_mecz": 2.842
+            }
+        }
+    },
+    "poziom15": {
+        "poziom": "poziom15",
+        "analiza": {
+            "ilosc_przypadkow": 497,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 32,
+                    "procent": 6.44
+                },
+                "2:0": {
+                    "ilosc": 13,
+                    "procent": 2.62
+                },
+                "3:0": {
+                    "ilosc": 9,
+                    "procent": 1.81
+                },
+                "2:1": {
+                    "ilosc": 29,
+                    "procent": 5.84
+                },
+                "3:1": {
+                    "ilosc": 7,
+                    "procent": 1.41
+                },
+                "3:2": {
+                    "ilosc": 11,
+                    "procent": 2.21
+                },
+                "0:1": {
+                    "ilosc": 54,
+                    "procent": 10.87
+                },
+                "0:2": {
+                    "ilosc": 39,
+                    "procent": 7.85
+                },
+                "0:3": {
+                    "ilosc": 17,
+                    "procent": 3.42
+                },
+                "1:2": {
+                    "ilosc": 50,
+                    "procent": 10.06
+                },
+                "1:3": {
+                    "ilosc": 23,
+                    "procent": 4.63
+                },
+                "2:3": {
+                    "ilosc": 15,
+                    "procent": 3.02
+                },
+                "0:0": {
+                    "ilosc": 43,
+                    "procent": 8.65
+                },
+                "1:1": {
+                    "ilosc": 52,
+                    "procent": 10.46
+                },
+                "2:2": {
+                    "ilosc": 30,
+                    "procent": 6.04
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 116,
+                    "procent": 23.34
+                },
+                "remis": {
+                    "ilosc": 131,
+                    "procent": 26.36
+                },
+                "goscie": {
+                    "ilosc": 250,
+                    "procent": 50.3
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.091,
+                "srednia_gole_wyj": 1.692,
+                "srednia_goli_mecz": 2.783
+            }
+        }
+    },
+    "poziom7": {
+        "poziom": "poziom7",
+        "analiza": {
+            "ilosc_przypadkow": 3448,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 420,
+                    "procent": 12.18
+                },
+                "2:0": {
+                    "ilosc": 241,
+                    "procent": 6.99
+                },
+                "3:0": {
+                    "ilosc": 119,
+                    "procent": 3.45
+                },
+                "2:1": {
+                    "ilosc": 315,
+                    "procent": 9.14
+                },
+                "3:1": {
+                    "ilosc": 132,
+                    "procent": 3.83
+                },
+                "3:2": {
+                    "ilosc": 85,
+                    "procent": 2.47
+                },
+                "0:1": {
+                    "ilosc": 285,
+                    "procent": 8.27
+                },
+                "0:2": {
+                    "ilosc": 149,
+                    "procent": 4.32
+                },
+                "0:3": {
+                    "ilosc": 96,
+                    "procent": 2.78
+                },
+                "1:2": {
+                    "ilosc": 238,
+                    "procent": 6.9
+                },
+                "1:3": {
+                    "ilosc": 73,
+                    "procent": 2.12
+                },
+                "2:3": {
+                    "ilosc": 80,
+                    "procent": 2.32
+                },
+                "0:0": {
+                    "ilosc": 281,
+                    "procent": 8.15
+                },
+                "1:1": {
+                    "ilosc": 439,
+                    "procent": 12.73
+                },
+                "2:2": {
+                    "ilosc": 180,
+                    "procent": 5.22
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 1470,
+                    "procent": 42.63
+                },
+                "remis": {
+                    "ilosc": 944,
+                    "procent": 27.38
+                },
+                "goscie": {
+                    "ilosc": 1034,
+                    "procent": 29.99
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.401,
+                "srednia_gole_wyj": 1.176,
+                "srednia_goli_mecz": 2.578
+            }
+        }
+    },
+    "poziom27": {
+        "poziom": "poziom27",
+        "analiza": {
+            "ilosc_przypadkow": 103,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 5,
+                    "procent": 4.85
+                },
+                "2:0": {
+                    "ilosc": 1,
+                    "procent": 0.97
+                },
+                "3:0": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "2:1": {
+                    "ilosc": 3,
+                    "procent": 2.91
+                },
+                "3:1": {
+                    "ilosc": 2,
+                    "procent": 1.94
+                },
+                "3:2": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "0:1": {
+                    "ilosc": 11,
+                    "procent": 10.68
+                },
+                "0:2": {
+                    "ilosc": 10,
+                    "procent": 9.71
+                },
+                "0:3": {
+                    "ilosc": 12,
+                    "procent": 11.65
+                },
+                "1:2": {
+                    "ilosc": 14,
+                    "procent": 13.59
+                },
+                "1:3": {
+                    "ilosc": 4,
+                    "procent": 3.88
+                },
+                "2:3": {
+                    "ilosc": 6,
+                    "procent": 5.83
+                },
+                "0:0": {
+                    "ilosc": 5,
+                    "procent": 4.85
+                },
+                "1:1": {
+                    "ilosc": 12,
+                    "procent": 11.65
+                },
+                "2:2": {
+                    "ilosc": 7,
+                    "procent": 6.8
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 12,
+                    "procent": 11.65
+                },
+                "remis": {
+                    "ilosc": 25,
+                    "procent": 24.27
+                },
+                "goscie": {
+                    "ilosc": 66,
+                    "procent": 64.08
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.913,
+                "srednia_gole_wyj": 1.961,
+                "srednia_goli_mecz": 2.874
+            }
+        }
+    },
+    "poziom25": {
+        "poziom": "poziom25",
+        "analiza": {
+            "ilosc_przypadkow": 133,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 6,
+                    "procent": 4.51
+                },
+                "2:0": {
+                    "ilosc": 5,
+                    "procent": 3.76
+                },
+                "3:0": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "2:1": {
+                    "ilosc": 5,
+                    "procent": 3.76
+                },
+                "3:1": {
+                    "ilosc": 2,
+                    "procent": 1.5
+                },
+                "3:2": {
+                    "ilosc": 2,
+                    "procent": 1.5
+                },
+                "0:1": {
+                    "ilosc": 12,
+                    "procent": 9.02
+                },
+                "0:2": {
+                    "ilosc": 10,
+                    "procent": 7.52
+                },
+                "0:3": {
+                    "ilosc": 6,
+                    "procent": 4.51
+                },
+                "1:2": {
+                    "ilosc": 19,
+                    "procent": 14.29
+                },
+                "1:3": {
+                    "ilosc": 6,
+                    "procent": 4.51
+                },
+                "2:3": {
+                    "ilosc": 2,
+                    "procent": 1.5
+                },
+                "0:0": {
+                    "ilosc": 11,
+                    "procent": 8.27
+                },
+                "1:1": {
+                    "ilosc": 12,
+                    "procent": 9.02
+                },
+                "2:2": {
+                    "ilosc": 8,
+                    "procent": 6.02
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 22,
+                    "procent": 16.54
+                },
+                "remis": {
+                    "ilosc": 34,
+                    "procent": 25.56
+                },
+                "goscie": {
+                    "ilosc": 77,
+                    "procent": 57.89
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.977,
+                "srednia_gole_wyj": 2.038,
+                "srednia_goli_mecz": 3.015
+            }
+        }
+    },
+    "poziom16": {
+        "poziom": "poziom16",
+        "analiza": {
+            "ilosc_przypadkow": 391,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 23,
+                    "procent": 5.88
+                },
+                "2:0": {
+                    "ilosc": 11,
+                    "procent": 2.81
+                },
+                "3:0": {
+                    "ilosc": 3,
+                    "procent": 0.77
+                },
+                "2:1": {
+                    "ilosc": 28,
+                    "procent": 7.16
+                },
+                "3:1": {
+                    "ilosc": 9,
+                    "procent": 2.3
+                },
+                "3:2": {
+                    "ilosc": 6,
+                    "procent": 1.53
+                },
+                "0:1": {
+                    "ilosc": 38,
+                    "procent": 9.72
+                },
+                "0:2": {
+                    "ilosc": 35,
+                    "procent": 8.95
+                },
+                "0:3": {
+                    "ilosc": 20,
+                    "procent": 5.12
+                },
+                "1:2": {
+                    "ilosc": 41,
+                    "procent": 10.49
+                },
+                "1:3": {
+                    "ilosc": 17,
+                    "procent": 4.35
+                },
+                "2:3": {
+                    "ilosc": 14,
+                    "procent": 3.58
+                },
+                "0:0": {
+                    "ilosc": 22,
+                    "procent": 5.63
+                },
+                "1:1": {
+                    "ilosc": 52,
+                    "procent": 13.3
+                },
+                "2:2": {
+                    "ilosc": 17,
+                    "procent": 4.35
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 86,
+                    "procent": 21.99
+                },
+                "remis": {
+                    "ilosc": 95,
+                    "procent": 24.3
+                },
+                "goscie": {
+                    "ilosc": 210,
+                    "procent": 53.71
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.061,
+                "srednia_gole_wyj": 1.816,
+                "srednia_goli_mecz": 2.877
+            }
+        }
+    },
+    "poziom22": {
+        "poziom": "poziom22",
+        "analiza": {
+            "ilosc_przypadkow": 222,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 8,
+                    "procent": 3.6
+                },
+                "2:0": {
+                    "ilosc": 3,
+                    "procent": 1.35
+                },
+                "3:0": {
+                    "ilosc": 2,
+                    "procent": 0.9
+                },
+                "2:1": {
+                    "ilosc": 6,
+                    "procent": 2.7
+                },
+                "3:1": {
+                    "ilosc": 3,
+                    "procent": 1.35
+                },
+                "3:2": {
+                    "ilosc": 1,
+                    "procent": 0.45
+                },
+                "0:1": {
+                    "ilosc": 24,
+                    "procent": 10.81
+                },
+                "0:2": {
+                    "ilosc": 34,
+                    "procent": 15.32
+                },
+                "0:3": {
+                    "ilosc": 17,
+                    "procent": 7.66
+                },
+                "1:2": {
+                    "ilosc": 23,
+                    "procent": 10.36
+                },
+                "1:3": {
+                    "ilosc": 11,
+                    "procent": 4.95
+                },
+                "2:3": {
+                    "ilosc": 7,
+                    "procent": 3.15
+                },
+                "0:0": {
+                    "ilosc": 13,
+                    "procent": 5.86
+                },
+                "1:1": {
+                    "ilosc": 19,
+                    "procent": 8.56
+                },
+                "2:2": {
+                    "ilosc": 11,
+                    "procent": 4.95
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 29,
+                    "procent": 13.06
+                },
+                "remis": {
+                    "ilosc": 45,
+                    "procent": 20.27
+                },
+                "goscie": {
+                    "ilosc": 148,
+                    "procent": 66.67
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.824,
+                "srednia_gole_wyj": 2.032,
+                "srednia_goli_mecz": 2.856
+            }
+        }
+    },
+    "poziom21": {
+        "poziom": "poziom21",
+        "analiza": {
+            "ilosc_przypadkow": 180,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 8,
+                    "procent": 4.44
+                },
+                "2:0": {
+                    "ilosc": 7,
+                    "procent": 3.89
+                },
+                "3:0": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "2:1": {
+                    "ilosc": 6,
+                    "procent": 3.33
+                },
+                "3:1": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "3:2": {
+                    "ilosc": 3,
+                    "procent": 1.67
+                },
+                "0:1": {
+                    "ilosc": 24,
+                    "procent": 13.33
+                },
+                "0:2": {
+                    "ilosc": 16,
+                    "procent": 8.89
+                },
+                "0:3": {
+                    "ilosc": 12,
+                    "procent": 6.67
+                },
+                "1:2": {
+                    "ilosc": 15,
+                    "procent": 8.33
+                },
+                "1:3": {
+                    "ilosc": 13,
+                    "procent": 7.22
+                },
+                "2:3": {
+                    "ilosc": 5,
+                    "procent": 2.78
+                },
+                "0:0": {
+                    "ilosc": 5,
+                    "procent": 2.78
+                },
+                "1:1": {
+                    "ilosc": 23,
+                    "procent": 12.78
+                },
+                "2:2": {
+                    "ilosc": 10,
+                    "procent": 5.56
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 27,
+                    "procent": 15.0
+                },
+                "remis": {
+                    "ilosc": 40,
+                    "procent": 22.22
+                },
+                "goscie": {
+                    "ilosc": 113,
+                    "procent": 62.78
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.972,
+                "srednia_gole_wyj": 2.056,
+                "srednia_goli_mecz": 3.028
+            }
+        }
+    },
+    "poziom17": {
+        "poziom": "poziom17",
+        "analiza": {
+            "ilosc_przypadkow": 378,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 22,
+                    "procent": 5.82
+                },
+                "2:0": {
+                    "ilosc": 11,
+                    "procent": 2.91
+                },
+                "3:0": {
+                    "ilosc": 3,
+                    "procent": 0.79
+                },
+                "2:1": {
+                    "ilosc": 15,
+                    "procent": 3.97
+                },
+                "3:1": {
+                    "ilosc": 4,
+                    "procent": 1.06
+                },
+                "3:2": {
+                    "ilosc": 4,
+                    "procent": 1.06
+                },
+                "0:1": {
+                    "ilosc": 55,
+                    "procent": 14.55
+                },
+                "0:2": {
+                    "ilosc": 27,
+                    "procent": 7.14
+                },
+                "0:3": {
+                    "ilosc": 21,
+                    "procent": 5.56
+                },
+                "1:2": {
+                    "ilosc": 29,
+                    "procent": 7.67
+                },
+                "1:3": {
+                    "ilosc": 18,
+                    "procent": 4.76
+                },
+                "2:3": {
+                    "ilosc": 6,
+                    "procent": 1.59
+                },
+                "0:0": {
+                    "ilosc": 30,
+                    "procent": 7.94
+                },
+                "1:1": {
+                    "ilosc": 48,
+                    "procent": 12.7
+                },
+                "2:2": {
+                    "ilosc": 24,
+                    "procent": 6.35
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 71,
+                    "procent": 18.78
+                },
+                "remis": {
+                    "ilosc": 107,
+                    "procent": 28.31
+                },
+                "goscie": {
+                    "ilosc": 200,
+                    "procent": 52.91
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.003,
+                "srednia_gole_wyj": 1.701,
+                "srednia_goli_mecz": 2.704
+            }
+        }
+    },
+    "poziom1": {
+        "poziom": "poziom1",
+        "analiza": {
+            "ilosc_przypadkow": 1171,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 97,
+                    "procent": 8.28
+                },
+                "2:0": {
+                    "ilosc": 142,
+                    "procent": 12.13
+                },
+                "3:0": {
+                    "ilosc": 127,
+                    "procent": 10.85
+                },
+                "2:1": {
+                    "ilosc": 87,
+                    "procent": 7.43
+                },
+                "3:1": {
+                    "ilosc": 81,
+                    "procent": 6.92
+                },
+                "3:2": {
+                    "ilosc": 31,
+                    "procent": 2.65
+                },
+                "0:1": {
+                    "ilosc": 12,
+                    "procent": 1.02
+                },
+                "0:2": {
+                    "ilosc": 2,
+                    "procent": 0.17
+                },
+                "0:3": {
+                    "ilosc": 2,
+                    "procent": 0.17
+                },
+                "1:2": {
+                    "ilosc": 15,
+                    "procent": 1.28
+                },
+                "1:3": {
+                    "ilosc": 4,
+                    "procent": 0.34
+                },
+                "2:3": {
+                    "ilosc": 9,
+                    "procent": 0.77
+                },
+                "0:0": {
+                    "ilosc": 21,
+                    "procent": 1.79
+                },
+                "1:1": {
+                    "ilosc": 46,
+                    "procent": 3.93
+                },
+                "2:2": {
+                    "ilosc": 20,
+                    "procent": 1.71
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 1029,
+                    "procent": 87.87
+                },
+                "remis": {
+                    "ilosc": 95,
+                    "procent": 8.11
+                },
+                "goscie": {
+                    "ilosc": 47,
+                    "procent": 4.01
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 3.289,
+                "srednia_gole_wyj": 0.594,
+                "srednia_goli_mecz": 3.883
+            }
+        }
+    },
+    "poziom10": {
+        "poziom": "poziom10",
+        "analiza": {
+            "ilosc_przypadkow": 1498,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 143,
+                    "procent": 9.55
+                },
+                "2:0": {
+                    "ilosc": 74,
+                    "procent": 4.94
+                },
+                "3:0": {
+                    "ilosc": 33,
+                    "procent": 2.2
+                },
+                "2:1": {
+                    "ilosc": 107,
+                    "procent": 7.14
+                },
+                "3:1": {
+                    "ilosc": 38,
+                    "procent": 2.54
+                },
+                "3:2": {
+                    "ilosc": 46,
+                    "procent": 3.07
+                },
+                "0:1": {
+                    "ilosc": 160,
+                    "procent": 10.68
+                },
+                "0:2": {
+                    "ilosc": 92,
+                    "procent": 6.14
+                },
+                "0:3": {
+                    "ilosc": 55,
+                    "procent": 3.67
+                },
+                "1:2": {
+                    "ilosc": 137,
+                    "procent": 9.15
+                },
+                "1:3": {
+                    "ilosc": 55,
+                    "procent": 3.67
+                },
+                "2:3": {
+                    "ilosc": 34,
+                    "procent": 2.27
+                },
+                "0:0": {
+                    "ilosc": 117,
+                    "procent": 7.81
+                },
+                "1:1": {
+                    "ilosc": 185,
+                    "procent": 12.35
+                },
+                "2:2": {
+                    "ilosc": 68,
+                    "procent": 4.54
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 488,
+                    "procent": 32.58
+                },
+                "remis": {
+                    "ilosc": 392,
+                    "procent": 26.17
+                },
+                "goscie": {
+                    "ilosc": 618,
+                    "procent": 41.26
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.205,
+                "srednia_gole_wyj": 1.421,
+                "srednia_goli_mecz": 2.626
+            }
+        }
+    },
+    "poziom11": {
+        "poziom": "poziom11",
+        "analiza": {
+            "ilosc_przypadkow": 1187,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 110,
+                    "procent": 9.27
+                },
+                "2:0": {
+                    "ilosc": 32,
+                    "procent": 2.7
+                },
+                "3:0": {
+                    "ilosc": 13,
+                    "procent": 1.1
+                },
+                "2:1": {
+                    "ilosc": 77,
+                    "procent": 6.49
+                },
+                "3:1": {
+                    "ilosc": 39,
+                    "procent": 3.29
+                },
+                "3:2": {
+                    "ilosc": 16,
+                    "procent": 1.35
+                },
+                "0:1": {
+                    "ilosc": 124,
+                    "procent": 10.45
+                },
+                "0:2": {
+                    "ilosc": 83,
+                    "procent": 6.99
+                },
+                "0:3": {
+                    "ilosc": 46,
+                    "procent": 3.88
+                },
+                "1:2": {
+                    "ilosc": 99,
+                    "procent": 8.34
+                },
+                "1:3": {
+                    "ilosc": 50,
+                    "procent": 4.21
+                },
+                "2:3": {
+                    "ilosc": 30,
+                    "procent": 2.53
+                },
+                "0:0": {
+                    "ilosc": 108,
+                    "procent": 9.1
+                },
+                "1:1": {
+                    "ilosc": 155,
+                    "procent": 13.06
+                },
+                "2:2": {
+                    "ilosc": 66,
+                    "procent": 5.56
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 328,
+                    "procent": 27.63
+                },
+                "remis": {
+                    "ilosc": 352,
+                    "procent": 29.65
+                },
+                "goscie": {
+                    "ilosc": 507,
+                    "procent": 42.71
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.168,
+                "srednia_gole_wyj": 1.498,
+                "srednia_goli_mecz": 2.666
+            }
+        }
+    },
+    "poziom19": {
+        "poziom": "poziom19",
+        "analiza": {
+            "ilosc_przypadkow": 246,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 16,
+                    "procent": 6.5
+                },
+                "2:0": {
+                    "ilosc": 10,
+                    "procent": 4.07
+                },
+                "3:0": {
+                    "ilosc": 1,
+                    "procent": 0.41
+                },
+                "2:1": {
+                    "ilosc": 10,
+                    "procent": 4.07
+                },
+                "3:1": {
+                    "ilosc": 2,
+                    "procent": 0.81
+                },
+                "3:2": {
+                    "ilosc": 6,
+                    "procent": 2.44
+                },
+                "0:1": {
+                    "ilosc": 26,
+                    "procent": 10.57
+                },
+                "0:2": {
+                    "ilosc": 22,
+                    "procent": 8.94
+                },
+                "0:3": {
+                    "ilosc": 17,
+                    "procent": 6.91
+                },
+                "1:2": {
+                    "ilosc": 21,
+                    "procent": 8.54
+                },
+                "1:3": {
+                    "ilosc": 8,
+                    "procent": 3.25
+                },
+                "2:3": {
+                    "ilosc": 7,
+                    "procent": 2.85
+                },
+                "0:0": {
+                    "ilosc": 20,
+                    "procent": 8.13
+                },
+                "1:1": {
+                    "ilosc": 26,
+                    "procent": 10.57
+                },
+                "2:2": {
+                    "ilosc": 15,
+                    "procent": 6.1
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 47,
+                    "procent": 19.11
+                },
+                "remis": {
+                    "ilosc": 66,
+                    "procent": 26.83
+                },
+                "goscie": {
+                    "ilosc": 133,
+                    "procent": 54.07
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 1.004,
+                "srednia_gole_wyj": 1.882,
+                "srednia_goli_mecz": 2.886
+            }
+        }
+    },
+    "poziom20": {
+        "poziom": "poziom20",
+        "analiza": {
+            "ilosc_przypadkow": 278,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 15,
+                    "procent": 5.4
+                },
+                "2:0": {
+                    "ilosc": 5,
+                    "procent": 1.8
+                },
+                "3:0": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "2:1": {
+                    "ilosc": 16,
+                    "procent": 5.76
+                },
+                "3:1": {
+                    "ilosc": 7,
+                    "procent": 2.52
+                },
+                "3:2": {
+                    "ilosc": 2,
+                    "procent": 0.72
+                },
+                "0:1": {
+                    "ilosc": 26,
+                    "procent": 9.35
+                },
+                "0:2": {
+                    "ilosc": 33,
+                    "procent": 11.87
+                },
+                "0:3": {
+                    "ilosc": 19,
+                    "procent": 6.83
+                },
+                "1:2": {
+                    "ilosc": 24,
+                    "procent": 8.63
+                },
+                "1:3": {
+                    "ilosc": 15,
+                    "procent": 5.4
+                },
+                "2:3": {
+                    "ilosc": 7,
+                    "procent": 2.52
+                },
+                "0:0": {
+                    "ilosc": 17,
+                    "procent": 6.12
+                },
+                "1:1": {
+                    "ilosc": 37,
+                    "procent": 13.31
+                },
+                "2:2": {
+                    "ilosc": 13,
+                    "procent": 4.68
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 47,
+                    "procent": 16.91
+                },
+                "remis": {
+                    "ilosc": 69,
+                    "procent": 24.82
+                },
+                "goscie": {
+                    "ilosc": 162,
+                    "procent": 58.27
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.845,
+                "srednia_gole_wyj": 1.928,
+                "srednia_goli_mecz": 2.773
+            }
+        }
+    },
+    "poziom23": {
+        "poziom": "poziom23",
+        "analiza": {
+            "ilosc_przypadkow": 189,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 10,
+                    "procent": 5.29
+                },
+                "2:0": {
+                    "ilosc": 2,
+                    "procent": 1.06
+                },
+                "3:0": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "2:1": {
+                    "ilosc": 4,
+                    "procent": 2.12
+                },
+                "3:1": {
+                    "ilosc": 3,
+                    "procent": 1.59
+                },
+                "3:2": {
+                    "ilosc": 3,
+                    "procent": 1.59
+                },
+                "0:1": {
+                    "ilosc": 23,
+                    "procent": 12.17
+                },
+                "0:2": {
+                    "ilosc": 18,
+                    "procent": 9.52
+                },
+                "0:3": {
+                    "ilosc": 14,
+                    "procent": 7.41
+                },
+                "1:2": {
+                    "ilosc": 20,
+                    "procent": 10.58
+                },
+                "1:3": {
+                    "ilosc": 9,
+                    "procent": 4.76
+                },
+                "2:3": {
+                    "ilosc": 7,
+                    "procent": 3.7
+                },
+                "0:0": {
+                    "ilosc": 16,
+                    "procent": 8.47
+                },
+                "1:1": {
+                    "ilosc": 17,
+                    "procent": 8.99
+                },
+                "2:2": {
+                    "ilosc": 8,
+                    "procent": 4.23
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 27,
+                    "procent": 14.29
+                },
+                "remis": {
+                    "ilosc": 41,
+                    "procent": 21.69
+                },
+                "goscie": {
+                    "ilosc": 121,
+                    "procent": 64.02
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.82,
+                "srednia_gole_wyj": 2.026,
+                "srednia_goli_mecz": 2.847
+            }
+        }
+    },
+    "poziom24": {
+        "poziom": "poziom24",
+        "analiza": {
+            "ilosc_przypadkow": 198,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 12,
+                    "procent": 6.06
+                },
+                "2:0": {
+                    "ilosc": 6,
+                    "procent": 3.03
+                },
+                "3:0": {
+                    "ilosc": 4,
+                    "procent": 2.02
+                },
+                "2:1": {
+                    "ilosc": 6,
+                    "procent": 3.03
+                },
+                "3:1": {
+                    "ilosc": 3,
+                    "procent": 1.52
+                },
+                "3:2": {
+                    "ilosc": 2,
+                    "procent": 1.01
+                },
+                "0:1": {
+                    "ilosc": 20,
+                    "procent": 10.1
+                },
+                "0:2": {
+                    "ilosc": 14,
+                    "procent": 7.07
+                },
+                "0:3": {
+                    "ilosc": 19,
+                    "procent": 9.6
+                },
+                "1:2": {
+                    "ilosc": 14,
+                    "procent": 7.07
+                },
+                "1:3": {
+                    "ilosc": 12,
+                    "procent": 6.06
+                },
+                "2:3": {
+                    "ilosc": 6,
+                    "procent": 3.03
+                },
+                "0:0": {
+                    "ilosc": 14,
+                    "procent": 7.07
+                },
+                "1:1": {
+                    "ilosc": 23,
+                    "procent": 11.62
+                },
+                "2:2": {
+                    "ilosc": 8,
+                    "procent": 4.04
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 38,
+                    "procent": 19.19
+                },
+                "remis": {
+                    "ilosc": 47,
+                    "procent": 23.74
+                },
+                "goscie": {
+                    "ilosc": 113,
+                    "procent": 57.07
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.985,
+                "srednia_gole_wyj": 1.929,
+                "srednia_goli_mecz": 2.914
+            }
+        }
+    },
+    "poziom29": {
+        "poziom": "poziom29",
+        "analiza": {
+            "ilosc_przypadkow": 86,
+            "wyniki_docelowe": {
+                "1:0": {
+                    "ilosc": 3,
+                    "procent": 3.49
+                },
+                "2:0": {
+                    "ilosc": 2,
+                    "procent": 2.33
+                },
+                "3:0": {
+                    "ilosc": 0,
+                    "procent": 0.0
+                },
+                "2:1": {
+                    "ilosc": 4,
+                    "procent": 4.65
+                },
+                "3:1": {
+                    "ilosc": 1,
+                    "procent": 1.16
+                },
+                "3:2": {
+                    "ilosc": 1,
+                    "procent": 1.16
+                },
+                "0:1": {
+                    "ilosc": 7,
+                    "procent": 8.14
+                },
+                "0:2": {
+                    "ilosc": 9,
+                    "procent": 10.47
+                },
+                "0:3": {
+                    "ilosc": 8,
+                    "procent": 9.3
+                },
+                "1:2": {
+                    "ilosc": 10,
+                    "procent": 11.63
+                },
+                "1:3": {
+                    "ilosc": 7,
+                    "procent": 8.14
+                },
+                "2:3": {
+                    "ilosc": 2,
+                    "procent": 2.33
+                },
+                "0:0": {
+                    "ilosc": 3,
+                    "procent": 3.49
+                },
+                "1:1": {
+                    "ilosc": 6,
+                    "procent": 6.98
+                },
+                "2:2": {
+                    "ilosc": 4,
+                    "procent": 4.65
+                }
+            },
+            "profil_meczu_1X2": {
+                "gospodarze": {
+                    "ilosc": 11,
+                    "procent": 12.79
+                },
+                "remis": {
+                    "ilosc": 14,
+                    "procent": 16.28
+                },
+                "goscie": {
+                    "ilosc": 61,
+                    "procent": 70.93
+                }
+            },
+            "statystyka_goli": {
+                "srednia_gole_dom": 0.93,
+                "srednia_gole_wyj": 2.372,
+                "srednia_goli_mecz": 3.302
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "nazwa": "siec_04_procent_kursow",
+    "cechy": [
+        "procent_kurs_1",
+        "procent_kurs_X",
+        "procent_kurs_2"
+    ],
+    "dokladnosc": 0.13493210054897428,
+    "podzial": {
+        "trening": "50%",
+        "walidacja": "10%",
+        "obserwacja": "40%"
+    }
+}

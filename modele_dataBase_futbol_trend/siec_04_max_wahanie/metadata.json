@@ -1,0 +1,14 @@
+{
+    "nazwa": "siec_04_max_wahanie",
+    "cechy": [
+        "max_wahanie_1",
+        "max_wahanie_X",
+        "max_wahanie_2"
+    ],
+    "dokladnosc": 0.13383208645054032,
+    "podzial": {
+        "trening": "50%",
+        "walidacja": "10%",
+        "obserwacja": "40%"
+    }
+}

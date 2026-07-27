@@ -1,0 +1,14 @@
+{
+    "nazwa": "siec_06_koniec_raw",
+    "cechy": [
+        "koniec_1_raw",
+        "koniec_X_raw",
+        "koniec_2_raw"
+    ],
+    "dokladnosc": 0.1571072319201995,
+    "podzial": {
+        "trening": "50%",
+        "walidacja": "10%",
+        "obserwacja": "40%"
+    }
+}

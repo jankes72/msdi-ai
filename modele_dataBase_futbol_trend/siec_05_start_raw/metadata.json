@@ -1,0 +1,14 @@
+{
+    "nazwa": "siec_05_start_raw",
+    "cechy": [
+        "start_1_raw",
+        "start_X_raw",
+        "start_2_raw"
+    ],
+    "dokladnosc": 0.15350512607370462,
+    "podzial": {
+        "trening": "50%",
+        "walidacja": "10%",
+        "obserwacja": "40%"
+    }
+}

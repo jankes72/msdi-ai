@@ -1,0 +1,472 @@
+{
+    "0": {
+        "wynik": "1:0",
+        "progi_pewnosci": {
+            "(0.0957, 0.132]": {
+                "ilosc": 718,
+                "trafienia": 85,
+                "skutecznosc": 0.11838440111420613
+            },
+            "(0.132, 0.138]": {
+                "ilosc": 716,
+                "trafienia": 77,
+                "skutecznosc": 0.10754189944134078
+            },
+            "(0.138, 0.142]": {
+                "ilosc": 716,
+                "trafienia": 93,
+                "skutecznosc": 0.12988826815642457
+            },
+            "(0.142, 0.145]": {
+                "ilosc": 718,
+                "trafienia": 95,
+                "skutecznosc": 0.13231197771587744
+            },
+            "(0.145, 0.148]": {
+                "ilosc": 715,
+                "trafienia": 107,
+                "skutecznosc": 0.14965034965034965
+            },
+            "(0.148, 0.153]": {
+                "ilosc": 717,
+                "trafienia": 84,
+                "skutecznosc": 0.11715481171548117
+            },
+            "(0.153, 0.157]": {
+                "ilosc": 715,
+                "trafienia": 85,
+                "skutecznosc": 0.11888111888111888
+            },
+            "(0.157, 0.162]": {
+                "ilosc": 717,
+                "trafienia": 94,
+                "skutecznosc": 0.13110181311018132
+            },
+            "(0.162, 0.167]": {
+                "ilosc": 716,
+                "trafienia": 101,
+                "skutecznosc": 0.14106145251396648
+            },
+            "(0.167, 0.462]": {
+                "ilosc": 717,
+                "trafienia": 70,
+                "skutecznosc": 0.09762900976290098
+            }
+        }
+    },
+    "1": {
+        "wynik": "2:0",
+        "progi_pewnosci": {
+            "(0.11, 0.146]": {
+                "ilosc": 12,
+                "trafienia": 2,
+                "skutecznosc": 0.16666666666666666
+            },
+            "(0.146, 0.15]": {
+                "ilosc": 11,
+                "trafienia": 1,
+                "skutecznosc": 0.09090909090909091
+            },
+            "(0.15, 0.157]": {
+                "ilosc": 11,
+                "trafienia": 1,
+                "skutecznosc": 0.09090909090909091
+            },
+            "(0.157, 0.161]": {
+                "ilosc": 11,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.161, 0.164]": {
+                "ilosc": 11,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.164, 0.165]": {
+                "ilosc": 12,
+                "trafienia": 1,
+                "skutecznosc": 0.08333333333333333
+            },
+            "(0.165, 0.166]": {
+                "ilosc": 10,
+                "trafienia": 1,
+                "skutecznosc": 0.1
+            },
+            "(0.166, 0.172]": {
+                "ilosc": 11,
+                "trafienia": 2,
+                "skutecznosc": 0.18181818181818182
+            },
+            "(0.172, 0.19]": {
+                "ilosc": 11,
+                "trafienia": 1,
+                "skutecznosc": 0.09090909090909091
+            },
+            "(0.19, 1.0]": {
+                "ilosc": 11,
+                "trafienia": 1,
+                "skutecznosc": 0.09090909090909091
+            }
+        }
+    },
+    "2": {
+        "wynik": "3:0",
+        "progi_pewnosci": {
+            "(0.138, 0.182]": {
+                "ilosc": 34,
+                "trafienia": 4,
+                "skutecznosc": 0.11764705882352941
+            },
+            "(0.182, 0.188]": {
+                "ilosc": 33,
+                "trafienia": 4,
+                "skutecznosc": 0.12121212121212122
+            },
+            "(0.188, 0.205]": {
+                "ilosc": 33,
+                "trafienia": 2,
+                "skutecznosc": 0.06060606060606061
+            },
+            "(0.205, 0.229]": {
+                "ilosc": 33,
+                "trafienia": 4,
+                "skutecznosc": 0.12121212121212122
+            },
+            "(0.229, 0.263]": {
+                "ilosc": 33,
+                "trafienia": 4,
+                "skutecznosc": 0.12121212121212122
+            },
+            "(0.263, 0.293]": {
+                "ilosc": 33,
+                "trafienia": 5,
+                "skutecznosc": 0.15151515151515152
+            },
+            "(0.293, 0.334]": {
+                "ilosc": 33,
+                "trafienia": 6,
+                "skutecznosc": 0.18181818181818182
+            },
+            "(0.334, 0.42]": {
+                "ilosc": 33,
+                "trafienia": 8,
+                "skutecznosc": 0.24242424242424243
+            },
+            "(0.42, 0.628]": {
+                "ilosc": 33,
+                "trafienia": 3,
+                "skutecznosc": 0.09090909090909091
+            },
+            "(0.628, 0.999]": {
+                "ilosc": 34,
+                "trafienia": 4,
+                "skutecznosc": 0.11764705882352941
+            }
+        }
+    },
+    "3": {
+        "wynik": "2:1",
+        "progi_pewnosci": {
+            "(0.11699999999999999, 0.14]": {
+                "ilosc": 48,
+                "trafienia": 6,
+                "skutecznosc": 0.125
+            },
+            "(0.14, 0.148]": {
+                "ilosc": 48,
+                "trafienia": 6,
+                "skutecznosc": 0.125
+            },
+            "(0.148, 0.154]": {
+                "ilosc": 48,
+                "trafienia": 7,
+                "skutecznosc": 0.14583333333333334
+            },
+            "(0.154, 0.166]": {
+                "ilosc": 48,
+                "trafienia": 7,
+                "skutecznosc": 0.14583333333333334
+            },
+            "(0.166, 0.178]": {
+                "ilosc": 48,
+                "trafienia": 6,
+                "skutecznosc": 0.125
+            },
+            "(0.178, 0.19]": {
+                "ilosc": 48,
+                "trafienia": 8,
+                "skutecznosc": 0.16666666666666666
+            },
+            "(0.19, 0.212]": {
+                "ilosc": 48,
+                "trafienia": 5,
+                "skutecznosc": 0.10416666666666667
+            },
+            "(0.212, 0.243]": {
+                "ilosc": 48,
+                "trafienia": 7,
+                "skutecznosc": 0.14583333333333334
+            },
+            "(0.243, 0.325]": {
+                "ilosc": 48,
+                "trafienia": 4,
+                "skutecznosc": 0.08333333333333333
+            },
+            "(0.325, 0.948]": {
+                "ilosc": 48,
+                "trafienia": 6,
+                "skutecznosc": 0.125
+            }
+        }
+    },
+    "4": {
+        "wynik": "3:1",
+        "progi_pewnosci": {
+            "(0.188, 0.194]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.194, 0.199]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.282, 0.365]": {
+                "ilosc": 1,
+                "trafienia": 1,
+                "skutecznosc": 1.0
+            },
+            "(0.368, 0.37]": {
+                "ilosc": 1,
+                "trafienia": 1,
+                "skutecznosc": 1.0
+            },
+            "(0.382, 0.393]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.455, 0.517]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            }
+        }
+    },
+    "6": {
+        "wynik": "0:1",
+        "progi_pewnosci": {
+            "(0.0933, 0.0946]": {
+                "ilosc": 2,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.0946, 0.0976]": {
+                "ilosc": 1,
+                "trafienia": 1,
+                "skutecznosc": 1.0
+            },
+            "(0.0976, 0.101]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.101, 0.102]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.102, 0.103]": {
+                "ilosc": 2,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.103, 0.106]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.106, 0.111]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.111, 0.118]": {
+                "ilosc": 1,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.118, 0.124]": {
+                "ilosc": 1,
+                "trafienia": 1,
+                "skutecznosc": 1.0
+            },
+            "(0.124, 0.132]": {
+                "ilosc": 2,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            }
+        }
+    },
+    "9": {
+        "wynik": "1:2",
+        "progi_pewnosci": {
+            "(0.104, 0.119]": {
+                "ilosc": 141,
+                "trafienia": 13,
+                "skutecznosc": 0.09219858156028368
+            },
+            "(0.119, 0.124]": {
+                "ilosc": 141,
+                "trafienia": 16,
+                "skutecznosc": 0.11347517730496454
+            },
+            "(0.124, 0.13]": {
+                "ilosc": 140,
+                "trafienia": 11,
+                "skutecznosc": 0.07857142857142857
+            },
+            "(0.13, 0.137]": {
+                "ilosc": 142,
+                "trafienia": 15,
+                "skutecznosc": 0.1056338028169014
+            },
+            "(0.137, 0.146]": {
+                "ilosc": 139,
+                "trafienia": 15,
+                "skutecznosc": 0.1079136690647482
+            },
+            "(0.146, 0.16]": {
+                "ilosc": 141,
+                "trafienia": 9,
+                "skutecznosc": 0.06382978723404255
+            },
+            "(0.16, 0.178]": {
+                "ilosc": 140,
+                "trafienia": 19,
+                "skutecznosc": 0.1357142857142857
+            },
+            "(0.178, 0.212]": {
+                "ilosc": 141,
+                "trafienia": 17,
+                "skutecznosc": 0.12056737588652482
+            },
+            "(0.212, 0.313]": {
+                "ilosc": 140,
+                "trafienia": 11,
+                "skutecznosc": 0.07857142857142857
+            },
+            "(0.313, 0.97]": {
+                "ilosc": 141,
+                "trafienia": 10,
+                "skutecznosc": 0.07092198581560284
+            }
+        }
+    },
+    "12": {
+        "wynik": "0:0",
+        "progi_pewnosci": {
+            "(0.116, 0.147]": {
+                "ilosc": 36,
+                "trafienia": 1,
+                "skutecznosc": 0.027777777777777776
+            },
+            "(0.147, 0.155]": {
+                "ilosc": 35,
+                "trafienia": 1,
+                "skutecznosc": 0.02857142857142857
+            },
+            "(0.155, 0.165]": {
+                "ilosc": 37,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.165, 0.176]": {
+                "ilosc": 34,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.176, 0.201]": {
+                "ilosc": 36,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.201, 0.231]": {
+                "ilosc": 35,
+                "trafienia": 1,
+                "skutecznosc": 0.02857142857142857
+            },
+            "(0.231, 0.296]": {
+                "ilosc": 35,
+                "trafienia": 4,
+                "skutecznosc": 0.11428571428571428
+            },
+            "(0.296, 0.43]": {
+                "ilosc": 36,
+                "trafienia": 1,
+                "skutecznosc": 0.027777777777777776
+            },
+            "(0.43, 0.697]": {
+                "ilosc": 35,
+                "trafienia": 0,
+                "skutecznosc": 0.0
+            },
+            "(0.697, 1.0]": {
+                "ilosc": 36,
+                "trafienia": 2,
+                "skutecznosc": 0.05555555555555555
+            }
+        }
+    },
+    "13": {
+        "wynik": "1:1",
+        "progi_pewnosci": {
+            "(0.0902, 0.122]": {
+                "ilosc": 1900,
+                "trafienia": 217,
+                "skutecznosc": 0.11421052631578947
+            },
+            "(0.122, 0.128]": {
+                "ilosc": 1892,
+                "trafienia": 239,
+                "skutecznosc": 0.1263213530655391
+            },
+            "(0.128, 0.134]": {
+                "ilosc": 1908,
+                "trafienia": 234,
+                "skutecznosc": 0.12264150943396226
+            },
+            "(0.134, 0.136]": {
+                "ilosc": 1883,
+                "trafienia": 202,
+                "skutecznosc": 0.10727562400424855
+            },
+            "(0.136, 0.137]": {
+                "ilosc": 1896,
+                "trafienia": 242,
+                "skutecznosc": 0.12763713080168776
+            },
+            "(0.137, 0.138]": {
+                "ilosc": 1895,
+                "trafienia": 227,
+                "skutecznosc": 0.11978891820580474
+            },
+            "(0.138, 0.139]": {
+                "ilosc": 4607,
+                "trafienia": 510,
+                "skutecznosc": 0.11070110701107011
+            },
+            "(0.139, 0.14]": {
+                "ilosc": 1080,
+                "trafienia": 131,
+                "skutecznosc": 0.12129629629629629
+            },
+            "(0.14, 0.149]": {
+                "ilosc": 1895,
+                "trafienia": 226,
+                "skutecznosc": 0.11926121372031662
+            }
+        }
+    }
+}

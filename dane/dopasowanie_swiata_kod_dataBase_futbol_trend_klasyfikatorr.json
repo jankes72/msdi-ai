@@ -1,0 +1,1986 @@
+{
+    "plik_zrodlo": "dopasowanie_swiata_kod_dataBase_futbol_trend_klasyfikatorr.csv",
+    "liczba_rekordow": 9259,
+    "swiaty": {
+        "AGMK - Mash'al": {
+            "ilosc_dopasowan": 211,
+            "liczba_historycznych_meczow": 211,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 1.0
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.4280427599937713,
+                    "RF": 0.7556455496251152,
+                    "DC": 0.7331111615422617,
+                    "sila": 0.6178441173477216
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.5585872845627169,
+                    "RF": 0.8269546594598752,
+                    "DC": 0.4803565243535583,
+                    "sila": 0.6156282689691168
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.20258084754579442,
+                    "RF": 0.7852347866066138,
+                    "DC": 0.8083468616898376,
+                    "sila": 0.5591068335072531
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.9698881237836833,
+                    "RF": 0.33871834782446225,
+                    "DC": 0.14440811128401077,
+                    "sila": 0.5328931872460152
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.2051647896307257,
+                    "RF": 0.6868942726830681,
+                    "DC": 0.21952847349328725,
+                    "sila": 0.3539927397051969
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Andijon - Buxoro": {
+            "ilosc_dopasowan": 106,
+            "liczba_historycznych_meczow": 106,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.9083747809982831,
+                    "DC": 0.1879042369694405,
+                    "sila": 0.7288837053903171
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5031908806525756,
+                    "RF": 1.0,
+                    "DC": 0.6825292907905542,
+                    "sila": 0.7060351394981964
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.2889939318576555,
+                    "RF": 0.8732226239314359,
+                    "DC": 1.0,
+                    "sila": 0.677564359922493
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.24896088286598758,
+                    "RF": 0.8118949810659387,
+                    "DC": 0.4526426052382787,
+                    "sila": 0.47894562903766025
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.7490327933292558,
+                    "RF": 0.2835530599469032,
+                    "DC": 0.2311581819734326,
+                    "sila": 0.4540264899078031
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.43373344433080796,
+                    "RF": 0.37370493427027274,
+                    "DC": 0.0,
+                    "sila": 0.285604858013405
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Botosani - Rapid Bucuresti": {
+            "ilosc_dopasowan": 293,
+            "liczba_historycznych_meczow": 293,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 1.0
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.9637224489670516,
+                    "RF": 0.9275662180764667,
+                    "DC": 0.7493491023420523,
+                    "sila": 0.8885635757123764
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.11442185119771787,
+                    "RF": 0.9396110106311168,
+                    "DC": 0.6375002306152862,
+                    "sila": 0.518902112853008
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.5381199936128488,
+                    "RF": 0.6620358043191126,
+                    "DC": 0.26049546317168804,
+                    "sila": 0.49200737769237973
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.42364034683611246,
+                    "RF": 0.6053051238463301,
+                    "DC": 0.027839373008330122,
+                    "sila": 0.359399487790843
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.21375188537170547,
+                    "RF": 0.42009330568409103,
+                    "DC": 0.12813255288338143,
+                    "sila": 0.24996851171892392
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Breidablik - IBV Vestmannaeyjar": {
+            "ilosc_dopasowan": 63,
+            "liczba_historycznych_meczow": 63,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5134073423202619,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.8053629369281048
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.8561918004428214,
+                    "DC": 0.2827852428391899,
+                    "sila": 0.7416931129846034
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.36752187260428215,
+                    "RF": 0.9967323518720371,
+                    "DC": 0.5956757917654898,
+                    "sila": 0.6247311921329709
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.45350518316517335,
+                    "RF": 0.9777929816012931,
+                    "DC": 0.4723614028072189,
+                    "sila": 0.6164483885886229
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.6689931524767709,
+                    "RF": 0.47513246692537037,
+                    "DC": 0.0,
+                    "sila": 0.4101370010683195
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.012757693345844937,
+                    "RF": 0.6372551067043823,
+                    "DC": 0.0,
+                    "sila": 0.1962796093496527
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.15024542170266325,
+                    "sila": 0.04507362651079897
+                }
+            ]
+        },
+        "CA Fenix - Yupanqui": {
+            "ilosc_dopasowan": 83,
+            "liczba_historycznych_meczow": 83,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.6375191133160482,
+                    "RF": 0.904654423692479,
+                    "DC": 1.0,
+                    "sila": 0.826403972434163
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 1.0,
+                    "RF": 0.8942156519262322,
+                    "DC": 0.37194418112212135,
+                    "sila": 0.7798479499145061
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.7526948661215063,
+                    "RF": 0.9745536679381017,
+                    "DC": 0.2828786014794526,
+                    "sila": 0.6783076272738688
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.3149398645651303,
+                    "RF": 1.0,
+                    "DC": 0.6085489307134967,
+                    "sila": 0.6085406250401011
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.6022711907007422,
+                    "RF": 0.8901741231476453,
+                    "DC": 0.136133552186459,
+                    "sila": 0.5488007788805281
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.49601153306872686,
+                    "RF": 0.6471185087113804,
+                    "DC": 0.2441818817790603,
+                    "sila": 0.465794730374623
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "CFR Cluj - FC Voluntari": {
+            "ilosc_dopasowan": 53,
+            "liczba_historycznych_meczow": 53,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 0.8146536527053574,
+                    "DC": 1.0,
+                    "sila": 0.9443960958116073
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.7540739513111436,
+                    "RF": 0.8118783537540747,
+                    "DC": 0.6936097083901823,
+                    "sila": 0.7532759991677346
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.33273985378059523,
+                    "RF": 1.0,
+                    "DC": 0.8012871020255947,
+                    "sila": 0.6734820721199165
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.34700049638154085,
+                    "RF": 0.5078643372553813,
+                    "DC": 0.5910244299394567,
+                    "sila": 0.4684668287110677
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.6488176244717903,
+                    "RF": 0.3361883981207619,
+                    "DC": 0.13214163368563447,
+                    "sila": 0.400026059330635
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.054248645383811085,
+                    "RF": 0.6173591827124735,
+                    "DC": 0.3957812225881941,
+                    "sila": 0.3256415797437247
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Dunav Ruse - Ludogorets Razgrad": {
+            "ilosc_dopasowan": 152,
+            "liczba_historycznych_meczow": 152,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.8618655077361446,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.9447462030944578
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.8159603632049218,
+                    "RF": 0.8048233636934901,
+                    "DC": 0.8246190813953591,
+                    "sila": 0.8152168788086235
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.7633322123607421,
+                    "RF": 0.9955457915471344,
+                    "DC": 0.5372310044332009,
+                    "sila": 0.7651659237383974
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.5854493190027146,
+                    "RF": 0.841539373331567,
+                    "DC": 0.8924293764535716,
+                    "sila": 0.7543703525366274
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.6313670666334562,
+                    "RF": 0.5692727487518198,
+                    "DC": 0.9953744543442381,
+                    "sila": 0.7219409875821998
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 1.0,
+                    "RF": 0.9219187270744457,
+                    "DC": 0.0,
+                    "sila": 0.6765756181223337
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Envigado - Real Soacha": {
+            "ilosc_dopasowan": 54,
+            "liczba_historycznych_meczow": 54,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 1.0,
+                    "RF": 0.08405796717573671,
+                    "DC": 1.0,
+                    "sila": 0.725217390152721
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.8322290163755957,
+                    "RF": 1.0,
+                    "DC": 0.19577015102972672,
+                    "sila": 0.6916226518591564
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.4485320961703004,
+                    "RF": 0.690411980725143,
+                    "DC": 0.5573801413382308,
+                    "sila": 0.5537504750871323
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.2077866933880831,
+                    "RF": 0.7963658220927111,
+                    "DC": 0.5919589792523308,
+                    "sila": 0.4996121177587458
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.12164726807113768,
+                    "RF": 0.6571632172541307,
+                    "DC": 0.3236710137765332,
+                    "sila": 0.3429091765376543
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.48968054365681335,
+                    "RF": 0.2933424417485569,
+                    "DC": 0.1282898386880703,
+                    "sila": 0.3223619015937135
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "FC STK 1914 Samorin - OFK Malzenice": {
+            "ilosc_dopasowan": 447,
+            "liczba_historycznych_meczow": 447,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.7469647749676056,
+                    "RF": 0.9735269671903786,
+                    "DC": 1.0,
+                    "sila": 0.8908440001441558
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.8334675635501148,
+                    "RF": 1.0,
+                    "DC": 0.82994972944947,
+                    "sila": 0.882371944254887
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 1.0,
+                    "RF": 0.599848907164402,
+                    "DC": 0.5905116666682997,
+                    "sila": 0.7571081721498105
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.7066552293720016,
+                    "RF": 0.829766544785902,
+                    "DC": 0.6192230832388248,
+                    "sila": 0.7173589801562186
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.30528088245457413,
+                    "RF": 0.6925543331064454,
+                    "DC": 0.44538514384335043,
+                    "sila": 0.4634941960667684
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.3389767049281053,
+                    "RF": 0.4355419869303314,
+                    "DC": 0.44176461347720786,
+                    "sila": 0.3987826620935039
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "FS Metta/LU - Tukums II": {
+            "ilosc_dopasowan": 1370,
+            "liczba_historycznych_meczow": 1370,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.49693167595574017,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.798772670382296
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.6641688861613209,
+                    "DC": 0.598983623171006,
+                    "sila": 0.778945752799698
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5308055786605359,
+                    "RF": 0.7521998483715994,
+                    "DC": 0.7261043206963955,
+                    "sila": 0.6558134821846128
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.5103071312870775,
+                    "RF": 0.5630707962896495,
+                    "DC": 0.42616314344146217,
+                    "sila": 0.5008930344341644
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.583658966522024,
+                    "RF": 0.1673830495498778,
+                    "DC": 0.40806156344865024,
+                    "sila": 0.406096970508368
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.12598910610323474,
+                    "RF": 0.040083803546011175,
+                    "DC": 0.08412708337106495,
+                    "sila": 0.08765890851641674
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Gualberto Villarroel SJ - Universitario de Vinto": {
+            "ilosc_dopasowan": 217,
+            "liczba_historycznych_meczow": 217,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.7475741176662474,
+                    "DC": 0.38398899874346404,
+                    "sila": 0.7394689349229134
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.27547575421152914,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.7101903016846116
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.6104699293244192,
+                    "RF": 0.804788421486444,
+                    "DC": 0.5075746604464115,
+                    "sila": 0.6378968963096243
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.25921546631159104,
+                    "RF": 0.8823338193265852,
+                    "DC": 0.5221081163266102,
+                    "sila": 0.525018767220595
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.6390792021276669,
+                    "RF": 0.515222150795768,
+                    "DC": 0.21721775040966484,
+                    "sila": 0.4753636512126966
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.47200363417496305,
+                    "RF": 0.3961398455318692,
+                    "DC": 0.0,
+                    "sila": 0.307643407329546
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Guayaquil City - Universidad Catolica": {
+            "ilosc_dopasowan": 168,
+            "liczba_historycznych_meczow": 168,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.7789189124280482,
+                    "RF": 0.9506533230459635,
+                    "DC": 1.0,
+                    "sila": 0.8967635618850083
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 0.5688432627841755,
+                    "sila": 0.8706529788352526
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.8303859889809859,
+                    "RF": 0.5642186933749618,
+                    "DC": 0.8957637047309627,
+                    "sila": 0.7701491150241717
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.2853113415743932,
+                    "RF": 0.9406781195235872,
+                    "DC": 0.7955238265732777,
+                    "sila": 0.6349851204588167
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.3823664560121288,
+                    "RF": 0.8306429416747568,
+                    "DC": 0.6611901137097478,
+                    "sila": 0.6004964990202029
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.1345625948554006,
+                    "RF": 0.8708954053321103,
+                    "DC": 0.9402321132500967,
+                    "sila": 0.5971632935168223
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Hegelmann - Zalgiris Vilnius": {
+            "ilosc_dopasowan": 64,
+            "liczba_historycznych_meczow": 64,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 1.0,
+                    "RF": 0.8805482549225101,
+                    "DC": 1.0,
+                    "sila": 0.964164476476753
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.8884452335445595,
+                    "RF": 0.963689200398227,
+                    "DC": 0.5360803446448926,
+                    "sila": 0.8053089569307598
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.9465972208458194,
+                    "RF": 0.7830086509099513,
+                    "DC": 0.5244551383446981,
+                    "sila": 0.7708780251147227
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.7113431700978972,
+                    "RF": 1.0,
+                    "DC": 0.3544308260927642,
+                    "sila": 0.6908665158669881
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.2943132372447464,
+                    "RF": 0.9038294265540043,
+                    "DC": 0.3497626141716919,
+                    "sila": 0.4938029071156074
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.20351658700075195,
+                    "RF": 0.4849872475243708,
+                    "DC": 0.005746886631838551,
+                    "sila": 0.22862687504716359
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Indonezja - Kambodża": {
+            "ilosc_dopasowan": 1370,
+            "liczba_historycznych_meczow": 1370,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.49693167595574017,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.798772670382296
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.6641688861613209,
+                    "DC": 0.598983623171006,
+                    "sila": 0.778945752799698
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5308055786605359,
+                    "RF": 0.7521998483715994,
+                    "DC": 0.7261043206963955,
+                    "sila": 0.6558134821846128
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.5103071312870775,
+                    "RF": 0.5630707962896495,
+                    "DC": 0.42616314344146217,
+                    "sila": 0.5008930344341644
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.583658966522024,
+                    "RF": 0.1673830495498778,
+                    "DC": 0.40806156344865024,
+                    "sila": 0.406096970508368
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.12598910610323474,
+                    "RF": 0.040083803546011175,
+                    "DC": 0.08412708337106495,
+                    "sila": 0.08765890851641674
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "KA Akureyri - Thor Akureyri": {
+            "ilosc_dopasowan": 63,
+            "liczba_historycznych_meczow": 63,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5134073423202619,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.8053629369281048
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.8561918004428214,
+                    "DC": 0.2827852428391899,
+                    "sila": 0.7416931129846034
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.36752187260428215,
+                    "RF": 0.9967323518720371,
+                    "DC": 0.5956757917654898,
+                    "sila": 0.6247311921329709
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.45350518316517335,
+                    "RF": 0.9777929816012931,
+                    "DC": 0.4723614028072189,
+                    "sila": 0.6164483885886229
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.6689931524767709,
+                    "RF": 0.47513246692537037,
+                    "DC": 0.0,
+                    "sila": 0.4101370010683195
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.012757693345844937,
+                    "RF": 0.6372551067043823,
+                    "DC": 0.0,
+                    "sila": 0.1962796093496527
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.15024542170266325,
+                    "sila": 0.04507362651079897
+                }
+            ]
+        },
+        "Lokomotiv Tashkent - Sogdiana": {
+            "ilosc_dopasowan": 65,
+            "liczba_historycznych_meczow": 65,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.6833425760420221,
+                    "RF": 0.9383558304396499,
+                    "DC": 0.8468198958797591,
+                    "sila": 0.8088897483126315
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.7329146273774761,
+                    "RF": 0.7167444046625273,
+                    "DC": 0.9121630612288465,
+                    "sila": 0.7818380907184026
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.4444624644845214,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.7777849857938086
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 1.0,
+                    "RF": 0.6535938409868246,
+                    "DC": 0.3668517148131398,
+                    "sila": 0.7061336667399893
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.7299564465075511,
+                    "RF": 0.28433677920035805,
+                    "DC": 0.7068900725115658,
+                    "sila": 0.5893506341165976
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.7050066696172254,
+                    "RF": 0.4128875777631333,
+                    "DC": 0.22217421505999563,
+                    "sila": 0.4725212056938288
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Lyn II - Oppsal": {
+            "ilosc_dopasowan": 52,
+            "liczba_historycznych_meczow": 52,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.8096255927210046,
+                    "DC": 1.0,
+                    "sila": 0.9428876778163013
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.2423263107716114,
+                    "RF": 0.930011867366859,
+                    "DC": 0.7311475588335615,
+                    "sila": 0.5952783521687707
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.14834567682525937,
+                    "RF": 0.8864972338406581,
+                    "DC": 0.6362800923200513,
+                    "sila": 0.5161714685783166
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.13500445617091275,
+                    "RF": 1.0,
+                    "DC": 0.25504870358633175,
+                    "sila": 0.43051639354426463
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.07729309761732736,
+                    "RF": 0.541524167159269,
+                    "DC": 0.35161011294952293,
+                    "sila": 0.29885752307956853
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.3967852895412991,
+                    "RF": 0.43795274731014405,
+                    "DC": 0.0,
+                    "sila": 0.29009994000956285
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "MTK Budapest - Zalaegerszeg": {
+            "ilosc_dopasowan": 477,
+            "liczba_historycznych_meczow": 477,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.31919896335487297,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.7276795853419491
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.7237630150264849,
+                    "DC": 0.3079872295510772,
+                    "sila": 0.7095250733732686
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.9026070383936549,
+                    "RF": 0.41336680871330467,
+                    "DC": 0.1837065273554476,
+                    "sila": 0.5401648161780876
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.01800492213231689,
+                    "RF": 0.9784023115564314,
+                    "DC": 0.663550861807459,
+                    "sila": 0.4997879208620939
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.08990732212268913,
+                    "RF": 0.7939365805337846,
+                    "DC": 0.2684737085229646,
+                    "sila": 0.3546860155661004
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.23017964108987757,
+                    "RF": 0.5896529566140658,
+                    "DC": 0.23864152753691756,
+                    "sila": 0.340560201681246
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Miedź Legnica - Podbeskidzie": {
+            "ilosc_dopasowan": 117,
+            "liczba_historycznych_meczow": 117,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 1.0
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5148992543082616,
+                    "RF": 0.7722627173103687,
+                    "DC": 0.6063938396410907,
+                    "sila": 0.6195566688087424
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.5078737177511828,
+                    "RF": 0.5933242162116803,
+                    "DC": 0.48798871622729595,
+                    "sila": 0.5275433668321661
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.25883837005801974,
+                    "RF": 0.7580931849154103,
+                    "DC": 0.4231762634916174,
+                    "sila": 0.4579161825453162
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.49529486888019514,
+                    "RF": 0.5192503696717412,
+                    "DC": 0.0,
+                    "sila": 0.3538930584536004
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.35350694739545424,
+                    "RF": 0.3689608382416011,
+                    "DC": 0.19769198541755398,
+                    "sila": 0.3113986260559283
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.013698536618720659,
+                    "sila": 0.004109560985616197
+                }
+            ]
+        },
+        "Mohammedan SC - Baghpat FC": {
+            "ilosc_dopasowan": 56,
+            "liczba_historycznych_meczow": 56,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 0.9937385299417645,
+                    "sila": 0.9981215589825293
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.9449984447595788,
+                    "RF": 0.8033504758462837,
+                    "DC": 0.8660485668438285,
+                    "sila": 0.8788190907108651
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.8959006216836868,
+                    "RF": 0.8251517771552563,
+                    "DC": 0.8613944649134899,
+                    "sila": 0.8643241212940986
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.11608434150569667,
+                    "RF": 0.8131316321306432,
+                    "DC": 1.0,
+                    "sila": 0.5903732262414716
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.800295850992237,
+                    "RF": 0.3578529569820055,
+                    "DC": 0.29533294509366737,
+                    "sila": 0.5160741110195967
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.7160262174892036,
+                    "RF": 0.3875662750637205,
+                    "DC": 0.2718573504597915,
+                    "sila": 0.48423757465273504
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Mushuc Runa - Libertad": {
+            "ilosc_dopasowan": 106,
+            "liczba_historycznych_meczow": 106,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.6784172971484167,
+                    "RF": 0.7428376485472745,
+                    "DC": 0.9441208085126687,
+                    "sila": 0.7774544559773496
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.3934346641369409,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.7573738656547764
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.6451461944742295,
+                    "RF": 0.9518339783659138,
+                    "DC": 0.5021632146902937,
+                    "sila": 0.694257635706554
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.44920789725031757,
+                    "DC": 0.11433091030799947,
+                    "sila": 0.5690616422674952
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.3768958173748508,
+                    "RF": 0.8973468272325048,
+                    "DC": 0.28878381179315427,
+                    "sila": 0.506597518657638
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.3835592830594702,
+                    "RF": 0.435218352175889,
+                    "DC": 0.27860040165628197,
+                    "sila": 0.3675693393734394
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Nõmme United II - Viimsi JK": {
+            "ilosc_dopasowan": 36,
+            "liczba_historycznych_meczow": 36,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 0.7135362824997711,
+                    "sila": 0.9140608847499313
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.8205048287837927,
+                    "RF": 0.9199020638582642,
+                    "DC": 0.9524738259898484,
+                    "sila": 0.8899146984679509
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.8518396844875777,
+                    "RF": 0.6915740780385772,
+                    "DC": 1.0,
+                    "sila": 0.8482080972066042
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.6380328792910082,
+                    "RF": 0.5414387005993567,
+                    "DC": 0.07821057545522582,
+                    "sila": 0.441107934532778
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.48924977209260473,
+                    "RF": 0.4272133684905001,
+                    "DC": 0.11929898243577544,
+                    "sila": 0.3596536141149246
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.6703612149375039,
+                    "RF": 0.15035051491932044,
+                    "DC": 0.0,
+                    "sila": 0.31324964045079773
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.17252247297361553,
+                    "sila": 0.05175674189208466
+                }
+            ]
+        },
+        "Oerebro - IK Oddevold": {
+            "ilosc_dopasowan": 208,
+            "liczba_historycznych_meczow": 208,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.22441228398892796,
+                    "RF": 0.9255362495608919,
+                    "DC": 1.0,
+                    "sila": 0.6674257884638388
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.4019317584172398,
+                    "RF": 1.0,
+                    "DC": 0.6165320662489198,
+                    "sila": 0.6457323232415718
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5002278776061924,
+                    "RF": 0.9437784210211951,
+                    "DC": 0.5091237769416818,
+                    "sila": 0.63596181043134
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.5509514824702613,
+                    "DC": 0.080191851323165,
+                    "sila": 0.589343000138028
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.5512046878523352,
+                    "RF": 0.7990662329273521,
+                    "DC": 0.272719117561901,
+                    "sila": 0.54201748028771
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.22774907749456122,
+                    "RF": 0.8820067535517654,
+                    "DC": 0.34786440495311866,
+                    "sila": 0.4600609785492897
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Oesters IF - Varbergs BoIS FC": {
+            "ilosc_dopasowan": 267,
+            "liczba_historycznych_meczow": 267,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.7576235645801656,
+                    "RF": 0.9193884443994426,
+                    "DC": 0.9325043868731115,
+                    "sila": 0.8586172752138324
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.5275764077098507,
+                    "RF": 0.8534588152407253,
+                    "DC": 0.6559802740218351,
+                    "sila": 0.6638622898627085
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.6885882296881918,
+                    "RF": 0.7684284392432357,
+                    "DC": 0.4657325617904648,
+                    "sila": 0.6456835921853868
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.07121612089808138,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.6284864483592325
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.7277338911029472,
+                    "RF": 0.7457942069531159,
+                    "DC": 0.37041394232258334,
+                    "sila": 0.6259560012238887
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.44457315920280954,
+                    "DC": 0.2062135073751706,
+                    "sila": 0.595235999973394
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Opava - Karvina": {
+            "ilosc_dopasowan": 696,
+            "liczba_historycznych_meczow": 696,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.8801236580255933,
+                    "RF": 1.0,
+                    "DC": 0.5123434260876515,
+                    "sila": 0.8057524910365328
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 0.9200118883618955,
+                    "DC": 0.38248491339728186,
+                    "sila": 0.7907490405277532
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.0058697090494826635,
+                    "RF": 0.9996673623177753,
+                    "DC": 1.0,
+                    "sila": 0.6022480923151257
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.5966538485767949,
+                    "RF": 0.7648017347887779,
+                    "DC": 0.17870030870368112,
+                    "sila": 0.5217121524784556
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.19661738429938752,
+                    "RF": 0.6629416371707992,
+                    "DC": 0.4887869895913098,
+                    "sila": 0.4241655417483877
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.005885996037559083,
+                    "RF": 0.5117226223022121,
+                    "DC": 0.3436706319995078,
+                    "sila": 0.2589723747055396
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "PFC CSKA-Sofia - Botev Plovdiv": {
+            "ilosc_dopasowan": 106,
+            "liczba_historycznych_meczow": 106,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.6784172971484167,
+                    "RF": 0.7428376485472745,
+                    "DC": 0.9441208085126687,
+                    "sila": 0.7774544559773496
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.3934346641369409,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.7573738656547764
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.6451461944742295,
+                    "RF": 0.9518339783659138,
+                    "DC": 0.5021632146902937,
+                    "sila": 0.694257635706554
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.44920789725031757,
+                    "DC": 0.11433091030799947,
+                    "sila": 0.5690616422674952
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.3768958173748508,
+                    "RF": 0.8973468272325048,
+                    "DC": 0.28878381179315427,
+                    "sila": 0.506597518657638
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.3835592830594702,
+                    "RF": 0.435218352175889,
+                    "DC": 0.27860040165628197,
+                    "sila": 0.3675693393734394
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Randers FC - Silkeborg": {
+            "ilosc_dopasowan": 292,
+            "liczba_historycznych_meczow": 292,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 0.4874510356904319,
+                    "sila": 0.8462353107071295
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.9478370716537042,
+                    "RF": 0.7713741344356387,
+                    "DC": 0.0,
+                    "sila": 0.6105470689921734
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.06837214889203866,
+                    "RF": 0.9133392553626564,
+                    "DC": 1.0,
+                    "sila": 0.6013506361656124
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.7555757669923427,
+                    "RF": 0.7551570373058798,
+                    "DC": 0.23463303376171718,
+                    "sila": 0.5991673281172162
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.09160158917019622,
+                    "RF": 0.4678579756725034,
+                    "DC": 0.3957310162983392,
+                    "sila": 0.29571733325933125
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.22954145768193673,
+                    "RF": 0.4933549808171159,
+                    "DC": 0.09264327181331951,
+                    "sila": 0.2676160588619053
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Rosenborg - Fredrikstad": {
+            "ilosc_dopasowan": 217,
+            "liczba_historycznych_meczow": 217,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.9439170036184913,
+                    "RF": 0.9167366013259475,
+                    "DC": 1.0,
+                    "sila": 0.9525877818451807
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.5862399526566773,
+                    "RF": 1.0,
+                    "DC": 0.8507660491905795,
+                    "sila": 0.7897257958198447
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 1.0,
+                    "RF": 0.8174335989837167,
+                    "DC": 0.4580181538462787,
+                    "sila": 0.7826355258489986
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.3064658700145537,
+                    "RF": 0.8176680543300509,
+                    "DC": 0.5165728030740216,
+                    "sila": 0.5228586052270432
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.4914569740749212,
+                    "RF": 0.5348757490131536,
+                    "DC": 0.29629823301723285,
+                    "sila": 0.4459349842390844
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.11743169713832004,
+                    "RF": 0.5077564312887484,
+                    "DC": 0.3709048841860291,
+                    "sila": 0.31057107349776125
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "SK Lisen - Mlada Boleslav": {
+            "ilosc_dopasowan": 183,
+            "liczba_historycznych_meczow": 183,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 0.947723063821641,
+                    "sila": 0.9843169191464922
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.7791651947930861,
+                    "RF": 0.9456497557124751,
+                    "DC": 0.9704435707160467,
+                    "sila": 0.886494075845791
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.8551822707069573,
+                    "RF": 0.9211240133189604,
+                    "DC": 0.4650832547761244,
+                    "sila": 0.7579350887113084
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.7837039978781215,
+                    "RF": 0.9278265468610586,
+                    "DC": 0.5037442827040769,
+                    "sila": 0.7429528480207893
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.01284056663177397,
+                    "RF": 0.955724058116641,
+                    "DC": 1.0,
+                    "sila": 0.5918534440877019
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.41661404108669453,
+                    "RF": 0.548343645462919,
+                    "DC": 0.0014017380710147863,
+                    "sila": 0.33156923149485795
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Sacachispas FC - Leandro N. Alem": {
+            "ilosc_dopasowan": 26,
+            "liczba_historycznych_meczow": 26,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.8827881271900181,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.9531152508760072
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.6278487684659381,
+                    "DC": 0.8169595031457552,
+                    "sila": 0.833442481483508
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.8467744341898372,
+                    "RF": 0.7760158568888369,
+                    "DC": 0.687096010915993,
+                    "sila": 0.7776433340173838
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.4883238140954016,
+                    "RF": 0.8941468145869879,
+                    "DC": 0.530234049413329,
+                    "sila": 0.6226437848382557
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.3562668020697023,
+                    "RF": 0.7259177728686814,
+                    "DC": 0.6630155864587681,
+                    "sila": 0.5591867286261157
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.26518401414837645,
+                    "RF": 0.5152293414893951,
+                    "DC": 0.17596900782155525,
+                    "sila": 0.31343311045263567
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Sarpsborg 08 2 - Oern-Horten": {
+            "ilosc_dopasowan": 10,
+            "liczba_historycznych_meczow": 10,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.5495421535718058,
+                    "DC": 1.0,
+                    "sila": 0.8648626460715418
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.8812597595218925,
+                    "RF": 1.0,
+                    "DC": 0.3354324432044642,
+                    "sila": 0.7531336367700963
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.40353334285356074,
+                    "RF": 0.8908554042400326,
+                    "DC": 0.026106018333997963,
+                    "sila": 0.4365017639136335
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.4047439281476583,
+                    "RF": 0.7660739128728152,
+                    "DC": 0.0,
+                    "sila": 0.3917197451209079
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.1692622127538193,
+                    "RF": 0.8715895784834958,
+                    "DC": 0.00039856516540498824,
+                    "sila": 0.32930132819619795
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.3126996278211771,
+                    "RF": 0.41797795816164673,
+                    "DC": 0.0,
+                    "sila": 0.25047323857696485
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Singapur - Timor Wschodni": {
+            "ilosc_dopasowan": 1370,
+            "liczba_historycznych_meczow": 1370,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.49693167595574017,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.798772670382296
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 1.0,
+                    "RF": 0.6641688861613209,
+                    "DC": 0.598983623171006,
+                    "sila": 0.778945752799698
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5308055786605359,
+                    "RF": 0.7521998483715994,
+                    "DC": 0.7261043206963955,
+                    "sila": 0.6558134821846128
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.5103071312870775,
+                    "RF": 0.5630707962896495,
+                    "DC": 0.42616314344146217,
+                    "sila": 0.5008930344341644
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.583658966522024,
+                    "RF": 0.1673830495498778,
+                    "DC": 0.40806156344865024,
+                    "sila": 0.406096970508368
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.12598910610323474,
+                    "RF": 0.040083803546011175,
+                    "DC": 0.08412708337106495,
+                    "sila": 0.08765890851641674
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Stabaek - Hoedd": {
+            "ilosc_dopasowan": 11,
+            "liczba_historycznych_meczow": 11,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.9919708697410269,
+                    "RF": 1.0,
+                    "DC": 0.8198681177290514,
+                    "sila": 0.9427487832151262
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.9438821577083054,
+                    "RF": 0.8574332710097536,
+                    "DC": 1.0,
+                    "sila": 0.9347828443862483
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 1.0,
+                    "RF": 0.7616328988070962,
+                    "DC": 0.6532461266284247,
+                    "sila": 0.8244637076306562
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.16964897817381286,
+                    "RF": 0.36017825067140874,
+                    "DC": 0.614968101645848,
+                    "sila": 0.3604034969647022
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.5216851631635253,
+                    "RF": 0.1536280003974568,
+                    "DC": 0.008631319358817108,
+                    "sila": 0.2573518611922923
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.1455105717742063,
+                    "RF": 0.1270230878671003,
+                    "DC": 0.0,
+                    "sila": 0.09631115506981261
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.2524526885755645,
+                    "sila": 0.07573580657266936
+                }
+            ]
+        },
+        "Valmiera FC - Riga FC II": {
+            "ilosc_dopasowan": 113,
+            "liczba_historycznych_meczow": 113,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.7941466707056973,
+                    "RF": 1.0,
+                    "DC": 1.0,
+                    "sila": 0.9176586682822789
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.9431973219038366,
+                    "RF": 0.6353200015005723,
+                    "DC": 0.5699941846336601,
+                    "sila": 0.7388731846018044
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.8760408400677157,
+                    "RF": 0.6844446985028234,
+                    "DC": 0.5068018333660084,
+                    "sila": 0.7077902955877359
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 1.0,
+                    "RF": 0.17397382695105965,
+                    "DC": 0.5981865464215369,
+                    "sila": 0.631648112011779
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.5826264477144101,
+                    "RF": 0.8563832407567997,
+                    "DC": 0.09172175663252476,
+                    "sila": 0.5174820783025613
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.5919959575056337,
+                    "RF": 0.535174000559181,
+                    "DC": 0.3383271176685919,
+                    "sila": 0.4988487184705854
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.0,
+                    "sila": 0.0
+                }
+            ]
+        },
+        "Vittsjoe GIK - Malmö FF W": {
+            "ilosc_dopasowan": 15,
+            "liczba_historycznych_meczow": 15,
+            "ranking_cech": [
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 1.0,
+                    "RF": 0.5220588216619343,
+                    "DC": 1.0,
+                    "sila": 0.8566176464985804
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.5453792564207675,
+                    "RF": 1.0,
+                    "DC": 0.5217938183579439,
+                    "sila": 0.6746898480756902
+                },
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 0.22504440021185854,
+                    "RF": 0.6192727967701099,
+                    "DC": 0.0,
+                    "sila": 0.2757995991157764
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.39870253985802645,
+                    "RF": 0.25361518372696384,
+                    "DC": 0.0,
+                    "sila": 0.23556557106129974
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.2195777862192989,
+                    "RF": 0.4257638341452597,
+                    "DC": 0.0,
+                    "sila": 0.21556026473129747
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.028244732572958023,
+                    "RF": 0.5426561741888888,
+                    "DC": 0.0,
+                    "sila": 0.17409474528584984
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.14754110211251908,
+                    "sila": 0.044262330633755724
+                }
+            ]
+        },
+        "Zagłębie Lubin - Piast Gliwice": {
+            "ilosc_dopasowan": 122,
+            "liczba_historycznych_meczow": 122,
+            "ranking_cech": [
+                {
+                    "cecha": "log_start_2",
+                    "korelacja": 1.0,
+                    "RF": 1.0,
+                    "DC": 0.579945295507133,
+                    "sila": 0.8739835886521399
+                },
+                {
+                    "cecha": "log_koniec_X",
+                    "korelacja": 0.8543189841281114,
+                    "RF": 0.9734871589401513,
+                    "DC": 0.40598875332316176,
+                    "sila": 0.7555703673302384
+                },
+                {
+                    "cecha": "log_koniec_1",
+                    "korelacja": 0.7706728825047889,
+                    "RF": 0.9493172597441144,
+                    "DC": 0.25594666181036285,
+                    "sila": 0.6698483294682589
+                },
+                {
+                    "cecha": "log_start_X",
+                    "korelacja": 0.10530064222986842,
+                    "RF": 0.9179252392283783,
+                    "DC": 1.0,
+                    "sila": 0.6174978286604609
+                },
+                {
+                    "cecha": "log_koniec_2",
+                    "korelacja": 0.13256873212528245,
+                    "RF": 0.8345492472229431,
+                    "DC": 0.7271230700164828,
+                    "sila": 0.5215291880219407
+                },
+                {
+                    "cecha": "log_start_1",
+                    "korelacja": 0.8571958377948439,
+                    "RF": 0.4133957302456645,
+                    "DC": 0.0,
+                    "sila": 0.46689705419163696
+                },
+                {
+                    "cecha": "ilosc_dopsowan",
+                    "korelacja": 0.0,
+                    "RF": 0.0,
+                    "DC": 0.06711475101056509,
+                    "sila": 0.020134425303169525
+                }
+            ]
+        }
+    }
+}

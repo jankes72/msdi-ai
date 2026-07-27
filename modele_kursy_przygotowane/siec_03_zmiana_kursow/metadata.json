@@ -1,0 +1,14 @@
+{
+    "nazwa": "siec_03_zmiana_kursow",
+    "cechy": [
+        "zmiana_kurs_1",
+        "zmiana_kurs_X",
+        "zmiana_kurs_2"
+    ],
+    "dokladnosc": 0.13839930655879804,
+    "podzial": {
+        "trening": "50%",
+        "walidacja": "10%",
+        "obserwacja": "40%"
+    }
+}

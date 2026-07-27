@@ -1,0 +1,14 @@
+{
+    "nazwa": "siec_07_log_start",
+    "cechy": [
+        "log_start_1",
+        "log_start_X",
+        "log_start_2"
+    ],
+    "dokladnosc": 0.1543363812690496,
+    "podzial": {
+        "trening": "50%",
+        "walidacja": "10%",
+        "obserwacja": "40%"
+    }
+}
