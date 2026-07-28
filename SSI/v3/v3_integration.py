@@ -197,9 +197,6 @@ class V3Integration:
     - Połączenie z V4 (przez V3ToV4Bridge)
     - Zarządzanie przepływem danych między warstwami
     
-    UWAGA: WorldManager ma obecnie problemy z inicjalizacją (błędy w klasie).
-    Zalecane użycie: Podawanie WorldManager z zewnątrz.
-    
     Zgodnie z:
     - 01_SYSTEM_ARCHITECTURE.md Sekcja 3.3
     - 10_IMPLEMENTATION_MAP.md Etap 3C
@@ -308,12 +305,17 @@ class V3Integration:
                 self._component_statuses["memory_manager"] = ComponentStatus.INITIALIZED
                 self._logger.info("MemoryManager podany z zewnątrz")
             
-            # Inicjalizacja WorldManager - UWAGA: WorldManager ma problemy z inicjalizacją
-            # Tymczasowo: Wyłączona automatyczna inicjalizacja, należy podać z zewnątrz
-            if self._world_manager is None:
-                self._logger.warning("WorldManager nie został zainicjowany - podaj ręcznie")
-                self._component_statuses["world_manager"] = ComponentStatus.NOT_INITIALIZED
-            else:
+            # Inicjalizacja WorldManager
+            if self.integration_config.INIT_WORLD_MANAGER and self._world_manager is None:
+                self._logger.info("Inicjalizacja WorldManager...")
+                try:
+                    self._world_manager = tworz_world_manager(self.v3_config.world)
+                    self._component_statuses["world_manager"] = ComponentStatus.INITIALIZED
+                    self._logger.info("WorldManager zainicjowany automatycznie")
+                except Exception as e:
+                    self._logger.error(f"Błąd inicjalizacji WorldManager: {e}")
+                    self._component_statuses["world_manager"] = ComponentStatus.ERROR
+            elif self._world_manager is not None:
                 self._component_statuses["world_manager"] = ComponentStatus.INITIALIZED
                 self._logger.info("WorldManager podany z zewnątrz")
             
@@ -364,7 +366,9 @@ class V3Integration:
                 self._component_statuses["knowledge_engine"] = ComponentStatus.CONNECTED
             
             if self._knowledge_engine and self._world_manager:
-                self._knowledge_engine.integrate_with_world_manager(self._world_manager)
+                # WorldKnowledgeEngine używa WorldManager poprzez konstruktor
+                #Integracja jest już ustawiona w __init__ WorldKnowledgeEngine
+                self._component_statuses["knowledge_engine"] = ComponentStatus.CONNECTED
             
             self._logger.info("Komponenty V3 połączone")
             

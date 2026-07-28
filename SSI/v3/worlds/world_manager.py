@@ -105,13 +105,9 @@ class WorldManager:
             "active_worlds": 0,
             "total_observations": 0
         }
+        self._config = config
         self._ensure_directories()
-        logger.info(f"WorldManager {self.manager_id} ready")
-
-
-def tworz_world_manager(config: Optional[Any] = None) -> WorldManager:
-    """Fabryka tworząca WorldManager (Singleton)."""
-    return WorldManager.get_instance(config)
+        logger.info(f"WorldManager {self.manager_id} initialized successfully")
     
     def create_world(self, nazwa: str, world_type: Optional[Any] = None, **kwargs) -> Any:
         if len(self._worlds) >= 100:
@@ -178,10 +174,23 @@ def tworz_world_manager(config: Optional[Any] = None) -> WorldManager:
         pass
     
     def _ensure_directories(self) -> None:
-        Path("data/v3/worlds/").parent.mkdir(parents=True, exist_ok=True)
+        """Zapewnia istnienie niezbędnych katalogów dla WorldManager."""
+        Path("data/v3/worlds/").mkdir(parents=True, exist_ok=True)
+        Path("data/v3/worlds/metadata/").mkdir(parents=True, exist_ok=True)
+        Path("data/v3/worlds/backups/").mkdir(parents=True, exist_ok=True)
+        logger.debug("WorldManager directories ensured")
     
     def get_stats(self) -> Dict[str, Any]:
         return dict(self._stats)
+
+
+# =============================================================================
+# FABRYKA
+# =============================================================================
+
+def tworz_world_manager(config: Optional[Any] = None) -> WorldManager:
+    """Fabryka tworząca WorldManager (Singleton)."""
+    return WorldManager.get_instance(config)
 
 
 __all__ = [

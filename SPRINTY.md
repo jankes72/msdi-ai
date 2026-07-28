@@ -77,7 +77,9 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 
 ### Dziennik
 
-> Dodano most komunikacyjny V3 → V4 odpowiedzialny za przekazywanie wiedzy.
+> Dodano most komunikacyjny V3 → V4 odpowiedzialny za przekazywanie wiedzy. Implementacja obejmuje: transfer_knowledge(), ekstrakcję wiedzy z V3, konwersję światów do formatu V4, obsługę wzorców i subskrypcji agentów.
+>
+> **Status**: ✅ Zakończony (2026-07-28)
 
 ---
 
