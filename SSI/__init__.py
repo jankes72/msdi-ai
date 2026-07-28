@@ -19,6 +19,7 @@ Data: 2026-07-28
 
 from .core import SSISystem, SSIModule, SSIComponent
 from .config import SSIConfig
+from . import data
 
 __version__ = "1.0.0"
 __author__ = "SSI System"
@@ -29,6 +30,7 @@ __all__ = [
     'SSIModule', 
     'SSIComponent',
     'SSIConfig',
+    'data',
     '__version__',
     '__author__'
 ]

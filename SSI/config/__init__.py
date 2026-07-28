@@ -10,8 +10,11 @@ from .settings import SSISettings, get_settings, reset_settings
 from .parameters import SSIParameters, get_parameters, reset_parameters
 from .paths import SSIPaths, get_paths, reset_paths
 
+# Alias dla kompatybilności
+SSIConfig = SSISettings
+
 __all__ = [
-    'SSISettings', 'get_settings', 'reset_settings',
+    'SSISettings', 'SSIConfig', 'get_settings', 'reset_settings',
     'SSIParameters', 'get_parameters', 'reset_parameters',
     'SSIPaths', 'get_paths', 'reset_paths'
 ]
