@@ -1,7 +1,265 @@
+# SSI/MSDI AI - .gitignore
+# System ignorowania plików dla repozytorium Git
+
+# ============================================================================
+# PYTHON
+# ============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# translators
+*.mo
+*.pot
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+venv.bak/
+env.bak/
+
+# IDE
+# ============================================================================
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# JetBrains
+*.iml
+
+# Editor
+*.swp
+*.swo
+*~
+.project
+.settings/
+.pydevproject
+.validation/
+
+# macOS
+# ============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.Temp
+.Trash
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+# ============================================================================
+*~
+.nfs*
+
+# Windows
+# ============================================================================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================================
+# DATA FILES - Ignore all data files
+# ============================================================================
+
+# CSV files
+*.csv
+
+# JSON data files
+*.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# ML model files (large binaries)
+*.joblib
+*.pkl
+*.h5
+*.hdf5
+*.keras
+*.tflite
+*.onnx
+*.pt
+*.pth
+*.npz
+*.npy
+
+# ============================================================================
+# PROJECT SPECIFIC - SSI/MSDI AI
+# ============================================================================
+
+# Large prediction database file (do not analyze)
+generatorDataBaseTrendAnalisAll.py
+
+# Prepared data files
+kursy_przygotowane.csv
+wyniki/
+
+# Model files
+dataBase_futbol_trendijerison01.joblib
+dataBase_futbol_trend.joblib
+dataBase_futbol_trend joblib/
+
+# ============================================================================
+# SSI DIRECTORIES - Code only, no data
+# ============================================================================
+
+# Data directories (contents ignored)
+SSI/data/raw/*
+SSI/data/processed/*
+SSI/data/worlds/*
+SSI/data/results/*
+
+# V3 Memory (large files)
+SSI/v3/memory/*
+SSI/v3/metadata/*
+SSI/v3/relationships/*
+
+# V2 Models output
+SSI/v2/models/*
+SSI/v2/training/*
+SSI/v2/observation/*
+
+# V4 Agents
+SSI/v4/agents/*
+SSI/v4/population/*
+
+# Laboratories
+SSI/laboratories/*/*
+
+# Feedback and evolution
+SSI/feedback/*
+SSI/evolution/*
+
+# Strategy
+SSI/strategy/*
+
+# ============================================================================
+# OTHER RESULT DIRECTORIES
+# ============================================================================
+
+archiwa/
+archiwum_*/
+backup_*/
+
+laboratorium/
+
+modele_dataBase_futbol_trend/
+modele_kursy_przygotowane/
+
+pamiec_modeli_v2/
+
+WORLD/aktualny/
+
+warstwa5_generator/dane/
+
+# ============================================================================
+# EXCEPTIONS - Files that SHOULD be in Git
+# ============================================================================
+
+# Keep all Python files in SSI
+!SSI/*.py
+!SSI/**/*.py
+!SSI/README.md
+
+# Keep gitkeep files for empty directories
+!SSI/*.gitkeep
+!SSI/**/*.gitkeep
+
+# Keep directory structure
+!SSI/core/
+!SSI/config/
+!SSI/data/
+!SSI/utils/
+!SSI/v2/
+!SSI/v3/
+!SSI/v4/
+!SSI/strategy/
+!SSI/laboratories/
+!SSI/feedback/
+!SSI/decision/
+!SSI/evolution/
+!SSI/tests/
+
+# Keep documentation
+!SSI_DOCUMENTATION/
+!SSI_DOCUMENTATION/**
+
+# ============================================================================
+# LOGS AND CACHE
+# ============================================================================
+
+# Logs
+*.log
+logs/
+
+# Cache
 __pycache__/
 *.pyc
 
-*.csv
-*.joblib
-*.h5
-
+# Jupyter
+.notebooks/
+*.ipynb
+.ipynb_checkpoints/
