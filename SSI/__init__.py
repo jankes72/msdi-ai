@@ -1,36 +1,43 @@
 """
 SSI (Self Learning Intelligence Ecosystem)
-Główny moduł systemu SSI - Self Learning Intelligence
+Main module for SSI - Self Learning Intelligence
 
-Ten moduł dostarcza struktury dla autonomicznego ekosystemu uczących się agentów,
-który analizuje, rozumie i podejmuje decyzje w sposób inteligentny i adaptacyjny.
+This module provides structure for autonomous ecosystem of learning agents
+that analyzes, understands and makes decisions in intelligent and adaptive way.
 
-Architektura:
-- V2 Model Laboratory: Modele interpretujące świat
-- V3 World Memory System: Mapa wiedzy o światach i wzorcach  
-- V4 Agent Evolution: Autonomiczne jednostki decyzyjne
-- Strategy Intelligence Engine: System tworzenia i ewolucji strategii
-- Decision Laboratories: Środowiska eksperymentalne
-- Feedback Loop: System ciągłej poprawy
+Architecture:
+- V2 Model Laboratory: Models interpreting the world
+- V3 World Memory System: Knowledge map of worlds and patterns
+- V4 Agent Evolution: Autonomous decision units
+- Strategy Intelligence Engine: System for creation and evolution of strategies
+- Decision Laboratories: Experimental environments
+- Feedback Loop: System for continuous improvement
 
-Wersja: 1.0
-Data: 2026-07-28
+Version: 1.0
+Date: 2026-07-28
 """
 
 from .core import SSISystem, SSIModule, SSIComponent
 from .config import SSIConfig
 from . import data
+from . import v2
+# Temporarily commented to allow V4 development
+# from . import v3
+from . import v4
 
 __version__ = "1.0.0"
 __author__ = "SSI System"
 
-# Eksport głównych klas
+# Export of main classes
 __all__ = [
     'SSISystem',
     'SSIModule', 
     'SSIComponent',
     'SSIConfig',
     'data',
+    'v2',
+    'v3',
+    'v4',
     '__version__',
     '__author__'
 ]

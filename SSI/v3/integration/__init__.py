@@ -27,8 +27,17 @@ from .world_integration import (
     tworz_integracje_v3
 )
 
+# Bridge V3 -> V4 (Placeholder dla Sprint 4)
+from .v3_to_v4_bridge import (
+    V3ToV4Bridge,
+    V3ToV4BridgeConfig,
+    AgentKnowledgePackage,
+    BridgeStatus,
+    tworz_v3_to_v4_bridge
+)
+
 # Re-export V2ToV3Bridge z V2
-from ..v2.integration.v2_to_v3_bridge import (
+from ...v2.integration.v2_to_v3_bridge import (
     V2ToV3Bridge,
     BridgeConfig,
     WorldDataPackage
@@ -40,6 +49,13 @@ __all__ = [
     'WorldIntegrationConfig',
     'IntegrationStatus',
     'tworz_integracje_v3',
+    
+    # V3 to V4 Bridge (Sprint 4)
+    'V3ToV4Bridge',
+    'V3ToV4BridgeConfig',
+    'AgentKnowledgePackage',
+    'BridgeStatus',
+    'tworz_v3_to_v4_bridge',
     
     # Re-exported from V2
     'V2ToV3Bridge',

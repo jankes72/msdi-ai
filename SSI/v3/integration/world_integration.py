@@ -138,7 +138,7 @@ class DataQuality(Enum):
     INVALID = auto()       # Nieważna
 
 
-class World CreationMode(Enum):
+class WorldCreationMode(Enum):
     """Tryb tworzenia światów"""
     AUTO = auto()           # Automatyczny
     MANUAL = auto()          # Ręczny
