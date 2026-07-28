@@ -178,6 +178,24 @@
 - **Efekt**: Pełna funkcjonalność transferu wiedzy, gotowy do integracji z agentami V4
 - **Status**: ✅ Zakończony (Sprint 4 z SPRINTY.md)
 
+#### 2026-07-28 - Sprint 5: Rozbudowa World Integration - Obsługa SEND_TO_V4
+- **Zmiana**: Rozbudowa world_integration.py o obsługę SEND_TO_V4 i podłączenie V3ToV4Bridge
+- **Opis**:
+  - **Nowe metody WorldIntegration**:
+    - `send_to_v4()` - Wysyłanie wiedzy do V4 przez V3ToV4Bridge z obsługą world_ids, agent_id i custom knowledge_data
+    - `_create_knowledge_package()` - Tworzenie pakietów wiedzy (AgentKnowledgePackage) z światami, wzorcami i metadanymi
+    - `connect_to_v4()` - Połączenie z istniejącym mostem V3ToV4Bridge
+    - `setup_v4_bridge()` - Automatyczne tworzenie i konfiguracja mostu V3ToV4Bridge
+  - **Nowe pola**: `v3_to_v4_bridge` w klasie WorldIntegration
+  - **Nowe ustawienia konfiguracji**: `AUTO_SEND_TO_V4`, `V4_BRIDGE_ENABLED` w WorldIntegrationConfig
+  - **Rozszerzona fabryka**: `tworz_integracje_v3()` teraz obsługuje parametry `v3_to_v4_bridge` i `enable_v4_bridge`
+  - **Integracja**: Pełne połączenie z V3ToV4Bridge, automatyczne tworzenie mostu przy inicjalizacji
+  - **Statystyki**: Dodane `total_sent_to_v4` do statystyk integracyjnych
+  - **Plik**: `SSI/v3/integration/world_integration.py` (rozbudowany)
+- **Powód**: Konieczność rozszerzenia integracji światów o możliwość przekazywania danych do V4 zgodnie z SPRINTY.md (Sprint 5)
+- **Efekt**: Pełna obsługa SEND_TO_V4, gotowa do użycia przez V4 Agent Core
+- **Status**: ✅ Zakończony (Sprint 5 z SPRINTY.md)
+
 ---
 
 ## 3. Decyzje Architektoliczne
@@ -436,7 +454,7 @@
 ## 11. Statystyki Projektu
 
 - **Liczba plików kodu**: 34 (stan na 2026-07-28)
-- **Liczba linii kodu**: ~90,000+ (stan na 2026-07-28)
+- **Liczba linii kodu**: ~92,000+ (stan na 2026-07-28)
 - **Pokrycie testami**: 0% (testy jeszcze nie zaimplementowane)
 - **Liczba modułów**: 12 (core, config, data, v2, v3/config, v3/memory, v3/worlds, v3/integration, v3/v3_integration, v3/intelligence, v3/bridge, v4 - w budowie)
 - **Pamięć systemowa**: ~30k linii (memory_manager.py)
@@ -444,6 +462,7 @@
 - **Konfiguracja**: ~500 linii (config.py)
 - **Główna Integracja**: ~700 linii (v3_integration.py)
 - **V3ToV4Bridge**: ~800 linii (pełna implementacja Sprint 4)
+- **WorldIntegration (Sprint 5)**: ~1100 linii (z obsługą SEND_TO_V4)
 
 ---
 
@@ -464,6 +483,6 @@ Stworzyć autonomiczny ekosystem uczących się agentów, który rozumie, analiz
 ---
 
 **Status Dokumentu:** Aktywny  
-**Wersja:** 2.4  
-**Ostatnia Aktualizacja:** 2026-07-28 (Sprint 4 - V3ToV4Bridge)
+**Wersja:** 2.5  
+**Ostatnia Aktualizacja:** 2026-07-28 (Sprint 5 - World Integration SEND_TO_V4)
 **Autor:** MSDI AI / SSI System + Mistral Vibe

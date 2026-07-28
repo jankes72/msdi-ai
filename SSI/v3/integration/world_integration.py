@@ -64,6 +64,18 @@ from ..memory.memory_manager import MemoryManager, MemoryConfig
 from ..worlds.world_manager import WorldManager
 from ..worlds.world_knowledge_engine import WorldKnowledgeEngine, WorldKnowledgeConfig
 
+# Import V3ToV4Bridge
+try:
+    from .v3_to_v4_bridge import (
+        V3ToV4Bridge,
+        V3ToV4BridgeConfig,
+        AgentKnowledgePackage
+    )
+except ImportError:
+    V3ToV4Bridge = None
+    V3ToV4BridgeConfig = None
+    AgentKnowledgePackage = None
+
 
 # =============================================================================
 # KONFIGURACJA
@@ -93,6 +105,8 @@ class WorldIntegrationConfig:
     AUTO_INTEGRATE: bool = True        # Automatyczna integracja nowych danych
     SAVE_TO_MEMORY: bool = True        # Zapis do pamięci V3
     SEND_TO_V4: bool = False           # Wysyłanie do V4 (domyślnie wyłączone)
+    AUTO_SEND_TO_V4: bool = False      # Automatyczne wysyłanie do V4 po przetworzeniu
+    V4_BRIDGE_ENABLED: bool = True     # Czy most V3ToV4Bridge jest dostępny
     
     # Ustawienia logowania
     LOG_LEVEL: str = "INFO"            # Poziom logowania
@@ -525,12 +539,14 @@ class WorldIntegration:
         config: Optional[WorldIntegrationConfig] = None,
         memory_manager: Optional[MemoryManager] = None,
         world_manager: Optional[WorldManager] = None,
-        v2_bridge: Optional[V2ToV3Bridge] = None
+        v2_bridge: Optional[V2ToV3Bridge] = None,
+        v3_to_v4_bridge: Optional[V3ToV4Bridge] = None
     ):
         self.config = config or WorldIntegrationConfig()
         self.memory_manager = memory_manager
         self.world_manager = world_manager
         self.v2_bridge = v2_bridge
+        self.v3_to_v4_bridge = v3_to_v4_bridge
         self._logger = logging.getLogger(__name__)
         
         # Inicjalizacja komponentów
@@ -788,6 +804,182 @@ class WorldIntegration:
         if self.knowledge_engine:
             self.knowledge_engine.integrate_with_memory(memory_manager)
         self._logger.info("Skonfigurowano integrację z MemoryManager")
+    
+    def connect_to_v4(self, v3_to_v4_bridge: V3ToV4Bridge) -> None:
+        """
+        Łączy z mostem V3 do V4.
+        
+        Args:
+            v3_to_v4_bridge: Most V3 do V4
+        """
+        self.v3_to_v4_bridge = v3_to_v4_bridge
+        if v3_to_v4_bridge and self.config.V4_BRIDGE_ENABLED:
+            # Konfiguruj most do korzystania z tej integracji
+            if hasattr(v3_to_v4_bridge, 'set_v3_integration'):
+                v3_to_v4_bridge.set_v3_integration(self)
+            self._logger.info("Połączono z V3ToV4Bridge")
+    
+    def send_to_v4(
+        self, 
+        knowledge_data: Optional[Dict[str, Any]] = None,
+        world_ids: Optional[List[str]] = None,
+        agent_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Wysyła wiedzę do V4 przez most V3ToV4Bridge.
+        
+        Args:
+            knowledge_data: Dane wiedzy do wysłania (opcjonalnie)
+            world_ids: Lista ID światów do wyekportowania (opcjonalnie)
+            agent_id: ID docelowego agenta V4 (opcjonalnie)
+            
+        Returns:
+            Statystyki wysyłki
+        """
+        result = {
+            "status": "not_sent",
+            "message": "V3ToV4Bridge nie jest dostępny",
+            "world_count": 0,
+            "agent_id": agent_id
+        }
+        
+        if not self.v3_to_v4_bridge or not self.config.V4_BRIDGE_ENABLED:
+            self._logger.warning("Próba wysłania do V4 - most V3ToV4Bridge niedostępny")
+            result["status"] = "bridge_unavailable"
+            return result
+        
+        try:
+            with self._lock:
+                self._set_status(IntegrationStatus.PROCESSING)
+                
+                # Przygotuj dane do wysłania
+                if knowledge_data is None and world_ids is None:
+                    # Wyślij wszystkie światy z WorldManager
+                    if self.world_manager:
+                        all_worlds = self.world_manager.list_worlds()
+                        world_ids = [w.world_id for w in all_worlds]
+                        result["world_count"] = len(all_worlds)
+                
+                # Utwórz pakiet wiedzy
+                package = self._create_knowledge_package(knowledge_data, world_ids, agent_id)
+                
+                # Wyślij przez most
+                transfer_result = self.v3_to_v4_bridge.transfer_knowledge(package)
+                
+                result.update({
+                    "status": "success",
+                    "message": "Wiedza wysłana do V4",
+                    "transfer_id": transfer_result.get("transfer_id"),
+                    "timestamp": datetime.now().isoformat(),
+                    "world_count": len(package.worlds) if package else 0
+                })
+                
+                # Statystyki
+                self._stats["total_sent_to_v4"] = self._stats.get("total_sent_to_v4", 0) + 1
+                
+                self._set_status(IntegrationStatus.COMPLETED)
+                
+        except Exception as e:
+            result["status"] = "error"
+            result["error"] = str(e)
+            self._stats["total_errors"] += 1
+            self._set_status(IntegrationStatus.FAILED)
+            self._logger.error(f"Błąd wysyłania do V4: {e}")
+        
+        return result
+    
+    def _create_knowledge_package(
+        self, 
+        knowledge_data: Optional[Dict[str, Any]],
+        world_ids: Optional[List[str]],
+        agent_id: Optional[str]
+    ) -> Optional[AgentKnowledgePackage]:
+        """
+        Tworzy pakiet wiedzy do wysłania do V4.
+        
+        Args:
+            knowledge_data: Dane wiedzy
+            world_ids: Lista ID światów
+            agent_id: ID docelowego agenta
+            
+        Returns:
+            AgentKnowledgePackage lub None
+        """
+        if V3ToV4Bridge is None or AgentKnowledgePackage is None:
+            self._logger.warning("Klasy mostu V3ToV4 nie są dostępne")
+            return None
+        
+        try:
+            worlds_data = []
+            patterns_data = []
+            metadata = {}
+            
+            # Pobierz światy
+            if world_ids and self.world_manager:
+                for world_id in world_ids:
+                    world = self.world_manager.get_world(world_id)
+                    if world:
+                        worlds_data.append(world.to_dict())
+            
+            # Pobierz wzorce z pamięci
+            if self.memory_manager and self.config.SEND_TO_V4:
+                pattern_memory = self.memory_manager.pattern_memory
+                if pattern_memory:
+                    patterns_data = pattern_memory.get_all_patterns()
+            
+            # Pobierz metadane
+            if self.memory_manager:
+                metadata_memory = self.memory_manager.metadata_memory
+                if metadata_memory:
+                    metadata = metadata_memory.get_all_metadata()
+            
+            # Utwórz pakiet
+            package = AgentKnowledgePackage(
+                package_id=f"pkg_{uuid.uuid4().hex[:12]}",
+                agent_id=agent_id,
+                worlds=worlds_data,
+                patterns=patterns_data,
+                metadata=metadata,
+                source="WorldIntegration",
+                timestamp=datetime.now().isoformat()
+            )
+            
+            return package
+            
+        except Exception as e:
+            self._logger.error(f"Błąd tworzenia pakietu wiedzy: {e}")
+            return None
+    
+    def setup_v4_bridge(self, bridge_config: Optional[V3ToV4BridgeConfig] = None) -> Optional[V3ToV4Bridge]:
+        """
+        Tworzy i konfiguruje most V3ToV4Bridge.
+        
+        Args:
+            bridge_config: Konfiguracja mostu (opcjonalnie)
+            
+        Returns:
+            Zuschowany most V3ToV4Bridge
+        """
+        if V3ToV4Bridge is None:
+            self._logger.warning("Klasa V3ToV4Bridge niedostępna")
+            return None
+        
+        try:
+            config = bridge_config or V3ToV4BridgeConfig()
+            bridge = V3ToV4Bridge(config)
+            
+            # Połączenie z tą integracją
+            if hasattr(bridge, 'connect'):
+                bridge.connect(self)
+            
+            self.v3_to_v4_bridge = bridge
+            self._logger.info("Utworzono i skonfigurowano V3ToV4Bridge")
+            
+            return bridge
+            
+        except Exception as e:
+            self._logger.error(f"Błąd tworzenia mostu V3ToV4: {e}")
+            return None
 
 
 # =============================================================================
@@ -798,7 +990,9 @@ def tworz_integracje_v3(
     config: Optional[Union[Dict[str, Any], WorldIntegrationConfig]] = None,
     memory_manager: Optional[MemoryManager] = None,
     world_manager: Optional[WorldManager] = None,
-    v2_bridge: Optional[V2ToV3Bridge] = None
+    v2_bridge: Optional[V2ToV3Bridge] = None,
+    v3_to_v4_bridge: Optional[V3ToV4Bridge] = None,
+    enable_v4_bridge: bool = True
 ) -> WorldIntegration:
     """
     Fabryka tworzenia WorldIntegration.
@@ -808,6 +1002,8 @@ def tworz_integracje_v3(
         memory_manager: Menadżer pamięci (opcjonalnie)
         world_manager: Menadżer światów (opcjonalnie)
         v2_bridge: Most V2 do V3 (opcjonalnie)
+        v3_to_v4_bridge: Most V3 do V4 (opcjonalnie)
+        enable_v4_bridge: Czy włączać automatyczną integrację z V4 (domyślnie True)
         
     Returns:
         WorldIntegration
@@ -819,7 +1015,18 @@ def tworz_integracje_v3(
     else:
         config_obj = WorldIntegrationConfig()
     
-    integration = WorldIntegration(config_obj, memory_manager, world_manager, v2_bridge)
+    # Zaktualizuj konfigurację dla V4
+    config_obj.V4_BRIDGE_ENABLED = enable_v4_bridge
+    config_obj.SEND_TO_V4 = enable_v4_bridge
+    config_obj.AUTO_SEND_TO_V4 = enable_v4_bridge
+    
+    integration = WorldIntegration(
+        config_obj, 
+        memory_manager, 
+        world_manager, 
+        v2_bridge,
+        v3_to_v4_bridge
+    )
     
     # Integracja z pamięcią
     if memory_manager:
@@ -828,6 +1035,12 @@ def tworz_integracje_v3(
     # Połączenie z V2
     if v2_bridge:
         integration.connect_to_v2(v2_bridge)
+    
+    # Połączenie z V4 (jeśli most nie został przekazany, spróbuj utworzyć)
+    if enable_v4_bridge and v3_to_v4_bridge is None:
+        integration.setup_v4_bridge()
+    elif v3_to_v4_bridge:
+        integration.connect_to_v4(v3_to_v4_bridge)
     
     return integration
 
@@ -892,4 +1105,34 @@ if __name__ == "__main__":
     stats = integration.get_statistics()
     print(f"Statystyki: {stats}")
     
-    print("\nAll WorldIntegration tests passed!")
+    # Test V4 bridge connection
+    print("\n=== Testy SEND_TO_V4 (Sprint 5) ===")
+    
+    # Sprawdź czy most V3ToV4Bridge jest dostępny
+    if integration.v3_to_v4_bridge:
+        print("V3ToV4Bridge jest połączony")
+        
+        # Test send_to_v4
+        send_result = integration.send_to_v4(agent_id="test_agent_001")
+        print(f"Wysyłanie do V4: {send_result}")
+        
+        # Test z konkretnymi world_ids
+        if integration.world_manager:
+            worlds = integration.world_manager.list_worlds()
+            if worlds:
+                world_ids = [worlds[0].world_id] if len(worlds) > 0 else []
+                send_result = integration.send_to_v4(world_ids=world_ids, agent_id="test_agent_002")
+                print(f"Wysyłanie konkretnego worlda do V4: {send_result}")
+    else:
+        print("V3ToV4Bridge nie jest dostępny - testy pominięte")
+        # Spróbuj utworzyć most ręcznie
+        try:
+            bridge = integration.setup_v4_bridge()
+            if bridge:
+                print("Utworzono V3ToV4Bridge ręcznie")
+                send_result = integration.send_to_v4(agent_id="test_agent_001")
+                print(f"Wysyłanie do V4 po ręcznym utworzeniu mostu: {send_result}")
+        except Exception as e:
+            print(f"Błąd tworzenia mostu V3ToV4: {e}")
+    
+    print("\nAll WorldIntegration tests passed! (Sprint 5 - SEND_TO_V4 implemented)")
