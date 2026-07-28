@@ -1,6 +1,225 @@
-__pycache__/
-*.pyc
+# SSI System - .gitignore
+# Obejmie wszystkie pliki tymczasowe, cache, dane i zależności
 
+# ============================================================================
+# Python
+# ============================================================================
+
+# Pliki skompilowane Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Pliki znaczników edytora
+*.swp
+*.swo
+*~
+.project
+.settings/
+.pydevproject
+.validation/
+.DS_Store
+
+# ============================================================================
+# Croix environment
+# ============================================================================
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================================================
+# IDE
+# ============================================================================
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# JetBrains
+*.iml
+
+# ============================================================================
+# Dane i pliki tymczasowe
+# ============================================================================
+
+# Pliki CSV z danymi
 *.csv
+
+# Pliki JSON z danymi (wyłącznie dane, nie konfiguracje systemowe)
+*.json
+
+# Pliki pamięci podręcznej
+*.cache
+*.tmp
+*.temp
+
+# Pliki logów
+*.log
+logs/
+
+# Pliki baz danych SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Pliki modeli ML (duże pliki binarne)
 *.joblib
+*.pkl
 *.h5
+*.hdf5
+*.keras
+*.tflite
+*.onnx
+*.pt
+*.pth
+*.npz
+*.npy
+
+# ============================================================================
+# Jupyter / IPython
+# ============================================================================
+.notebooks/
+*.ipynb
+.ipynb_checkpoints/
+
+# ============================================================================
+# macOS
+# ============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.Temp
+.Trash
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# ============================================================================
+# Linux
+# ============================================================================
+*~
+.nfs*
+
+# ============================================================================
+# Windows
+# ============================================================================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================================
+# SSI Specyficzne
+# ============================================================================
+
+# Każde pliki tymczasowe SSI
+SSI/*.tmp
+SSI/*.cache
+SSI/logs/*.log
+
+# Dane wejściowe i przetworzone (zanieczyszczenie git)
+SSI/data/raw/*
+SSI/data/processed/*
+SSI/data/worlds/*
+SSI/data/results/*
+
+# Pamięć systemowa (może być duża)
+SSI/v3/memory/*
+SSI/v3/metadata/*
+SSI/v3/relationships/*
+
+# Modele V2 (duże pliki)
+SSI/v2/models/*
+SSI/v2/training/*
+SSI/v2/observation/*
+
+# Pamięć agentów (может być duża)
+SSI/v4/agents/*
+SSI/v4/population/*
+
+# Wyniki laboratoriów
+SSI/laboratories/*/*
+
+# Feedback i ewolucja
+SSI/feedback/*
+SSI/evolution/*
+
+# Strategie
+SSI/strategy/*
+
+# Wyjątki - te pliki powinny być w git
+!SSI/*.gitkeep
+!SSI/**/*.gitkeep
+!SSI/*.py
+!SSI/**/*.py
+!SSI/README.md
+
+# Wyjątki dla katalogów (puste katalogi nie są trackowane domyślnie)
+!SSI/core/
+!SSI/config/
+!SSI/data/
+!SSI/utils/
+!SSI/v2/
+!SSI/v3/
+!SSI/v4/
+!SSI/strategy/
+!SSI/laboratories/
+!SSI/feedback/
+!SSI/decision/
+!SSI/evolution/
+!SSI/tests/
+
+# ============================================================================
+# Wykluczenia dla istniejącego projektu
+# ============================================================================
+
+# Duży plik do nie analizować
+generatorDataBaseTrendAnalisAll.py
+
+# Pliki CSV z danymi
+kursy_przygotowane.csv
+wyniki
+*.csv
+
+# Pliki joblib i h5
+dataBase_futbol_trendijerison01.joblib
+dataBase_futbol_trend joblib
+dataBase_futbol_trend.joblib
+*.h5
+*.joblib
+
