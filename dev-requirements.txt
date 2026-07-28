@@ -1,0 +1,288 @@
+# SSI (Self Learning Intelligence Ecosystem) - Development Requirements
+# ==============================================================
+# 
+# Zależności deweloperskie dla środowiska development
+# Nie są wymagane w produkcji
+#
+# Wersja: 1.0
+# Data: 2026-07-28
+# Autor: SSI System + Mistral Vibe
+
+# =============================================================================
+# TESTING & QUALITY (Testowanie i jakość kodu)
+# =============================================================================
+
+# --- Testing Frameworks ---
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+pytest-asyncio>=0.21.0
+pytest-xdist>=3.3.0          # Równoległe wykonywanie testów
+pytest-django>=4.5.0       # Testowanie aplikacji Django (jeśli potrzebne)
+hypothesis>=6.80.0        # Property-based testing
+
+# --- Coverage & Analysis ---
+coverage>=7.2.0
+coverage-badge>=1.1.0     # Generowanie odznak coverage
+
+# --- Linting & Formatting ---
+flake8>=6.0.0
+flake8-bugbear>=23.7.0    # Rozszerzone reguły flake8
+flake8-comprehensions>=3.14.0
+flake8-simplify>=0.20.0
+flake8-docstrings>=1.7.0
+flake8-annotations>=3.0.0
+
+black>=23.0.0
+isort>=5.12.0
+
+mypy>=1.4.0
+mypy-extensions>=1.0.0
+
+# --- Advanced Linting ---
+pylint>=2.17.0
+pylint-django>=2.5.0      # Jeśli używasz Django
+pylint-flask>=0.6.0      # Jeśli używasz Flask
+
+# --- Security ---
+bandit>=1.7.5
+safety>=2.3.0
+
+# --- Type Checking ---
+typeguard>=4.1.0          # Runtime type checking
+
+# ============================================================================= 
+# DOCUMENTATION (Dokumentacja)
+# =============================================================================
+
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.2.0
+sphinx-autodoc2>=0.4.0    # Nowsza wersja autodoc
+sphinx-mdinclude>=0.5.3  # Inkludowanie plików Markdown
+myst-parser>=2.0.0       # Markdown support w Sphinx
+
+# --- Documentation Generators ---
+pdoc>=14.0.0             # Dokumentacja API z docstringów
+pydoc-markdown>=4.7.0   # Generowanie Markdown z dokumentacji
+mkdocs>=1.4.2           # Alternatywny generator dokumentacji
+mkdocs-material>=9.1.0  # Tema Material dla MkDocs
+
+# ============================================================================= 
+# PERFORMANCE & PROFILING (Profilowanie wydajności)
+# ============================================================================= 
+
+memory-profiler>=0.61.0
+psutil>=5.9.0
+
+# --- CPU & Memory Profiling ---
+py-spy>=0.3.14           # Sampling profiler
+scales>=0.4.0           # Memory profiler for Python
+pympler>=1.0.1          # Memory usage analysis
+
+# --- Visualization ---
+snakeviz>=2.1.1          # Wizualizacja profilera
+pyinjury>=0.3.0         # Memory leak detection
+
+# ============================================================================= 
+# ENVIRONMENT & DEPENDENCY MANAGEMENT (Zarządzanie środowiskiem)
+# ============================================================================= 
+
+# --- Dependency Management ---
+pip-tools>=7.0.0
+poetry>=1.6.0
+
+# --- Virtual Environment ---
+virtualenv>=20.24.0
+
+# --- Version Management ---
+bump2version>=1.0.1
+semver>=3.0.0
+
+# --- Package Building ---
+build>=0.10.0
+setuptools>=68.0.0
+twine>=4.0.2
+wheel>=0.40.0
+
+# ============================================================================= 
+# PRE-COMMIT & GIT HOOKS (Git Hooks)
+# ============================================================================= 
+
+pre-commit>=3.3.0
+pre-commit-hooks>=4.4.0
+
+# --- Additional Hooks ---
+blacken-docs>=1.14.0      # Formatowanie kodu w dokumentacji
+pyupgrade>=3.3.0         # Aktualizacja kodu do nowszych wersji Python
+reorder-python-imports>=3.9.0
+
+# ============================================================================= 
+# IDE & EDITOR SUPPORT (Współpraca z IDE)
+# ============================================================================= 
+
+# --- Language Server Protocol ---
+python-lsp-server>=1.7.0
+pylsp-mypy>=0.6.6       # Mypy plugin dla pylsp
+pylsp-rope>=0.1.7       # Rope plugin dla pylsp
+
+# --- Code Navigation ---
+rope>=1.9.0
+jedi>=0.19.0            # Autocompletion
+
+# --- Refactoring ---
+com2ann>=0.5.0           # Convert comments to annotations
+
+# ============================================================================= 
+# MONITORING & OBSERVABILITY (Monitorowanie)
+# ============================================================================= 
+
+structlog>=23.0.0
+loguru>=0.7.0            # Łatwe logowanie
+
+# --- Metrics ---
+prometheus-client>=0.17.0
+
+# --- Distributed Tracing ---
+opentelemetry-api>=1.18.0
+opentelemetry-sdk>=1.18.0
+opentelemetry-exporter-jaeger>=1.18.0
+
+# ============================================================================= 
+# DATABASE & CACHE (Bazy danych - deweloperskie)
+# ============================================================================= 
+
+# --- In-Memory Cache ---
+redis>=4.5.0
+fakeredis>=2.1.0        # Mock dla Redis
+
+# --- Database Tools ---
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.6
+
+# --- migrations ---
+alembic>=1.11.0          # Database migrations
+
+# ============================================================================= 
+# API & WEB DEVELOPMENT (Rozwój API)
+# ============================================================================= 
+
+fastapi>=0.95.0
+uvicorn>=0.22.0
+httpx>=0.24.0           # Async HTTP client
+
+# --- API Documentation ---
+# swagger-ui-bundle>=0.0.8 (included with FastAPI)
+
+# --- Testing API ---
+httpx>=0.24.0
+pytest-httpx>=0.26.0     # Testing dla httpx
+
+# ============================================================================= 
+# ASYNC & CONCURRENCY (Programowanie asynchroniczne)
+# ============================================================================= 
+
+anyio>=4.0.0
+ trio>=0.22.0
+
+# --- Testing Async Code ---
+pytest-trio>=0.8.0
+
+# ============================================================================= 
+# DATA SCIENCE & VISUALIZATION (Nauka o danych)
+# ============================================================================= 
+
+# --- Visualization ---
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+
+# --- Interactive Widgets ---
+ipywidgets>=8.0.0
+
+# --- Jupyter Support ---
+notebook>=6.5.4
+jupyterlab>=3.6.0
+nbconvert>=7.4.0
+ipykernel>=6.23.0
+
+# ============================================================================= 
+# MACHINE LEARNING (Uczenie maszynowe - deweloperskie)
+# ============================================================================= 
+
+# --- Deep Learning ---
+torch>=2.0.0
+torchaudio>=2.0.0
+torchvision>=0.15.0
+
+# --- Hyperparameter Tuning ---
+optuna>=3.2.0
+ray[tune]>=2.6.0
+
+# --- Explainable AI ---
+shap>=0.42.0
+lime>=0.2.0.1
+eli5>=0.13.0
+
+# --- Model Interpretation ---
+captum>=0.6.0            # PyTorch interpretability
+
+# ============================================================================= 
+# DOCKER & CONTAINERIZATION (Konteneryzacja)
+# ============================================================================= 
+
+# --- Docker SDK for Python ---
+docker>=6.1.0
+
+# ============================================================================= 
+# UTILITIES (Różne narzędzia)
+# ============================================================================= 
+
+# --- Progressive ---
+tqdm>=4.65.0             # Progress bars
+rich>=13.4.0            # Rich text formatting
+
+# --- Configuration ---
+# python-decouple>=3.8    # Configuration management
+# dynaconf>=3.1.12       # Dynamic configuration
+
+# --- File Watching ---
+watchdog>=3.0.0
+
+# --- Arguments Parsing ---
+click>=8.1.0
+ typer>=0.9.0
+
+# --- String Manipulation ---
+pytz>=2023.3             # Timezone handling
+python-dateutil>=2.8.2
+
+# --- Shell Utilities ---
+sh>=2.0.0
+plumbum>=1.8.0
+
+# ============================================================================= 
+# INSTALLATION INSTRUCTIONS
+# ============================================================================= 
+#
+# 1. Instalacja zależności deweloperskich:
+#    pip install -r dev-requirements.txt
+#
+# 2. Instalacja z pre-commit hooks:
+#    pre-commit install
+#
+# 3. Uruchomienie wszystkich hooków na istniejących plikach:
+#    pre-commit run --all-files
+#
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# 1. Ten plik zawiera zależności DEWELOPERSKIE, nie wymagane w produkcji
+#
+# 2. Dla produkcji użyj requirements.txt
+#
+# 3. Wszystkie zależności muszą być kompatybilne z Python 3.9+
+#
+# 4. Przed dodaniem nowej zależności sprawdź PROJECT_RULES.md
+#
+# =============================================================================

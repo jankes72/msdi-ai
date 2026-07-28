@@ -1,0 +1,287 @@
+# SSI (Self Learning Intelligence Ecosystem) - Requirements
+# ==============================================================
+# 
+# System wymagań dla autonomicznego ekosystemu AI
+# Zgodnie z:
+# - PROJECT_RULES.md
+# - 01_SYSTEM_ARCHITECTURE.md
+# - 02_DATA_STRUCTURE.md
+#
+# Architekura systemu:
+# - V2: Model Laboratory (60% danych - trening, 40% - obserwacja)
+# - V3: World Knowledge Engine (pamięć systemowa, światy, wzorce)
+# - V4: Autonomous Agent Ecosystem (agenci, ewolucja, strategie)
+# - CORE: Infrastruktura (system, moduły, komponenty)
+#
+# Wersja: 1.0
+# Data: 2026-07-28
+# Autor: SSI System + Mistral Vibe
+
+# =============================================================================
+# SYSTEM WYMAGAN (Minimalna wersja Python)
+# =============================================================================
+# Wymagana wersja Python 3.9+ ze względu na:
+# - Type hints (PEP 585, PEP 604)
+# - dataclasses
+# - async/await
+# - Pattern matching (Python 3.10+)
+# - Modern typing features
+
+# =============================================================================
+# CORE DEPENDENCIES (Infraustruktura systemu)
+# =============================================================================
+
+# --- Standard Library (wbudowane, nie wymagają instalacji) ---
+# Używane moduły standardowe:
+# - dataclasses
+# - typing (Dict, List, Optional, Any, Union, TypedDict, Protocol)
+# - enum
+# - json
+# - os, pathlib
+# - datetime
+# - threading, multiprocessing
+# - uuid
+# - logging
+# - abc (Abstract Base Classes)
+# - collections (defaultdict, Counter, deque)
+# - itertools
+# - functools (lru_cache, partial)
+# - copy
+# - hashlib
+# - random
+# - statistics
+# - math
+# - pickle (dla serializacji modeli)
+# - warnings
+
+# =============================================================================
+# V2 MODEL LABORATORY (Modele i uczenie maszynowe)
+# =============================================================================
+
+# --- Machine Learning ---
+scikit-learn>=1.3.0           # RandomForest, klasyfikatory, metryki
+pandas>=2.0.0               # DataFrames, manipulacja danymi
+numpy>=1.24.0               # محلی Obliczenia numeryczne, tablice
+
+# --- Neural Networks (TensorFlow/Keras) ---
+tensorflow>=2.12.0          # siec_01_zmiana_kursow, siec_02_amplituda, etc.
+# OR (alternatywa)
+# torch>=2.0.0             # PyTorch jako alternatywa
+# torchaudio>=2.0.0
+# torchvision>=0.15.0
+
+# --- Data Processing ---
+scipy>=1.10.0               # Statystyka, obliczenia naukowe
+statsmodels>=0.14.0         # Modele statystyczne, analiza czasowa
+
+# --- Data Visualization (opcjonalne, dla debugowania) ---
+# matplotlib>=3.7.0
+# seaborn>=0.12.0
+# plotly>=5.14.0
+
+# --- Data Serialization ---
+joblib>=1.3.0               # Zapisywanianie modeli scikit-learn
+# h5py>=3.8.0              # Obsługa formatu HDF5 (dla TensorFlow/Keras)
+
+# =============================================================================
+# V3 WORLD KNOWLEDGE ENGINE (Pamięć i wiedza)
+# =============================================================================
+
+# --- Data Structures & Utilities ---
+# (Standard library wystarcza dla większości)
+
+# --- JSON & Configuration ---
+PyYAML>=6.0.0               # Obsługa plików YAML (konfiguracja)
+pydantic>=2.0.0            # Walidacja danych i konfiguracji (opcjonalne)
+
+# --- Caching & Performance ---
+# cachetools>=5.3.0        #Zaawansowane mechanizmy cachingu (opcjonalne)
+
+# --- File System Utilities ---
+# pathlib2>=2.3.7          # Rozszerzone pathlib (opcjonalne)
+# aiofiles>=23.0.0        # Asynchroniczne operacje na plikach (opcjonalne)
+
+# =============================================================================
+# V4 AUTONOMOUS AGENT ECOSYSTEM (Agenci i inteligencja)
+# =============================================================================
+
+# --- Agent Frameworks ---
+# CreAIte>=0.1.0           # Framework dla agentów AI (opcjonalne, do rozważenia)
+# langchain>=0.0.300       # Łańcuchy narzędzi dla agentów (opcjonalne)
+# autogen>=0.2.0          # Microsoft AutoGen framework (opcjonalne)
+
+# --- Evolution & Optimization ---
+deap>=1.4.0                # Ewolucja genetyczna, algorytmy ewolucyjne
+# optuna>=3.2.0           # Optymalizacja hiperparametrów (opcjonalne)
+# scikit-opt>=0.6.0       # Globalna optymalizacja (opcjonalne)
+
+# --- Decision Making ---
+# pymc>=5.0.0             # Probabilistyczne modele decyzyjne (opcjonalne)
+# ortools>=9.6.0          # Narzędzia optymalizacji Google (opcjonalne)
+
+# =============================================================================
+# INTEGRATION & COMMUNICATION (Integracja między warstwami)
+# =============================================================================
+
+# --- Message Brokers ---
+# redis>=4.5.0            # Baza danych w pamięci (opcjonalne, dla cache)
+# pika>=1.3.0            # Klient RabbitMQ (opcjonalne)
+
+# --- API & Web Services ---
+# fastapi>=0.95.0         # Szybkie API (opcjonalne, dla interfejsu REST)
+# uvicorn>=0.22.0        # ASGI server (opcjonalne)
+# requests>=2.31.0       # HTTP client
+
+# --- Serialization ---
+# msgpack>=1.0.5         # Szybka serializacja (opcjonalne)
+# orjson>=3.8.0          # Szybki JSON (opcjonalne)
+
+# =============================================================================
+# DATA & FILE FORMATS (Obsługa różnych formatów danych)
+# =============================================================================
+
+# --- CSV & Excel ---
+# openpyxl>=3.1.0        # Obsługa Excel (opcjonalne)
+# xlrd>=2.0.0           # Odczyt Excel (opcjonalne)
+
+# --- Databases ---
+# sqlalchemy>=2.0.0     # ORM dla SQL (opcjonalne)
+# psycopg2-binary>=2.9.6 # PostgreSQL adapter (opcjonalne)
+# sqlite3 (standard)    # Wbudowana baza SQLite
+
+# --- Parquet & Efficient Formats ---
+# pyarrow>=12.0.0       # Szybkie formaty kolumnowe (opcjonalne)
+# fastparquet>=2023.0.0 # Parquet format (opcjonalne)
+
+# =============================================================================
+# TESTING & QUALITY (Testowanie i jakość kodu)
+# =============================================================================
+
+# --- Testing Frameworks ---
+pytest>=7.4.0                # Framework testowy
+pytest-cov>=4.1.0          # Coverage reporting
+pytest-mock>=3.11.0       # Mocking
+pytest-asyncio>=0.21.0    # Testowanie kodu asynchronicznego
+
+# --- Linting & Formatting ---
+flake8>=6.0.0              # Linting (PEP 8)
+black>=23.0.0             # Auto-formatowanie kodu
+isort>=5.12.0            # Sortowanie importów
+mypy>=1.4.0               # Typowanie statyczne
+
+# --- Code Quality ---
+pylint>=2.17.0            # Zaawansowana analiza kodu
+bandit>=1.7.5             # Security linting
+safety>=2.3.0             # Security vulnerability checking
+
+# --- Documentation ---
+# sphinx>=7.0.0           # Dokumentacja API (opcjonalne)
+# sphinx-rtd-theme>=1.2.0 # Tema dla Sphinx (opcjonalne)
+
+# =============================================================================
+# PERFORMANCE & OPTIMIZATION (Wydajność)
+# =============================================================================
+
+# --- Performance Monitoring ---
+# memory-profiler>=0.61.0 # Profilowanie pamięci (opcjonalne)
+# psutil>=5.9.0          # Monitorowanie systemu (opcjonalne)
+
+# --- Parallel Processing ---
+# dask>=2023.0.0         # Równoległe obliczenia (opcjonalne)
+# ray>=2.6.0            # Distributed computing (opcjonalne)
+# multiprocess>=0.70.15 # Lepsze multiprocessing (opcjonalne)
+
+# --- Acceleration ---
+# numba>=0.56.0          # JIT compilation (opcjonalne)
+# cupy>=12.0.0          # GPU-accelerated NumPy (opcjonalne)
+
+# =============================================================================
+# LOGGING & MONITORING (Logowanie i monitorowanie)
+# =============================================================================
+
+# --- Logging ---
+# logging (standard)     # Wbudowany moduł logging
+# structlog>=23.0.0     # Strukturalne logowanie (opcjonalne)
+
+# --- Monitoring ---
+# prometheus-client>=0.17.0 # Metryki (opcjonalne)
+# grafana-api>=3.0.0    # Integracja z Grafana (opcjonalne)
+
+# =============================================================================
+# SECURITY (Bezpieczeństwo)
+# =============================================================================
+
+# --- Security ---
+# cryptography>=41.0.0  # Kryptografia (opcjonalne)
+# pyjwt>=2.7.0          # JWT tokens (opcjonalne)
+
+# =============================================================================
+# DEVELOPMENT TOOLS (Narzędzia deweloperskie)
+# =============================================================================
+
+# --- Version Control ---
+# pre-commit>=3.3.0     # Git hooks (opcjonalne)
+# bump2version>=1.0.1  # Zarządzanie wersjami (opcjonalne)
+
+# --- Environment Management ---
+# pip-tools>=7.0.0      # Compile requirements (opcjonalne)
+# poetry>=1.6.0        # Dependency management (opcjonalne)
+
+# --- IDE Support ---
+# python-lsp-server>=1.7.0 # LSP support (opcjonalne)
+# rope>=1.9.0           # Refactoring (opcjonalne)
+
+# =============================================================================
+# SPECIFIC DEPENDENCIES FOR SSI MODULES
+# =============================================================================
+
+# --- For V2 Models (TensorFlow/Keras) ---
+# tensorboard>=2.12.0    # Visualization for TensorFlow (opcjonalne)
+# keras-tuner>=1.3.0   # Hyperparameter tuning (opcjonalne)
+
+# --- For V3 Memory System ---
+# diskcache>=5.6.0      # Persistent caching (opcjonalne)
+# lmdb>=1.4.0          # Lightning Memory-Mapped Database (opcjonalne)
+
+# --- For V4 Agents ---
+# chromadb>=0.3.0      # Vector database for embeddings (opcjonalne)
+# sentence-transformers>=2.2.0 # Text embeddings (opcjonalne)
+
+# =============================================================================
+# INSTALLATION INSTRUCTIONS
+# =============================================================================
+#
+# 1. Create virtual environment:
+#    python -m venv .venv
+#    source .venv/bin/activate  # Linux/Mac
+#    .\.venv\Scripts\activate   # Windows
+#
+# 2. Install base dependencies:
+#    pip install -r requirements.txt
+#
+# 3. For GPU support (TensorFlow):
+#    pip install tensorflow-gpu>=2.12.0
+#
+# 4. For development:
+#    pip install -r dev-requirements.txt
+#
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# 1. All external dependencies should be approved according to PROJECT_RULES.md
+#    Section "Czasowe Zakazy" - "Nie wprowadzaj zależności zewnętrznych - Czeka na zatwierdzenie"
+#
+# 2. For production, consider using:
+#    - pip freeze > requirements-prod.txt
+#    - Docker for containerization
+#
+# 3. Version pinning:
+#    - Major versions: Use >= (allows updates within major version)
+#    - Critical dependencies: Pin exact versions (==)
+#
+# 4. Compatibility:
+#    - All packages must be compatible with Python 3.9+
+#    - Check compatibility before adding new dependencies
+#
+# =============================================================================
