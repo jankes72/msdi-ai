@@ -124,7 +124,15 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 
 ### Dziennik
 
-> Agenci V4 uzyskali dostęp do wiedzy zgromadzonej przez V3.
+> Agenci V4 uzyskali dostęp do wiedzy zgromadzonej przez V3. Zaimplementowano:
+> - Integracja V3 w klasie Agent: `connect_to_v3()`, `disconnect_from_v3()`, `is_v3_available()`
+> - Metody dostępu do pamięci V3 (tylko odczyt): `get_world_memory()`, `get_pattern_memory()`, `get_metadata_memory()`, `get_observation_memory()`
+> - Metody pomocnicze: `get_worlds_from_v3()`, `get_patterns_from_v3()`, `get_metadata_from_v3()`, `get_v3_knowledge_summary()`
+> - Integracja z _analyze_context() i make_decision() - agenci korzystają z wiedzy V3
+> - Rozszerzona fabryka `tworz_agent()` o parametry V3
+> - Nowe ustawienia konfiguracji w AgentConfig: `v3_world_memory_access`, `v3_pattern_memory_access`, `v3_metadata_access`, `use_v3_knowledge`
+>
+> **Status**: ✅ Zakończony (2026-07-28)
 
 ---
 

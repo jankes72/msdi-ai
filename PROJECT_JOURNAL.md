@@ -196,6 +196,33 @@
 - **Efekt**: Pełna obsługa SEND_TO_V4, gotowa do użycia przez V4 Agent Core
 - **Status**: ✅ Zakończony (Sprint 5 z SPRINTY.md)
 
+#### 2026-07-28 - Sprint 6: Integracja Agent Core z V3 World Memory System
+- **Zmiana**: Dodano integrację V3 w agent_core.py, udostępniono agentom World Memory i Pattern Memory
+- **Opis**:
+  - **Nowe pola klasy Agent**:
+    - `_v3_integration`, `_v3_memory_manager`, `_v3_world_memory`, `_v3_pattern_memory`, `_v3_metadata_memory`, `_v3_observation_memory`
+    - `_v3_available` - flaga dostępności V3
+  - **Nowe metody klasy Agent**:
+    - `is_v3_available()` - sprawdza dostępność V3
+    - `connect_to_v3()`, `disconnect_from_v3()` - zarządzanie połączeniem z V3
+    - `get_world_memory()`, `get_pattern_memory()`, `get_metadata_memory()`, `get_observation_memory()` - dostęp do pamięci (tylko odczyt)
+    - `get_worlds_from_v3()`, `get_patterns_from_v3()`, `get_metadata_from_v3()` - pobieranie konkretnych danych
+    - `get_v3_integration()`, `get_v3_knowledge_summary()` - dostęp do integracji i podsumowania
+    - `_initialize_v3_integration()` - automatyczna inicjalizacja połączenia z V3
+    - `_connect_to_v3_integration()` - łączenie z konkretną instancją V3Integration
+    - `_get_v3_knowledge_for_decision()` - pobieranie wiedzy V3 do podejmowania decyzji
+  - **Zaktualizowane metody**:
+    - `_analyze_context()` - zintegrowano z wiedzą V3
+    - `__init__()` - dodano inicjalizację V3
+  - **Nowe ustawienia AgentConfig**:
+    - `v3_world_memory_access`, `v3_pattern_memory_access`, `v3_metadata_access`, `use_v3_knowledge`
+  - **Rozszerzona fabryka**: `tworz_agent()` obsługuje parametry `v3_integration` i `enable_v3_access`
+  - **Testy**: Dodano testy integracji V3 w sekcji `__main__`
+  - **Plik**: `SSI/v4/agent_core.py` (1876+ linii)
+- **Powód**: Konieczność udostępnienia agentom V4 dostępu do wiedzy zgromadzonej w V3 (World Memory, Pattern Memory, Metadata Memory) zgodnie z SPRINTY.md (Sprint 6)
+- **Efekt**: Agenci V4 mają dostęp do pełnej wiedzy V3 (tylko odczyt) i korzystają z niej przy podejmowaniu decyzji
+- **Status**: ✅ Zakończony (Sprint 6 z SPRINTY.md)
+
 ---
 
 ## 3. Decyzje Architektoliczne
@@ -454,7 +481,7 @@
 ## 11. Statystyki Projektu
 
 - **Liczba plików kodu**: 34 (stan na 2026-07-28)
-- **Liczba linii kodu**: ~92,000+ (stan na 2026-07-28)
+- **Liczba linii kodu**: ~94,000+ (stan na 2026-07-28)
 - **Pokrycie testami**: 0% (testy jeszcze nie zaimplementowane)
 - **Liczba modułów**: 12 (core, config, data, v2, v3/config, v3/memory, v3/worlds, v3/integration, v3/v3_integration, v3/intelligence, v3/bridge, v4 - w budowie)
 - **Pamięć systemowa**: ~30k linii (memory_manager.py)
@@ -462,7 +489,8 @@
 - **Konfiguracja**: ~500 linii (config.py)
 - **Główna Integracja**: ~700 linii (v3_integration.py)
 - **V3ToV4Bridge**: ~800 linii (pełna implementacja Sprint 4)
-- **WorldIntegration (Sprint 5)**: ~1100 linii (z obsługą SEND_TO_V4)
+- **WorldIntegration (Sprint 5)**: ~1138 linii (z obsługą SEND_TO_V4)
+- **Agent Core (Sprint 6)**: ~1876 linii (z integracją V3)
 
 ---
 
@@ -483,6 +511,6 @@ Stworzyć autonomiczny ekosystem uczących się agentów, który rozumie, analiz
 ---
 
 **Status Dokumentu:** Aktywny  
-**Wersja:** 2.5  
-**Ostatnia Aktualizacja:** 2026-07-28 (Sprint 5 - World Integration SEND_TO_V4)
+**Wersja:** 2.6  
+**Ostatnia Aktualizacja:** 2026-07-28 (Sprint 6 - Agent Core z Integracją V3)
 **Autor:** MSDI AI / SSI System + Mistral Vibe

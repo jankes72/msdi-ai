@@ -76,6 +76,7 @@ except ImportError:
     V3ToV4BridgeConfig = None
     AgentKnowledgePackage = None
 
+import logging
 
 # =============================================================================
 # KONFIGURACJA

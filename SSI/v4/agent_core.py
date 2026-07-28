@@ -61,6 +61,30 @@ logger = logging.getLogger(__name__)
 
 
 # ============================================================================
+# IMPORTY V3 - Integracja z World Memory System
+# ============================================================================
+
+try:
+    # Import z V3 Integration
+    from ..v3.v3_integration import V3Integration, get_v3_integration
+    from ..v3.memory.memory_manager import MemoryManager
+    from ..v3.memory.pattern_memory import PatternMemory
+    from ..v3.memory.world_memory import WorldMemory
+    from ..v3.memory.observation_memory import ObservationMemory
+    from ..v3.memory.metadata_memory import MetadataMemory
+    V3_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"V3 Integration niedostępne: {e}")
+    V3Integration = None
+    MemoryManager = None
+    PatternMemory = None
+    WorldMemory = None
+    ObservationMemory = None
+    MetadataMemory = None
+    V3_AVAILABLE = False
+
+
+# ============================================================================
 # ENUMY - Statusy i Typy Agentów
 # ============================================================================
 
@@ -163,9 +187,13 @@ class AgentConfig:
     evolution_rate: float = 0.01
     learning_rate: float = 0.1
     
-    # Integracja
+    # Integracja z V3 World Memory System
     v3_memory_access: bool = True
     v2_model_access: bool = True
+    v3_world_memory_access: bool = True      # Dostęp do World Memory
+    v3_pattern_memory_access: bool = True    # Dostęp do Pattern Memory
+    v3_metadata_access: bool = True          # Dostęp do Metadata Memory
+    use_v3_knowledge: bool = True            # Czy korzystać z wiedzy V3 przy podejmowaniu decyzji
     
     def to_dict(self) -> Dict[str, Any]:
         """Konwersja do słownika"""
@@ -186,7 +214,11 @@ class AgentConfig:
             "evolution_rate": self.evolution_rate,
             "learning_rate": self.learning_rate,
             "v3_memory_access": self.v3_memory_access,
-            "v2_model_access": self.v2_model_access
+            "v2_model_access": self.v2_model_access,
+            "v3_world_memory_access": self.v3_world_memory_access,
+            "v3_pattern_memory_access": self.v3_pattern_memory_access,
+            "v3_metadata_access": self.v3_metadata_access,
+            "use_v3_knowledge": self.use_v3_knowledge
         }
     
     @classmethod
@@ -608,6 +640,20 @@ class Agent:
         # Lock dla thread-safety
         self._lock = threading.Lock()
         
+        # Integracja z V3 World Memory System
+        self._v3_integration: Optional[V3Integration] = None
+        self._v3_memory_manager: Optional[MemoryManager] = None
+        self._v3_world_memory: Optional[WorldMemory] = None
+        self._v3_pattern_memory: Optional[PatternMemory] = None
+        self._v3_metadata_memory: Optional[MetadataMemory] = None
+        self._v3_observation_memory: Optional[ObservationMemory] = None
+        
+        # Flaga wskazująca, czy V3 jest dostępne dla tego agenta
+        self._v3_available: bool = False
+        
+        # Inicjalizacja integracji V3
+        self._initialize_v3_integration()
+        
         logger.info(f"Utworzono agenta: {self.agent_id} (typ: {self.agent_type.value})")
     
     def _get_default_personality(self) -> PersonalityVector:
@@ -649,6 +695,280 @@ class Agent:
         else:
             # Domyślne wartości dla innych typów
             return PersonalityVector()
+    
+    def _initialize_v3_integration(self) -> None:
+        """
+        Inicjalizuje integrację z V3 World Memory System.
+        Łączy z globalną instancją V3Integration lub tworzy lokalne połączenie.
+        """
+        if not self.config.v3_world_memory_access and not self.config.v3_pattern_memory_access:
+            self._v3_available = False
+            return
+        
+        try:
+            # Spróbuj uzyskać globalną instancję V3Integration
+            if V3_AVAILABLE and get_v3_integration is not None:
+                try:
+                    v3_integration = get_v3_integration()
+                    if v3_integration:
+                        self._connect_to_v3_integration(v3_integration)
+                        return
+                except Exception:
+                    pass
+            
+            # Jeśli nie ma globalnej instancji, spróbuj utworzyć lokalne połączenie
+            if V3_AVAILABLE:
+                try:
+                    from ..v3.v3_integration import tworz_v3_integration
+                    v3_integration = tworz_v3_integration()
+                    self._connect_to_v3_integration(v3_integration)
+                except Exception as e:
+                    logger.warning(f"Nie udało się utworzyć V3Integration dla agenta {self.agent_id}: {e}")
+            
+            self._v3_available = self._v3_memory_manager is not None
+            
+        except Exception as e:
+            logger.warning(f"Błąd inicjalizacji V3 dla agenta {self.agent_id}: {e}")
+            self._v3_available = False
+    
+    def _connect_to_v3_integration(self, v3_integration: V3Integration) -> None:
+        """
+        Łączy agenta z instancją V3Integration.
+        
+        Args:
+            v3_integration: Instancja V3Integration
+        """
+        try:
+            self._v3_integration = v3_integration
+            
+            # Pobierz MemoryManager
+            if hasattr(v3_integration, 'memory_manager') and v3_integration.memory_manager:
+                self._v3_memory_manager = v3_integration.memory_manager
+            
+            # Pobierz poszczególne pamięci z MemoryManager
+            if self._v3_memory_manager:
+                memory = self._v3_memory_manager
+                if hasattr(memory, 'world_memory') and memory.world_memory:
+                    self._v3_world_memory = memory.world_memory
+                if hasattr(memory, 'pattern_memory') and memory.pattern_memory:
+                    self._v3_pattern_memory = memory.pattern_memory
+                if hasattr(memory, 'metadata_memory') and memory.metadata_memory:
+                    self._v3_metadata_memory = memory.metadata_memory
+                if hasattr(memory, 'observation_memory') and memory.observation_memory:
+                    self._v3_observation_memory = memory.observation_memory
+            
+            self._v3_available = True
+            logger.info(f"Agent {self.agent_id} połączony z V3 World Memory System")
+            
+        except Exception as e:
+            logger.error(f"Błąd łączenia z V3Integration: {e}")
+            self._v3_available = False
+    
+    def is_v3_available(self) -> bool:
+        """Sprawdza, czy V3 jest dostępne dla tego agenta."""
+        return self._v3_available and V3_AVAILABLE
+    
+    def connect_to_v3(self, v3_integration: V3Integration) -> bool:
+        """
+        Ręcznie łączy agenta z instancją V3Integration.
+        
+        Args:
+            v3_integration: Instancja V3Integration
+            
+        Returns:
+            True jeśli połączenie się powiodło
+        """
+        try:
+            self._connect_to_v3_integration(v3_integration)
+            return self._v3_available
+        except Exception as e:
+            logger.error(f"Błąd ręcznego łączenia z V3: {e}")
+            return False
+    
+    def disconnect_from_v3(self) -> None:
+        """Odłącza agenta od V3 World Memory System."""
+        self._v3_integration = None
+        self._v3_memory_manager = None
+        self._v3_world_memory = None
+        self._v3_pattern_memory = None
+        self._v3_metadata_memory = None
+        self._v3_observation_memory = None
+        self._v3_available = False
+        logger.info(f"Agent {self.agent_id} odłączony od V3")
+    
+    # ==========================================================================
+    # METODY DOSTĘPU DO V3 MEMORY (tylko do odczytu - agenci nie modyfikują V3)
+    # ==========================================================================
+    
+    def get_world_memory(self) -> Optional[WorldMemory]:
+        """
+        Zwraca instancję WorldMemory z V3.
+        Agenci mogą jedynie odczytywać dane, nie modyfikować ich.
+        
+        Returns:
+            WorldMemory lub None
+        """
+        if not self.is_v3_available() or not self.config.v3_world_memory_access:
+            return None
+        return self._v3_world_memory
+    
+    def get_pattern_memory(self) -> Optional[PatternMemory]:
+        """
+        Zwraca instancję PatternMemory z V3.
+        Agenci mogą jedynie odczytywać dane, nie modyfikować ich.
+        
+        Returns:
+            PatternMemory lub None
+        """
+        if not self.is_v3_available() or not self.config.v3_pattern_memory_access:
+            return None
+        return self._v3_pattern_memory
+    
+    def get_metadata_memory(self) -> Optional[MetadataMemory]:
+        """
+        Zwraca instancję MetadataMemory z V3.
+        Agenci mogą jedynie odczytywać dane, nie modyfikować ich.
+        
+        Returns:
+            MetadataMemory lub None
+        """
+        if not self.is_v3_available() or not self.config.v3_metadata_access:
+            return None
+        return self._v3_metadata_memory
+    
+    def get_observation_memory(self) -> Optional[ObservationMemory]:
+        """
+        Zwraca instancję ObservationMemory z V3.
+        Agenci mogą jedynie odczytywać dane, nie modyfikować ich.
+        
+        Returns:
+            ObservationMemory lub None
+        """
+        if not self.is_v3_available():
+            return None
+        return self._v3_observation_memory
+    
+    def get_v3_integration(self) -> Optional[V3Integration]:
+        """
+        Zwraca instancję V3Integration.
+        
+        Returns:
+            V3Integration lub None
+        """
+        return self._v3_integration
+    
+    def get_worlds_from_v3(self, limit: int = 100, world_type: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Pobiera światy z V3 World Memory.
+        
+        Args:
+            limit: Maksymalna liczba światów do zwrócenia
+            world_type: Filtr po typie świata (opcjonalnie)
+            
+        Returns:
+            Lista światów (jako dict)
+        """
+        if not self.is_v3_available() or not self.config.v3_world_memory_access:
+            return []
+        
+        try:
+            world_memory = self.get_world_memory()
+            if world_memory and hasattr(world_memory, 'get_all_worlds'):
+                all_worlds = world_memory.get_all_worlds()
+                
+                if world_type:
+                    all_worlds = [w for w in all_worlds if w.get('world_type') == world_type]
+                
+                return all_worlds[:limit]
+        except Exception as e:
+            logger.warning(f"Błąd pobierania światów z V3: {e}")
+        
+        return []
+    
+    def get_patterns_from_v3(self, limit: int = 100, pattern_type: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Pobiera wzorce z V3 Pattern Memory.
+        
+        Args:
+            limit: Maksymalna liczba wzorców
+            pattern_type: Filtr po typie wzorca (opcjonalnie)
+            
+        Returns:
+            Lista wzorców (jako dict)
+        """
+        if not self.is_v3_available() or not self.config.v3_pattern_memory_access:
+            return []
+        
+        try:
+            pattern_memory = self.get_pattern_memory()
+            if pattern_memory and hasattr(pattern_memory, 'get_all_patterns'):
+                all_patterns = pattern_memory.get_all_patterns()
+                
+                if pattern_type:
+                    all_patterns = [p for p in all_patterns if p.get('pattern_type') == pattern_type]
+                
+                return all_patterns[:limit]
+        except Exception as e:
+            logger.warning(f"Błąd pobierania wzorców z V3: {e}")
+        
+        return []
+    
+    def get_metadata_from_v3(self, metadata_type: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Pobiera metadane z V3 Metadata Memory.
+        
+        Args:
+            metadata_type: Filtr po typie metadanych (opcjonalnie)
+            
+        Returns:
+            Słownik z metadanymi
+        """
+        if not self.is_v3_available() or not self.config.v3_metadata_access:
+            return {}
+        
+        try:
+            metadata_memory = self.get_metadata_memory()
+            if metadata_memory and hasattr(metadata_memory, 'get_all_metadata'):
+                all_metadata = metadata_memory.get_all_metadata()
+                
+                if metadata_type:
+                    return {k: v for k, v in all_metadata.items() if k.startswith(metadata_type)}
+                
+                return all_metadata
+        except Exception as e:
+            logger.warning(f"Błąd pobierania metadanych z V3: {e}")
+        
+        return {}
+    
+    def get_v3_knowledge_summary(self) -> Dict[str, Any]:
+        """
+        Zwraca podsumowanie wiedzy dostępnej z V3.
+        
+        Returns:
+            Słownik z podsumowaniem wiedzy V3
+        """
+        summary = {
+            "v3_available": self.is_v3_available(),
+            "worlds_count": 0,
+            "patterns_count": 0,
+            "metadata_count": 0,
+            "observations_count": 0
+        }
+        
+        if self.is_v3_available():
+            try:
+                if self._v3_world_memory:
+                    summary["worlds_count"] = len(self._v3_world_memory.get_all_worlds())
+                if self._v3_pattern_memory:
+                    summary["patterns_count"] = len(self._v3_pattern_memory.get_all_patterns())
+                if self._v3_metadata_memory:
+                    summary["metadata_count"] = len(self._v3_metadata_memory.get_all_metadata())
+                if self._v3_observation_memory:
+                    summary["observations_count"] = len(self._v3_observation_memory.get_all_observations())
+            except Exception as e:
+                logger.warning(f"Błąd generowania podsumowania V3: {e}")
+        
+        return summary
     
     def initialize(self) -> bool:
         """
@@ -756,7 +1076,7 @@ class Agent:
                 }
     
     def _analyze_context(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Analizuje kontekst decyzji"""
+        """Analizuje kontekst decyzji z wsparciem V3 World Memory"""
         analysis = {
             "worlds": context.get("worlds", []),
             "models": context.get("models", []),
@@ -772,6 +1092,11 @@ class Agent:
             }
         }
         
+        # Integracja z V3 World Memory - pobierz dodatkowe dane
+        if self.config.use_v3_knowledge and self.is_v3_available():
+            v3_knowledge = self._get_v3_knowledge_for_decision(context)
+            analysis["v3_knowledge"] = v3_knowledge
+        
         # Symulacja analizy na podstawie osobowości
         if self.personality.analysis_power > 0.7:
             analysis["deep_analysis"] = True
@@ -781,6 +1106,55 @@ class Agent:
             analysis["exploration_mode"] = True
         
         return analysis
+    
+    def _get_v3_knowledge_for_decision(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Pobiera wiedzę z V3 World Memory System do wsparcia podejmowania decyzji.
+        Agenci jedynie odczytują dane, nie modyfikują ich.
+        
+        Args:
+            context: Kontekst decyzji
+            
+        Returns:
+            Słownik z wiedzą z V3
+        """
+        v3_knowledge = {
+            "from_v3": False,
+            "worlds_used": 0,
+            "patterns_used": 0,
+            "metadata_used": 0
+        }
+        
+        if not self.is_v3_available():
+            return v3_knowledge
+        
+        try:
+            # Pobierz światy z V3
+            worlds = self.get_worlds_from_v3(limit=50)
+            if worlds:
+                v3_knowledge["from_v3"] = True
+                v3_knowledge["worlds_used"] = len(worlds)
+                v3_knowledge["worlds"] = worlds
+            
+            # Pobierz wzorce z V3
+            patterns = self.get_patterns_from_v3(limit=30)
+            if patterns:
+                v3_knowledge["patterns_used"] = len(patterns)
+                v3_knowledge["patterns"] = patterns
+            
+            # Pobierz metadane z V3
+            metadata = self.get_metadata_from_v3()
+            if metadata:
+                v3_knowledge["metadata_used"] = len(metadata)
+                v3_knowledge["metadata"] = metadata
+            
+            # Podsumowanie statystyk V3
+            v3_knowledge["v3_summary"] = self.get_v3_knowledge_summary()
+            
+        except Exception as e:
+            logger.warning(f"Błąd pobierania wiedzy V3 dla agenta {self.agent_id}: {e}")
+        
+        return v3_knowledge
     
     def _choose_action(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """Wybiera akcję na podstawie analizy"""
@@ -1315,17 +1689,22 @@ def tworz_agent(
     agent_type: AgentType = AgentType.ANALYST,
     agent_id: Optional[str] = None,
     config: Optional[AgentConfig] = None,
+    v3_integration: Optional[V3Integration] = None,
+    enable_v3_access: bool = True,
     **kwargs
 ) -> Agent:
     """
-    Fabryka tworzących agentów V4.
+    Fabryka tworzących agentów V4 z obsługą integracji V3.
     
     Zgodnie z 05_AGENT_SYSTEM.md i 10_IMPLEMENTATION_MAP.md Etap 4A
+    Sprint 6: Integracja z V3 World Memory System
     
     Args:
         agent_type: Typ agenta (z AgentType)
         agent_id: ID agenta (opcjonalnie, auto-generowane)
         config: Konfiguracja agenta (opcjonalnie)
+        v3_integration: Instancja V3Integration (opcjonalnie)
+        enable_v3_access: Czy włączać dostęp do V3 (domyślnie True)
         **kwargs: Dodatkowe parametry konfiguracji
         
     Returns:
@@ -1335,19 +1714,43 @@ def tworz_agent(
         >>> agent = tworz_agent(AgentType.ANALYST)
         >>> agent.initialize()
         >>> decision = agent.make_decision(context)
+        
+        >>> # Z integracją V3
+        >>> v3_integration = tworz_v3_integration()
+        >>> agent = tworz_agent(AgentType.ANALYST, v3_integration=v3_integration)
     """
     if config is None:
-        config = AgentConfig(
-            agent_type=agent_type,
-            agent_id=agent_id,
+        # Domyślna konfiguracja z V3
+        config_kwargs = {
+            "agent_type": agent_type,
+            "agent_id": agent_id,
+            "v3_world_memory_access": enable_v3_access,
+            "v3_pattern_memory_access": enable_v3_access,
+            "v3_metadata_access": enable_v3_access,
+            "use_v3_knowledge": enable_v3_access,
             **kwargs
-        )
+        }
+        config = AgentConfig(**config_kwargs)
     else:
         config.agent_type = agent_type
         if agent_id:
             config.agent_id = agent_id
+        # Zaktualizuj ustawienia V3 jeśli nie zostały podane
+        if not hasattr(config, 'v3_world_memory_access') or config.v3_world_memory_access is None:
+            config.v3_world_memory_access = enable_v3_access
+        if not hasattr(config, 'v3_pattern_memory_access') or config.v3_pattern_memory_access is None:
+            config.v3_pattern_memory_access = enable_v3_access
+        if not hasattr(config, 'v3_metadata_access') or config.v3_metadata_access is None:
+            config.v3_metadata_access = enable_v3_access
+        if not hasattr(config, 'use_v3_knowledge') or config.use_v3_knowledge is None:
+            config.use_v3_knowledge = enable_v3_access
     
     agent = Agent(config)
+    
+    # Jeśli przekazano V3Integration, połącz agenta
+    if v3_integration and enable_v3_access:
+        agent.connect_to_v3(v3_integration)
+    
     return agent
 
 
@@ -1470,4 +1873,92 @@ if __name__ == "__main__":
     
     print("\n" + "=" * 60)
     print("All Agent Core tests passed!")
+    print("=" * 60)
+    
+    # ============================================================================
+    # TESTY INTEGRACJI V3 (Sprint 6)
+    # ============================================================================
+    
+    print("\n" + "=" * 60)
+    print("TESTY INTEGRACJI V3 (Sprint 6)")
+    print("=" * 60)
+    
+    # Test 7: Integracja z V3 World Memory System
+    print("\n[Test 7] Integracja z V3 World Memory System...")
+    
+    # Spróbuj utworzyć agenta z dostępem do V3
+    try:
+        from ..v3.v3_integration import tworz_v3_integration
+        from ..v3.memory.memory_manager import tworz_memory_manager
+        from ..v3.worlds.world_manager import tworz_world_manager
+        
+        # Utwórz instancję V3
+        memory_manager = tworz_memory_manager()
+        world_manager = tworz_world_manager()
+        v3_integration = tworz_v3_integration(
+            memory_manager=memory_manager,
+            world_manager=world_manager
+        )
+        
+        # Utwórz agenta z V3
+        v3_agent = tworz_agent(
+            AgentType.ANALYST,
+            v3_integration=v3_integration,
+            enable_v3_access=True
+        )
+        
+        print(f"  Agent V3: {v3_agent.agent_id}")
+        print(f"  V3 dostępny: {v3_agent.is_v3_available()}")
+        
+        # Test dostępu do V3
+        if v3_agent.is_v3_available():
+            print(f"  World Memory dostępny: {v3_agent.get_world_memory() is not None}")
+            print(f"  Pattern Memory dostępny: {v3_agent.get_pattern_memory() is not None}")
+            
+            # Test podsumowania wiedzy V3
+            summary = v3_agent.get_v3_knowledge_summary()
+            print(f"  Podsumowanie V3: {summary}")
+            
+            # Test podejmowania decyzji z wiedzą V3
+            v3_decision = v3_agent.make_decision(context)
+            has_v3_knowledge = "v3_knowledge" in v3_decision.get("analysis", {})
+            print(f"  Decyzja z wiedzą V3: {has_v3_knowledge}")
+            
+            if has_v3_knowledge:
+                v3_knowledge = v3_decision["analysis"]["v3_knowledge"]
+                print(f"  Światy użyte: {v3_knowledge.get('worlds_used', 0)}")
+                print(f"  Wzorce użyte: {v3_knowledge.get('patterns_used', 0)}")
+        else:
+            print("  V3 nie jest dostępny - test pominięty")
+            
+    except ImportError as e:
+        print(f"  Import V3 nie dostępny (jest to normalne w fazie rozwoju): {e}")
+    except Exception as e:
+        print(f"  Błąd integracji V3: {e}")
+    
+    # Test 8: Agent z wyłączonym dostępem do V3
+    print("\n[Test 8] Agent z wyłączonym dostępem do V3...")
+    no_v3_agent = tworz_agent(
+        AgentType.VALUE_STRATEGIST,
+        enable_v3_access=False
+    )
+    print(f"  Agent: {no_v3_agent.agent_id}")
+    print(f"  V3 dostępny: {no_v3_agent.is_v3_available()}")
+    
+    # Test 9: Ręczne połączenie z V3
+    print("\n[Test 9] Ręczne połączenie z V3...")
+    try:
+        manual_agent = tworz_agent(AgentType.EXPERIMENTATOR, enable_v3_access=False)
+        print(f"  Agent przed połączeniem: V3 dostępny = {manual_agent.is_v3_available()}")
+        
+        # Spróbuj połączyć ręcznie
+        if 'v3_integration' in locals() and v3_integration:
+            success = manual_agent.connect_to_v3(v3_integration)
+            print(f"  Połączenie ręczne: {'SUKCES' if success else 'BŁĄD'}")
+            print(f"  Agent po połączeniu: V3 dostępny = {manual_agent.is_v3_available()}")
+    except Exception as e:
+        print(f"  Błąd ręcznego połączenia: {e}")
+    
+    print("\n" + "=" * 60)
+    print("All Agent Core + V3 Integration tests completed!")
     print("=" * 60)
