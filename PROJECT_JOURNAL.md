@@ -178,6 +178,54 @@
 - **Efekt**: Pełna funkcjonalność transferu wiedzy, gotowy do integracji z agentami V4
 - **Status**: ✅ Zakończony (Sprint 4 z SPRINTY.md)
 
+#### 2026-07-30 - Audyt zgodności, runtime i mapa stabilizacji
+
+- **Autor / zespół audytowy**: `nullhnters auditors`
+- **Typ zmiany**: AUDIT / DOCS / GOVERNANCE
+- **Zakres**:
+  - audyt zgodności developmentu z dokumentacją;
+  - ocena gotowości projektu do dalszego skalowania;
+  - wykonawcza weryfikacja runtime na Pythonie 3.11.9;
+  - aktualizacja roadmapy Sprintów 7.1–10;
+  - aktualizacja zasad pracy dla programisty i jego asystenta.
+- **Utworzony artefakt**:
+  - `SSI_DOCUMENTATION/AUDYT_ZGODNOSCI_I_GOTOWOSCI_DO_SKALOWANIA_2026-07-30.md`
+- **Zaktualizowane pliki**:
+  - `SPRINTY.md` - dodano Sprinty 7.1–7.5 oraz wykonywalne kryteria dla Sprintów 8–10;
+  - `PROJECT_RULES.md` - dodano mapę operacyjną, Definition of Done, statusy funkcjonalności i bramkę `GO/NO-GO`;
+  - `PROJECT_JOURNAL.md` - niniejszy wpis.
+- **Wykonane kontrole**:
+  - Python 3.11.9, 64-bit - interpreter uruchomiony poprawnie;
+  - `python -m compileall -q .` - PASS;
+  - import smoke - 26/27 kluczowych modułów zaimportowano poprawnie;
+  - CLI `uruchom_system_v2.py --help` - PASS;
+  - `python -m pip check` - FAIL, wykryto dwa konflikty zależności;
+  - pytest discovery - BLOCKED, brak `pytest` w aktywnym środowisku;
+  - wbudowana komenda `test` - FAIL, wywołanie nieistniejącego `integration.main()`, błędny exit code `0`;
+  - demonstracje V3/V4 - TIMEOUT;
+  - test ścieżek - potwierdzono błędne `SSI/SSI/data` i `SSI/SSI/tests`.
+- **Najważniejsze ustalenia**:
+  - brak repozytoryjnego test suite i CI mimo wcześniejszych deklaracji;
+  - `pamiec_modeli_v2/` zawiera kod wymagany przez entrypoint, ale jest ignorowany przez Git;
+  - `Agent.make_decision()` ma reprodukowalny deadlock wynikający z ponownego przejęcia niereentrantnego locka;
+  - `warstwa5_generator` nie jest przenośny z powodu zakodowanej ścieżki `D:\sts\aplikacjaTyperBetAi`;
+  - dokumentacja, roadmapa i implementacja mają niespójne statusy V3/V4;
+  - brak lockfile, izolowanego środowiska, health checks, metryk i bramek jakości.
+- **Decyzja**:
+  - `NO-GO` dla skalowania produkcyjnego;
+  - `GO` dla dalszego developmentu po realizacji działań P0;
+  - brak dowodu testowego nie może być traktowany jako sukces.
+- **Plan naprawczy**:
+  - Sprint 7.1 - reprodukowalne środowisko;
+  - Sprint 7.2 - konfiguracja i przenośność;
+  - Sprint 7.3 - bezpieczeństwo współbieżności V4;
+  - Sprint 7.4 - kontrakty V2→V3→V4;
+  - Sprint 7.5 - obserwowalność i kontrola błędów;
+  - Sprint 8 - automatyczne testy i CI;
+  - Sprint 9 - dokumentacja wykonywalna i źródło prawdy;
+  - Sprint 10 - bramka gotowości do skalowania.
+- **Status**: ✅ Audyt i dokumentacja zarządcza zakończone; implementacja działań naprawczych oczekuje na realizację.
+
 ---
 
 ## 3. Decyzje Architektoliczne
