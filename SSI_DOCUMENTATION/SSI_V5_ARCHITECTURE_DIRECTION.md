@@ -1,8 +1,9 @@
 # SSI V5 - Kierunek Architektoniczny po Input Layer
 
-**Wersja dokumentu:** 1.0  
+**Wersja dokumentu:** 1.1  
 **Data utworzenia:** 2026-07-31  
-**Status:** AKTYWNY - Kierunek rozwoju po Sprint 11.1  
+**Ostatnia aktualizacja:** 2026-07-31 (dodano SSI Runtime Controller)
+**Status:** AKTYWNY - Kierunek rozwoju po Sprint 11.1 z Runtime Controller  
 **Autor:** Mistral Vibe + SSI System  
 **Podstawa:** `SSI_V5_ROADMAP.md`, `SPRINT_11_REFACTORED.md`, Dyskusja architektoniczna
 
@@ -33,6 +34,173 @@ SSI V5 jest **warstwą integracyjną i sterującą**, która:
 ```
 SSI V5 = Orkiestrator + Kontroler + Zarządca AI + System Pamięci + Bramka Komunikacyjna
 ```
+
+---
+
+## SSI Runtime Controller - Fundament Systemu
+
+**Pierwszy działający silnik życia systemu SSI V5.**
+
+### Filozofia
+
+> "Najpierw robimy organizm, który umie się włączyć, pracować, zapisać stan i wyłączyć. 
+> Dopiero później dajemy mu mózg."
+
+**SSI Runtime Controller to FUNDAMENT**, bez którego nie ma co budować kolejnych warstw:
+- AI Model Orchestrator
+- Developer Gateway
+- Network Architecture
+
+### Rola w systemie
+
+```
+V1 STARTER
+    |
+    ▼
+SSI Runtime Controller
+    |
+    ├── uruchamia SSI
+    ├── sprawdza godzinę
+    ├── wybiera tryb pracy
+    ├── uruchamia kolektory
+    ├── zapisuje stan
+    ├── wyłącza proces
+    └── przy następnym starcie odtwarza pamięć
+```
+
+### Tryby pracy
+
+| Tryb | Godziny | Cel | Harmonogram |
+|------|---------|-----|-------------|
+| **NOCNY_CYKL** | 00:00 - 06:00 | Pobranie danych, analiza V2/V3/V4, przygotowanie informacji | 01:00 V2, 02:00 V3, 03:00 V4, 04:00 analiza, 05:00 zapis, 06:00 STOP |
+| **DZIENNY_CYKL** | 10:00 - 16:00 | Odczyt stanu, kontynuacja zadań, przetwarzanie | Odczyt poprzedniego stanu, sprawdzenie kolejki, kontynuacja |
+| **WIECZORNY_CYKL** | 18:00 - 23:00 | Analiza nowych danych, aktualizacja pamięci | Analiza, aktualizacja, 23:00 SAVE + STOP |
+
+### Pamięć sesji (execution_memory.json)
+
+**Zasada:** System NIE myśli "zostałem wyłączony", tylko zapisuje stan.
+
+```json
+{
+  "system": "SSI_V5",
+  "last_session": {
+    "start": "2026-07-31 10:00",
+    "stop": "2026-07-31 16:00"
+  },
+  "completed_tasks": [
+    "V2_COLLECTION",
+    "V3_MEMORY_UPDATE"
+  ],
+  "pending_tasks": [
+    "V4_AGENT_ANALYSIS",
+    "MODEL_PROMPT_GENERATION"
+  ],
+  "status": "PAUSED"
+}
+```
+
+Przy kolejnym uruchomieniu: `BOOT → czytam execution_memory.json → wznawiam kolejkę`
+
+### Architektura
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   SSI Runtime Controller                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  start_ssi.py (V1 → SSI)                               │  │
+│  │    - Punkt wejścia wywoływany przez V1                   │  │
+│  │    - Inicjalizuje RuntimeController                      │  │
+│  │    - Uruchamia główną pętlę                             │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  RuntimeController                                      │  │
+│  │    - start() → Rozpoczyna sesję                        │  │
+│  │    - stop() → Kończy sesję z zapisem stanu               │  │
+│  │    - check_time() → WorkMode (NOCNY/DZIENNY/WIECZORNY)  │  │
+│  │    - run_cycle() → Główna pętla pracy                    │  │
+│  │    - run_collectors() → Uruchamia kolektory wg harmonogramu│  │
+│  │    - save_state() → Zapis execution_memory.json         │  │
+│  │    - load_state() → Odczyt execution_memory.json         │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  Scheduler                                             │  │
+│  │    - WorkMode: Enum[NOCNY, DZIENNY, WIECZORNY, STOP]    │  │
+│  │    - SCHEDULE: Dict[WorkMode, List[Task]]                │  │
+│  │    - get_current_mode(time: datetime) → WorkMode        │  │
+│  │    - get_schedule(mode: WorkMode) → List[ScheduledTask] │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  StateManager                                           │  │
+│  │    - execution_memory: ExecutionMemory                  │  │
+│  │    - save() → Zapisz stan do execution_memory.json       │  │
+│  │    - load() → Odczytaj stan z execution_memory.json       │  │
+│  │    - update_session(start/stop) → Aktualizuj sesję       │  │
+│  │    - add_completed(task) → Dodaj wykonane zadanie        │  │
+│  │    - add_pending(task) → Dodaj oczekujące zadanie          │  │
+│  └─────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Pliki modułu
+
+```
+SSI/v5/runtime/
+├── __init__.py
+├── runtime_controller.py    # Główny kontroler
+├── scheduler.py             # Harmonogram trybów pracy
+├── state_manager.py         # Zapis/odczyt stanu
+└── models.py                # Modele danych (WorkMode, SessionInfo, ExecutionMemory)
+
+SSI/v5/launcher/
+└── start_ssi.py             # Punkt wejścia (wywoływany przez V1)
+
+SSI/v5/execution_memory.json  # Generowany - pamięć sesji
+```
+
+### Przykładowy output `python start_ssi.py`
+
+```
+==================================
+SSI V5 RUNTIME START
+==================================
+
+Godzina: 00:03
+Tryb: NOCNY_CYKL
+
+Uruchamiam:
+✓ V2 Collector
+✓ V3 Collector
+✓ V4 Collector
+
+Pobieranie danych...
+
+MODEL INPUT PACKAGE:
+{
+  V2: 5 modeli
+  V3: pamięć świata
+  V4: agenci
+}
+
+Sesja aktywna:
+Koniec: 06:00
+
+==================================
+```
+
+### Kryteria akceptacji Sprint 11.6
+
+- [ ] `start_ssi.py` uruchamia system i sprawdza godzinę
+- [ ] RuntimeController rozpoznaje tryb pracy na podstawie godziny
+- [ ] System uruchamia odpowiednie kolektory wg harmonogramu
+- [ ] Wyłączenie i zapis stanu happen automatycznie o ustalonej godzinie
+- [ ] `execution_memory.json` jest tworzony i aktualizowany
+- [ ] Przy ponownym uruchomieniu system odczytuje stan i kontynuuje prace
+- [ ] test: `python start_ssi.py` wyświetla status i harmonogram
 
 ---
 

@@ -143,7 +143,7 @@
 ## 📊 NOWY PODZIAŁ SPRINTU 11
 
 ```
-Sprint 11: Uniwersalna Magistrala Danych SSI V5
+Sprint 11: Uniwersalna Magistrala Danych + Runtime Controller SSI V5
 ├── Sprint 11.1: V2 Data Collector (✅ ZAKOŃCZONY)
 │   ├── BaseCollector (Interfejs Wspólny) ← NOWOŚĆ
 │   ├── V2DataCollector
@@ -162,7 +162,7 @@ Sprint 11: Uniwersalna Magistrala Danych SSI V5
 │
 ├── Sprint 11.4: External Knowledge Collector
 │   ├── ExternalKnowledgeCollector (dziedziczy z BaseCollector)
-│   ├── Source types: DEVELOPER, LABORATORIES, COLLECTIVE, SYSTEM
+│   ├── Source types: DEVELOPER, LABORATORIES, COLLECTIVE, SYSTEM, AGENTS
 │   └── test_external_collector.py
 │
 ├── Sprint 11.5: Unified Input Layer
@@ -171,21 +171,31 @@ Sprint 11: Uniwersalna Magistrala Danych SSI V5
 │   ├── KnowledgeCollectorRegistry (rejestr kolektorów)
 │   └── test_unified_input.py
 │
-├── Sprint 11.6: Knowledge Classifier
+├── Sprint 11.6: SSI Runtime Controller (NOWY - Fundament systemu)
+│   ├── runtime_controller.py (sterowanie cyklem życia)
+│   ├── scheduler.py (harmonogram trybów pracy)
+│   ├── state_manager.py (zapis/odczyt stanu)
+│   ├── execution_memory.json (pamięć sesji)
+│   ├── launcher/start_ssi.py (punkt wejścia)
+│   └── test_runtime_controller.py
+│
+├── Sprint 11.7: Knowledge Classifier
 │   ├── KnowledgeClassifier (klasyfikuje dane)
 │   ├── ClassificationRules (zasady klasyfikacji)
 │   └── test_classifier.py
 │
-├── Sprint 11.7: Context & Prompt Builder
+├── Sprint 11.8: Context & Prompt Builder
 │   ├── KnowledgeContextBuilder (buduje kontekst)
 │   ├── PromptBuilder (buduje prompty dla modelu)
 │   └── test_prompt_builder.py
 │
-└── Sprint 11.8: AI Gateway
+└── Sprint 11.9: AI Gateway
     ├── AIModelGateway (komunikacja z Ollama)
     ├── ModelRouter (wybór modelu)
     ├── TaskQueue (kolejka zadań)
     └── test_ai_gateway.py
+
+**UWAGA:** Sprint 11.6 (Runtime Controller) jest **fundamentem systemu**. Bez niego nie ma co budować kolejnych warstw!
 ```
 
 ---
@@ -278,7 +288,7 @@ SSI/tests/v5/
 
 ### 🔢 **Sprint 11.4: External Knowledge Collector**
 
-**Cel:** Zbieranie danych z zewnętrznych źródeł (programista, laboratoria, kolektyw, system).
+**Cel:** Zbieranie danych z zewnętrznych źródeł (programista, laboratoria, kolektyw, system, agenci).
 
 #### **Źródła danych:**
 | Źródło | Typ | Opis |
@@ -289,6 +299,8 @@ SSI/tests/v5/
 | Laboratorium Grup | LABORATORY | Grupy, kupony, strategie grupowe |
 | Laboratorium Kuponów | LABORATORY | Kupony, kombinacje, analiza ryzyka |
 | Kolektyw Agentów | COLLECTIVE | Rozmowy, decyzje, konflikty, sojusze |
+| Agenci | AGENTS | Stan agentów, pamięć, strategie |
+| Komunikaty Systemowe | SYSTEM | Logi, status, zdarzenia systemowe |
 | Komunikaty Systemowe | SYSTEM | Logi, status, zdarzenia systemowe |
 
 #### **Architektura:**
@@ -384,7 +396,186 @@ SSI/tests/v5/
 
 ---
 
-### 🔢 **Sprint 11.6: Knowledge Classifier**
+### 🔢 **Sprint 11.6: SSI Runtime Controller**
+
+**Cel:** Stworzenie **fundamentu życia systemu** - pierwszego działającego silnika, który umie się włączyć, pracować, zapisać stan i wyłączyć.
+
+**Filozofia:** "Najpierw robimy organizm, który umie się włączyć, pracować, zapisać stan i wyłączyć. Dopiero później dajemy mu mózg."
+
+#### **Rola w systemie:**
+```
+V1 STARTER
+    |
+    ▼
+SSI Runtime Controller
+    |
+    ├── uruchamia SSI
+    ├── sprawdza godzinę
+    ├── wybiera tryb pracy
+    ├── uruchamia kolektory
+    ├── zapisuje stan
+    ├── wyłącza proces
+    └── przy następnym starcie odtwarza pamięć
+```
+
+#### **Tryby pracy:**
+
+| Tryb | Godziny | Cel |
+|------|---------|-----|
+| **NOCNY_CYKL** | 00:00 - 06:00 | Pobranie danych, analiza V2/V3/V4, przygotowanie informacji |
+| **DZIENNY_CYKL** | 10:00 - 16:00 | Odczyt stanu, kontynuacja zadań, przetwarzanie |
+| **WIECZORNY_CYKL** | 18:00 - 23:00 | Analiza nowych danych, aktualizacja pamięci |
+
+#### **Przebieg NOCNY_CYKL (przykład):**
+```
+00:01 START
+     │
+     ▼
+01:00 V2 Collector
+     │
+     ▼
+02:00 V3 Collector
+     │
+     ▼
+03:00 V4 Collector
+     │
+     ▼
+04:00 Analiza
+     │
+     ▼
+05:00 Zapis pamięci
+     │
+     ▼
+06:00 STOP (automatyczne wyłączenie)
+```
+
+#### **Pamięć sesji (execution_memory.json):**
+```json
+{
+  "system": "SSI_V5",
+  "last_session": {
+    "start": "2026-07-31 10:00",
+    "stop": "2026-07-31 16:00"
+  },
+  "completed_tasks": [
+    "V2_COLLECTION",
+    "V3_MEMORY_UPDATE"
+  ],
+  "pending_tasks": [
+    "V4_AGENT_ANALYSIS",
+    "MODEL_PROMPT_GENERATION"
+  ],
+  "status": "PAUSED"
+}
+```
+
+**Zasada:** System NIE myśli "zostałem wyłączony", tylko zapisuje stan. Przy kolejnym uruchomieniu odczytuje `execution_memory.json` i wznawia kolejkę.
+
+#### **Architektura:**
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   SSI Runtime Controller                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  RuntimeController                                      │  │
+│  │    - start()                                           │  │
+│  │    - stop()                                            │  │
+│  │    - check_time() -> WorkMode                          │  │
+│  │    - select_mode() -> WorkMode                         │  │
+│  │    - run_collectors()                                 │  │
+│  │    - save_state()                                     │  │
+│  │    - load_state()                                     │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  Scheduler                                             │  │
+│  │    - NOCNY_CYKL: 00:00-06:00                           │  │
+│  │    - DZIENNY_CYKL: 10:00-16:00                          │  │
+│  │    - WIECZORNY_CYKL: 18:00-23:00                        │  │
+│  │    - get_current_mode() -> WorkMode                    │  │
+│  │    - get_schedule(mode: WorkMode) -> List[Task]        │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  StateManager                                           │  │
+│  │    - save.execution_memory()                          │  │
+│  │    - load_execution_memory()                          │  │
+│  │    - update_session_start()                            │  │
+│  │    - update_session_stop()                             │  │
+│  │    - add_completed_task(task: str)                      │  │
+│  │    - add_pending_task(task: str)                        │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  ExecutionMemory (execution_memory.json)                │  │
+│  │    - system: str                                       │  │
+│  │    - last_session: SessionInfo                         │  │
+│  │    - completed_tasks: List[str]                        │  │
+│  │    - pending_tasks: List[str]                          │  │
+│  │    - status: Literal["RUNNING", "PAUSED", "STOPPED"]    │  │
+│  └─────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### **Pliki do utworzenia:**
+```
+SSI/v5/runtime/
+├── __init__.py
+├── runtime_controller.py    # Główny kontroler
+├── scheduler.py             # Harmonogram trybów pracy
+├── state_manager.py         # Zapis/odczyt stanu
+├── models.py                # Modele danych (WorkMode, SessionInfo)
+└── execution_memory.json    # Pamięć sesji (generowany)
+
+SSI/v5/launcher/
+└── start_ssi.py             # Punkt wejścia (wywoływany przez V1)
+
+SSI/tests/v5/
+└── test_runtime_controller.py (testy jednostkowe)
+```
+
+#### **Kryteria Akceptacji:**
+- [ ] `start_ssi.py` uruchamia system i sprawdza godzinę
+- [ ] RuntimeController rozpoznaje tryb pracy na podstawie godziny
+- [ ] System uruchamia odpowiednie kolektory wg harmonogramu
+- [ ] Wyłączenie i zapis stanu happen automatycznie o ustalonej godzinie
+- [ ] `execution_memory.json` jest tworzony/aktualizowany
+- [ ] Przy ponownym uruchomieniu system odczytuje stan i kontynuuje
+- [ ] Test: `python start_ssi.py` wyświetla status i harmonogram
+
+#### **Przykładowy output `python start_ssi.py`:**
+```
+==================================
+SSI V5 RUNTIME START
+==================================
+
+Godzina: 00:03
+Tryb: NOCNY_CYKL
+
+Uruchamiam:
+✓ V2 Collector
+✓ V3 Collector
+✓ V4 Collector
+
+Pobieranie danych...
+
+MODEL INPUT PACKAGE:
+{
+  V2: 5 modeli
+  V3: pamięć świata
+  V4: agenci
+}
+
+Sesja aktywna:
+Koniec: 06:00
+
+==================================
+```
+
+---
+
+### 🔢 **Sprint 11.7: Knowledge Classifier**
 
 **Cel:** Klasyfikacja wiedzy - odpowiedź na pytanie: **"Co zrobić z tą informacją?"**
 
@@ -616,9 +807,19 @@ SSI/
         ├── context_builder.py        # Builder kontekstu (Sprint 11.7)
         └── prompt_builder.py         # Builder promptow
     │
+    └── runtime/                      # Runtime Controller (Sprint 11.6 - FUNDAMENT)
+        ├── __init__.py
+        ├── runtime_controller.py    # Główny kontroler
+        ├── scheduler.py             # Harmonogram trybów pracy
+        ├── state_manager.py         # Zapis/odczyt stanu
+        └── models.py                # Modele danych
+    │
+    └── launcher/                    # Punkt wejścia (Sprint 11.6)
+        └── start_ssi.py             # Uruchamiany przez V1
+    │
     └── ai_gateway/                   # Bramka AI
         ├── __init__.py
-        ├── model_gateway.py          # Bramka modeli (Sprint 11.8)
+        ├── model_gateway.py          # Bramka modeli (Sprint 11.9)
         ├── model_router.py           # Router modeli
         ├── task_queue.py             # Kolejka zadań
         ├── ollama_integration.py    # Integracja z Ollama
@@ -626,10 +827,9 @@ SSI/
     │
     └── core/                         # SSI V5 CORE - PRZYSZLOSC
         ├── __init__.py
-        ├── bootloader.py            # Bootloader (Sprint 11.9)
-        ├── state_manager.py         # State Manager (Sprint 11.9)
-        ├── supervisor.py            # Supervisor (Sprint 11.9)
-        └── lifecycle.py              # Lifecycle Manager (Sprint 11.9)
+        ├── bootloader.py            # Bootloader (Sprint 11.9+)
+        ├── supervisor.py            # Supervisor (Sprint 11.9+)
+        └── lifecycle.py              # Lifecycle Manager (Sprint 11.9+)
     │
     └── orchestrator/                # AI Model Orchestrator - PRZYSZLOSC
         ├── __init__.py
@@ -660,10 +860,11 @@ SSI/tests/
     ├── test_v4_collector.py         # Testy V4 (Sprint 11.3)
     ├── test_external_collector.py  # Testy External (Sprint 11.4)
     ├── test_unified_input.py       # Testy Unified (Sprint 11.5)
-    ├── test_classifier.py           # Testy Classifier (Sprint 11.6)
-    ├── test_context_builder.py     # Testy Context (Sprint 11.7)
-    ├── test_prompt_builder.py      # Testy Prompt (Sprint 11.7)
-    └── test_ai_gateway.py          # Testy AI Gateway (Sprint 11.8)
+    ├── test_runtime_controller.py   # Testy Runtime Controller (Sprint 11.6)
+    ├── test_classifier.py           # Testy Classifier (Sprint 11.7)
+    ├── test_context_builder.py     # Testy Context (Sprint 11.8)
+    ├── test_prompt_builder.py      # Testy Prompt (Sprint 11.8)
+    └── test_ai_gateway.py          # Testy AI Gateway (Sprint 11.9)
 
 SSI_DOCUMENTATION/
 ├── SSI_V5_ROADMAP.md              # Glowna mapa (zaktualizowana)
@@ -686,17 +887,18 @@ SSI_DOCUMENTATION/
 ### **Implementacyjne:**
 1. **Sprint 11.2** - Utworzyć `BaseCollector` + `V3DataCollector`
 2. **Sprint 11.3** - `V4DataCollector`
-3. **Sprint 11.4** - `ExternalKnowledgeCollector` (najważniejszy!)
+3. **Sprint 11.4** - `ExternalKnowledgeCollector` (w tym AGENTS source type)
 4. **Sprint 11.5** - `SSIKnowledgePackage` + `KnowledgeCollectorManager`
-5. **Sprint 11.6** - `KnowledgeClassifier`
-6. **Sprint 11.7** - `ContextBuilder` + `PromptBuilder`
-7. **Sprint 11.8** - `AIModelGateway` + `OllamaIntegration`
+5. **Sprint 11.6** - **SSI Runtime Controller** (FUNDAMENT - start_ssi.py, runtime_controller, scheduler, state_manager)
+6. **Sprint 11.7** - `KnowledgeClassifier`
+7. **Sprint 11.8** - `ContextBuilder` + `PromptBuilder`
+8. **Sprint 11.9** - `AIModelGateway` + `OllamaIntegration`
 
-### **Po Sprint 11.8 (SSI V5 CORE):**
-1. **Sprint 11.9** - `SSI Lifecycle Manager` (Bootloader, State Manager, Supervisor)
-2. **Sprint 11.10** - `AI Model Orchestrator` (Model Registry, Task Scheduler, Model Executor)
-3. **Sprint 11.11** - `Developer Gateway` (Input Handler, Task Translator, Communication Bridge)
-4. **Sprint 11.12** - `Dual Environment Communication` (Network Protocol, State Synchronizer)
+### **Po Sprint 11.9 (AI Gateway完成):**
+1. **Sprint 11.10** - `SSI Lifecycle Manager` (Bootloader, State Manager, Supervisor)
+2. **Sprint 11.11** - `AI Model Orchestrator` (Model Registry, Task Scheduler, Model Executor)
+3. **Sprint 11.12** - `Developer Gateway` (Input Handler, Task Translator, Communication Bridge)
+4. **Sprint 11.13** - `Dual Environment Communication` (Network Protocol, State Synchronizer)
 
 ### **Długoterminowe:**
 - **Sprint 12+** - Kontynuować z pamięcią wejściową, modelami językowymi itd.

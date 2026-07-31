@@ -78,22 +78,23 @@ Qwen2.5:7B / i5 / i7 / Future Models
 **ETAP: Integracja AI Core + Samorozwoj Systemu**
 
 ```
-Sprint 11:uniwersalna Magistrala Danych (8 pod-sprintow)
+Sprint 11: Uniwersalna Magistrala Danych + Runtime Controller (9 pod-sprintow)
 ├── 11.1: V2 Data Collector + BaseCollector (ZAKONCZONY)
 ├── 11.2: V3 Knowledge Collector
 ├── 11.3: V4 Agent Collector  
-├── 11.4: External Knowledge Collector
+├── 11.4: External Knowledge Collector (+ AGENTS source)
 ├── 11.5: Unified Input Layer
-├── 11.6: Knowledge Classifier
-├── 11.7: Context i Prompt Builder
-└── 11.8: AI Gateway
+├── 11.6: SSI Runtime Controller (FUNDAMENT - start_ssi.py, scheduler, state_manager)
+├── 11.7: Knowledge Classifier
+├── 11.8: Context i Prompt Builder
+└── 11.9: AI Gateway
 
 Sprint 12: System Pamieci Wejsciowej i Wiedzy SSI
 Sprint 13: Model Jezykowy SSI V5 Core
-Sprint 14: Klasyfikacja Informacji i Routing (polaczony z 11.6)
+Sprint 14: Klasyfikacja Informacji i Routing
 Sprint 15: Panel Programisty SSI V5
 Sprint 16: Panel Uzytkownika SSI  
-Sprint 17: Zarzadzanie Wieloma Modelami AI (polaczony z 11.8)
+Sprint 17: Zarzadzanie Wieloma Modelami AI
 Sprint 18: Integracja Laboratoriow AI
 Sprint 19: Kolektyw Agentow i Komunikacja
 Sprint 20: Bramka Gotowosci SSI V5
@@ -127,7 +128,7 @@ Sprint 20: Bramka Gotowosci SSI V5
 
 ### Sprint 11.4: External Knowledge Collector
 - ExternalKnowledgeCollector (dziedziczy z BaseCollector)
-- Zrodla: DEVELOPER, LABORATORIES, COLLECTIVE, SYSTEM
+- Zrodla: DEVELOPER, LABORATORIES, COLLECTIVE, SYSTEM, **AGENTS**
 - Status: PLANNED (WAZNY!)
 
 ### Sprint 11.5: Unified Input Layer
@@ -136,17 +137,26 @@ Sprint 20: Bramka Gotowosci SSI V5
 - KnowledgeCollectorRegistry (rejestr kolektorow)
 - Status: PLANNED
 
-### Sprint 11.6: Knowledge Classifier
+### Sprint 11.6: SSI Runtime Controller (FUNDAMENT SYSTEMU)
+- launcher/start_ssi.py (punkt wejścia, wywoływany przez V1)
+- runtime/runtime_controller.py (główny kontroler cykлу życia)
+- runtime/scheduler.py (tryby pracy: NOCNY_CYKL, DZIENNY_CYKL, WIECZORNY_CYKL)
+- runtime/state_manager.py (zapis/odczyt execution_memory.json)
+- runtime/models.py (WorkMode, SessionInfo, ExecutionMemory)
+- execution_memory.json (pamięć sesji - generowany)
+- Status: **PRIORYTET MAX** - Bez tego nie ma co budować dalej!
+
+### Sprint 11.7: Knowledge Classifier
 - KnowledgeClassifier (klasyfikuje dane)
 - ClassificationRules (zasady klasyfikacji)
 - Status: PLANNED
 
-### Sprint 11.7: Context and Prompt Builder
+### Sprint 11.8: Context and Prompt Builder
 - KnowledgeContextBuilder (buduje kontekst)
 - PromptBuilder (buduje prompty dla modelu)
 - Status: PLANNED
 
-### Sprint 11.8: AI Gateway
+### Sprint 11.9: AI Gateway
 - AIModelGateway (komunikacja z Ollama)
 - ModelRouter (wybor modelu)
 - TaskQueue (kolejka zadan)
@@ -162,14 +172,14 @@ Sprint 20: Bramka Gotowosci SSI V5
 ### Sprint 13: Model Jezykowy SSI V5 Core
 
 ### Sprint 14: Klasyfikacja Informacji i Routing
-UWAGA: Polaczony z Sprintem 11.6
+UWAGA: Polaczony z Sprintem 11.7
 
 ### Sprint 15: Panel Programisty SSI V5
 
 ### Sprint 16: Panel Uzytkownika SSI
 
 ### Sprint 17: Zarzadzanie Wieloma Modelami AI
-UWAGA: Polaczony z Sprintem 11.8
+UWAGA: Polaczony z Sprintem 11.9
 
 ### Sprint 18: Integracja Laboratoriow AI
 UWAGA: Czesciowo zrealizowane w Sprint 11.4
@@ -203,14 +213,26 @@ SSI/v5/
 │   ├── collector_manager.py (Sprint 11.5)
 │   └── knowledge_package.py (Sprint 11.5)
 │
+├── runtime/                         # Sprint 11.6 - SSI Runtime Controller (FUNDAMENT)
+│   ├── __init__.py
+│   ├── runtime_controller.py      # Główny kontroler
+│   ├── scheduler.py               # Tryby pracy (NOCNY/DZIENNY/WIECZORNY)
+│   ├── state_manager.py           # Zapis/odczyt stanu
+│   └── models.py                  # Modele danych
+│
+├── launcher/                       # Sprint 11.6 - Punkt wejścia
+│   └── start_ssi.py               # Uruchamiany przez V1
+│
+├── execution_memory.json          # Generowany - pamięć sesji
+│
 ├── processing/
-│   ├── classifier.py (Sprint 11.6)
-│   ├── context_builder.py (Sprint 11.7)
-│   └── prompt_builder.py (Sprint 11.7)
+│   ├── classifier.py (Sprint 11.7)
+│   ├── context_builder.py (Sprint 11.8)
+│   └── prompt_builder.py (Sprint 11.8)
 │
 └── ai_gateway/
-    ├── model_gateway.py (Sprint 11.8)
-    └── ollama_integration.py (Sprint 11.8)
+    ├── model_gateway.py (Sprint 11.9)
+    └── ollama_integration.py (Sprint 11.9)
 
 ---
 
