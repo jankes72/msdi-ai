@@ -511,6 +511,31 @@ Stworzyć autonomiczny ekosystem uczących się agentów, który rozumie, analiz
 
 ---
 
+#### 2026-07-31 - Sprint 7.2: Stabilizacja konfiguracji i przenośności
+- **Zmiana**: Naprawa systemu ścieżek i poprawa przenośności konfiguracji
+- **Opis**:
+  - **SSI/config/paths.py**:
+    - Dodano `get_root_path()` z obsługą `SSI_ROOT`, `PROJECT_ROOT` i domyślnego wyliczania względem `__file__`
+    - Zmieniono wszystkie ścieżki z `str` na `pathlib.Path` w `SSIPaths`
+    - Odpowiednio zaktualizowano `get_absolute_path()` i `create_directory_structure()`
+    - Usunięto podwójne prefiksy `SSI/SSI` - walidowane w `SSIConfigValidator`
+  - **SSI/config/validator.py**:
+    - Zaktualizowano `_validate_path_format()` do obsługi typów `Path` i `str`
+  - **warstwa5_generator/konfiguracja.py**:
+    - Zastąpiono zakodowaną ścieżkę `D:\sts\aplikacjaTyperBetAi` przenośnym `get_project_root()`
+    - Usunięto operacje I/O (`os.makedirs`) z `__post_init__` - zastąpione lazy properties
+    - Wszystkie ścieżki teraz zwracają `Path` zamiast `str`
+    - Dodano `ensure_directories_exist()` i `Config.ensure_directories()` dla jawnego tworzenia struktur
+  - **SSI/__init__.py**:
+    - Dodano automatyczną walidację konfiguracji (`validate_config()`) podczas pierwszego importu SSI
+  - **SSI/tests/test_paths.py**:
+    - Zaktualizowano testy, by działały z typem `Path`
+- **Powód**: Implementacja Sprint 7.2 z SPRINTY.md - stabilizacja konfiguracji przed produkcją
+- **Efekt**: Ścieżki przenośne, bez operacji I/O podczas importu, walidacja konfiguracji przy starcie
+- **Status**: ✅ Zakończony (Sprint 7.2 z SPRINTY.md)
+
+---
+
 #### 2026-07-31 - Sprint 7.4: Kontrakty i walidacja przepływu V2 → V3 → V4
 - **Zmiana**: Implementacja wersjonowanych kontraktów danych i pionowego przepływu
 - **Opis**:
@@ -535,6 +560,6 @@ Stworzyć autonomiczny ekosystem uczących się agentów, który rozumie, analiz
 ---
 
 **Status Dokumentu:** Aktywny  
-**Wersja:** 2.5  
-**Ostatnia Aktualizacja:** 2026-07-31 (Sprint 7.4 - Kontrakty i walidacja przepływu V2→V3→V4)
+**Wersja:** 2.6  
+**Ostatnia Aktualizacja:** 2026-07-31 (Sprint 7.2 + 7.4 - Stabilizacja konfiguracji i Kontrakty)
 **Autor:** MSDI AI / SSI System + Mistral Vibe

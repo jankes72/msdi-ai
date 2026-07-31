@@ -135,12 +135,14 @@ class SSIConfigValidator:
         ]
         
         for path in all_paths:
-            if "SSI/SSI" in path or "SSI\\SSI" in path:
+            # path może być Path lub str, konwertujemy na str
+            path_str = str(path)
+            if "SSI/SSI" in path_str or "SSI\\SSI" in path_str:
                 self.errors.append(
                     ConfigValidationError(
-                        field_name=f"path_{path}",
-                        field_value=path,
-                        message=f"Path contains double SSI prefix: {path}"
+                        field_name=f"path_{path_str}",
+                        field_value=path_str,
+                        message=f"Path contains double SSI prefix: {path_str}"
                     )
                 )
     

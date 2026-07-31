@@ -2,47 +2,167 @@
 Konfiguracja Warstwy 5 - Generator Rozszerzonego Swiata Obserwacji
 
 Definiuje ścieżki, parametry i ustawienia dla modułów Warstwy 5.
+
+UWAGA: Ten moduł NIE powinien wykonywać operacji I/O podczas importu.
+Ścieżki są obliczane leniwie (lazy) przy pierwszym użyciu.
 """
 
 import os
 from pathlib import Path
 from dataclasses import dataclass, field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def get_project_root() -> Path:
+    """
+    Zwraca główny katalog projektu w sposób przenośny.
+    
+    Kolejność priorytetów:
+    1. Zmienna środowiskowa PROJECT_ROOT
+    2. Zmienna środowiskowa SSI_ROOT  
+    3. Ścieżka względna od tego pliku (warstwa5_generator/konfiguracja.py -> ../../)
+    
+    Returns:
+        Path: Absolutna ścieżka do katalogu głównego projektu
+    """
+    # 1. Spróbuj PROJECT_ROOT
+    project_root = os.environ.get('PROJECT_ROOT')
+    if project_root:
+        return Path(project_root).resolve()
+    
+    # 2. Spróbuj SSI_ROOT
+    ssi_root = os.environ.get('SSI_ROOT')
+    if ssi_root:
+        return Path(ssi_root).resolve()
+    
+    # 3. Domyślna - od tego pliku (warstwa5_generator/konfiguracja.py)
+    # zum ../../, um vom warstwa5_generator zum Projektroot zu gelangen
+    return Path(__file__).parent.parent.resolve()
 
 
 @dataclass
 class SciezkiConfig:
-    """Konfiguracja ścieżek do plików i katalogów."""
+    """Konfiguracja ścieżek do plików i katalogów.
     
-    # Katalog główny projektu
-    ROOT_DIR: str = "D:\\sts\\aplikacjaTyperBetAi"
+    UWAGA: Wszystkie ścieżki są typem Path, nie str.
+    Kastalogi i pliki są obliczane wzgledem ROOT_DIR wartosci leniwie.
+    """
     
-    # Katalogi V2 (źródło danych)
-    V2_MODELE_TREND: str = os.path.join(ROOT_DIR, "modele_dataBase_futbol_trend")
-    V2_MODELE_KURSY: str = os.path.join(ROOT_DIR, "modele_kursy_przygotowane")
-    V2_PAMIEC: str = os.path.join(ROOT_DIR, "pamiec_modeli_v2")
+    # Nie przechowujemy ROOT_DIR jako string, ale wyliczamy go dynamicznie
+    # Uzywamy lazy property, aby nie wykonywać operacji I/O podczas importu
     
-    # Katalogi Warstwy 5 (docelowe)
-    WARSTWA5_DIR: str = os.path.join(ROOT_DIR, "warstwa5_generator")
-    WARSTWA5_DANE: str = os.path.join(WARSTWA5_DIR, "dane")
-    WARSTWA5_EXPORTS: str = os.path.join(WARSTWA5_DANE, "exports")
-    WARSTWA5_LOGS: str = os.path.join(WARSTWA5_DANE, "logs")
+    # Flaga czy struktura katalogów została utworzona
+    _directories_created: bool = False
     
-    # Pliki wyjściowe
-    ROZSZERZONY_SWIAT_FILE: str = os.path.join(WARSTWA5_EXPORTS, "rozszerzony_swiat_obserwacji.json")
-    METADANE_CECH_FILE: str = os.path.join(WARSTWA5_EXPORTS, "metadane_cech.json")
-    EWOLUCJA_PAMIECI_FILE: str = os.path.join(WARSTWA5_EXPORTS, "ewolucja_pamieci.json")
-    PODSUMOWANIE_FILE: str = os.path.join(WARSTWA5_EXPORTS, "podsumowanie_analizy.json")
+    @property
+    def ROOT_DIR(self) -> Path:
+        """Główny katalog projektu - wyliczany dynamicznie."""
+        return get_project_root()
     
-    # Pliki logów
-    LOG_KOLEKTOR: str = os.path.join(WARSTWA5_LOGS, "kolektor.log")
-    LOG_GENERATOR: str = os.path.join(WARSTWA5_LOGS, "generator.log")
-    LOG_ANALIZATOR: str = os.path.join(WARSTWA5_LOGS, "analizator.log")
+    @property
+    def V2_MODELE_TREND(self) -> Path:
+        """Katalog modeli trend V2."""
+        return self.ROOT_DIR / "modele_dataBase_futbol_trend"
+    
+    @property
+    def V2_MODELE_KURSY(self) -> Path:
+        """Katalog modeli kursów V2."""
+        return self.ROOT_DIR / "modele_kursy_przygotowane"
+    
+    @property
+    def V2_PAMIEC(self) -> Path:
+        """Katalog pamięci V2."""
+        return self.ROOT_DIR / "pamiec_modeli_v2"
+    
+    @property
+    def WARSTWA5_DIR(self) -> Path:
+        """Katalog Warstwy 5."""
+        return self.ROOT_DIR / "warstwa5_generator"
+    
+    @property
+    def WARSTWA5_DANE(self) -> Path:
+        """Katalog danych Warstwy 5."""
+        return self.WARSTWA5_DIR / "dane"
+    
+    @property
+    def WARSTWA5_EXPORTS(self) -> Path:
+        """Katalog eksportów Warstwy 5."""
+        return self.WARSTWA5_DANE / "exports"
+    
+    @property
+    def WARSTWA5_LOGS(self) -> Path:
+        """Katalog logów Warstwy 5."""
+        return self.WARSTWA5_DANE / "logs"
+    
+    @property
+    def ROZSZERZONY_SWIAT_FILE(self) -> Path:
+        """Plik rozszerzonego świata obserwacji."""
+        return self.WARSTWA5_EXPORTS / "rozszerzony_swiat_obserwacji.json"
+    
+    @property
+    def METADANE_CECH_FILE(self) -> Path:
+        """Plik metadanych cech."""
+        return self.WARSTWA5_EXPORTS / "metadane_cech.json"
+    
+    @property
+    def EWOLUCJA_PAMIECI_FILE(self) -> Path:
+        """Plik ewolucji pamięci."""
+        return self.WARSTWA5_EXPORTS / "ewolucja_pamieci.json"
+    
+    @property
+    def PODSUMOWANIE_FILE(self) -> Path:
+        """Plik podsumowania analizy."""
+        return self.WARSTWA5_EXPORTS / "podsumowanie_analizy.json"
+    
+    @property
+    def LOG_KOLEKTOR(self) -> Path:
+        """Plik logu kolektora."""
+        return self.WARSTWA5_LOGS / "kolektor.log"
+    
+    @property
+    def LOG_GENERATOR(self) -> Path:
+        """Plik logu generatora."""
+        return self.WARSTWA5_LOGS / "generator.log"
+    
+    @property
+    def LOG_ANALIZATOR(self) -> Path:
+        """Plik logu analizatora."""
+        return self.WARSTWA5_LOGS / "analizator.log"
+    
+    def ensure_directories_exist(self) -> bool:
+        """
+        Zapewnia, że wymagane katalogi istnieją.
+        
+        UWAGA: Ta metoda powinna być wywoływana JAWNIE, a nie podczas importu.
+        
+        Returns:
+            True jeśli wszystkie katalogi zostały utworzone
+        """
+        if self._directories_created:
+            return True
+        
+        try:
+            directories = [self.WARSTWA5_EXPORTS, self.WARSTWA5_LOGS]
+            for path in directories:
+                path.mkdir(parents=True, exist_ok=True)
+            
+            self._directories_created = True
+            logger.info("Required directories created successfully")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to create directories: {e}")
+            return False
     
     def __post_init__(self):
-        """Utwórz brakujące katalogi."""
-        for path in [self.WARSTWA5_EXPORTS, self.WARSTWA5_LOGS]:
-            os.makedirs(path, exist_ok=True)
+        """
+        NIE tworzy katalogów podczas importu!
+        Zamiast tego, wywołaj ensure_directories_exist() jawnie.
+        """
+        # Nie robimy nic podczas __post_init__ - lazily initialization
+        pass
 
 
 @dataclass
@@ -141,9 +261,22 @@ class Config:
         "3:2": "1", "2:3": "2", "4:2": "1", "2:4": "2", "5:1": "1", "1:5": "2"
     })
     
+    def ensure_directories(self) -> bool:
+        """
+        Zapewnia, że wszystkie wymagane katalogi istnieją.
+        
+        UWAGA: Wywołaj tę metodę JAWNIE, a nie podczas importu.
+        
+        Returns:
+            True jeśli katalogi zostały utworzone
+        """
+        return self.sciezki.ensure_directories_exist()
+    
     def __post_init__(self):
-        """Inicjalizacja konfiguracji."""
-        self.sciezki.__post_init__()
+        """Inicjalizacja konfiguracji - NIE wykonuje operacji I/O!"""
+        # Nie wywołujemy __post_init__ SciezkiConfig, ponieważ to robiłoby I/O
+        # Zamiast tego, użytkownik powinien wywołać ensure_directories() jawnie
+        pass
 
 
 # Instancja globalnej konfiguracji

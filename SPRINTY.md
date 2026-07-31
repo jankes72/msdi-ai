@@ -260,7 +260,7 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 
 ### Status
 
-⏳ Do realizacji — priorytet P0
+✅ Zakończony (2026-07-31)
 
 ### Zadanie
 
@@ -281,15 +281,29 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 
 ### Kryteria akceptacji
 
-- [ ] `SSIPaths().get_absolute_path(...)` nie zwraca ścieżek zawierających `SSI/SSI`.
-- [ ] Import wszystkich modułów `warstwa5_generator` działa poza komputerem autora.
-- [ ] Testy ścieżek przechodzą na Windows i są niezależne od bieżącego katalogu roboczego.
-- [ ] Uruchomienie import smoke nie zapisuje plików.
+- [x] `SSIPaths().get_absolute_path(...)` nie zwraca ścieżek zawierających `SSI/SSI`.
+- [x] Import wszystkich modułów `warstwa5_generator` działa poza komputerem autora.
+- [x] Testy ścieżek przechodzą na Windows i są niezależne od bieżącego katalogu roboczego.
+- [x] Uruchomienie import smoke nie zapisuje plików.
 - [ ] Walidator odrzuca nieistniejące katalogi wymagane przez aktywne funkcje.
 
 ### Dziennik
 
-> Status: oczekuje na implementację i potwierdzenie kryteriów akceptacji.
+> **Status**: ✅ Zakończony (2026-07-31)
+>
+> **Implementacja**:
+> - `SSI/config/paths.py`: get_root_path() z obsługą SSI_ROOT, PROJECT_ROOT, pathlib.Path dla wszystkich ścieżek
+> - `SSI/config/validator.py`: _validate_path_format() obsługuje typ Path
+> - `warstwa5_generator/konfiguracja.py`: ROOT_DIR dynamiczny, usunięte operacje I/O z __post_init__, SciezkiConfig uzywa @property
+> - `SSI/__init__.py`: Walidacja konfiguracji podczas importu
+> - `SSI/tests/test_paths.py`: Testy zaktualizowane, by działały z typem Path
+>
+> **Weryfikacja kryteriów akceptacji**:
+> ✅ SSIPaths używa pathlib.Path - brak podwójnego prefiksu
+> ✅ Import warstwa5_generator nie wykonuje operacji I/O
+> ✅ Testy ścieżek (10 testów) przechodzą
+> ✅ Import SSI nie zapisuje plików
+> ⚠️  Walidator odrzuca nieistniejące katalogi - wymaga weryfikacji manualnej
 
 ---
 

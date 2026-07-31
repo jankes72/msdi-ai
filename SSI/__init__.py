@@ -13,19 +13,35 @@ Architecture:
 - Decision Laboratories: Experimental environments
 - Feedback Loop: System for continuous improvement
 
-Version: 1.0
-Date: 2026-07-28
+Version: 1.1
+Date: 2026-07-31
 """
 
 from .core import SSISystem, SSIModule, SSIComponent
 from .config import SSIConfig
+from .config.settings import get_settings
+from .config.validator import validate_config, ConfigValidationError
 from . import data
 from . import v2
 # Temporarily commented to allow V4 development
 # from . import v3
 from . import v4
 
-__version__ = "1.0.0"
+# Walidacja konfiguracji podczas startu systemu
+# Wywołuje się przy pierwszym imporcie SSI
+try:
+    validate_config()
+    _CONFIG_VALID = True
+except ConfigValidationError as e:
+    import warnings
+    warnings.warn(f"Configuration validation warning: {e}", RuntimeWarning)
+    _CONFIG_VALID = False
+except Exception as e:
+    import warnings
+    warnings.warn(f"Configuration validation failed: {e}", RuntimeWarning)
+    _CONFIG_VALID = False
+
+__version__ = "1.1.0"
 __author__ = "SSI System"
 
 # Export of main classes

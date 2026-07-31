@@ -44,8 +44,9 @@ class TestSSIPaths(unittest.TestCase):
         ]
         
         for path in module_paths:
-            self.assertNotIn("SSI/SSI", path, f"Path {path} contains double SSI/SSI prefix")
-            self.assertNotIn("SSI\\SSI", path, f"Path {path} contains double SSI\\SSI prefix")
+            path_str = str(path)
+            self.assertNotIn("SSI/SSI", path_str, f"Path {path_str} contains double SSI/SSI prefix")
+            self.assertNotIn("SSI\\SSI", path_str, f"Path {path_str} contains double SSI\\SSI prefix")
         
         # Check all data paths
         data_paths = [
@@ -54,15 +55,17 @@ class TestSSIPaths(unittest.TestCase):
         ]
         
         for path in data_paths:
-            self.assertNotIn("SSI/SSI", path, f"Path {path} contains double SSI/SSI prefix")
-            self.assertNotIn("SSI\\SSI", path, f"Path {path} contains double SSI\\SSI prefix")
+            path_str = str(path)
+            self.assertNotIn("SSI/SSI", path_str, f"Path {path_str} contains double SSI/SSI prefix")
+            self.assertNotIn("SSI\\SSI", path_str, f"Path {path_str} contains double SSI\\SSI prefix")
         
         # Check configuration paths
         config_paths = [paths.config_path, paths.utils_path, paths.tests_path]
         
         for path in config_paths:
-            self.assertNotIn("SSI/SSI", path, f"Path {path} contains double SSI/SSI prefix")
-            self.assertNotIn("SSI\\SSI", path, f"Path {path} contains double SSI\\SSI prefix")
+            path_str = str(path)
+            self.assertNotIn("SSI/SSI", path_str, f"Path {path_str} contains double SSI/SSI prefix")
+            self.assertNotIn("SSI\\SSI", path_str, f"Path {path_str} contains double SSI\\SSI prefix")
     
     def test_get_absolute_path_returns_path_object(self):
         """Test that get_absolute_path returns a Path object."""
@@ -106,10 +109,11 @@ class TestSSIPaths(unittest.TestCase):
         ]
         
         for path in module_paths:
-            self.assertFalse(path.startswith("SSI/"), 
-                           f"Path {path} starts with SSI/")
-            self.assertFalse(path.startswith("SSI" + chr(92)),
-                           f"Path {path} starts with SSI backslash")
+            path_str = str(path)
+            self.assertFalse(path_str.startswith("SSI/"), 
+                           f"Path {path_str} starts with SSI/")
+            self.assertFalse(path_str.startswith("SSI" + chr(92)),
+                           f"Path {path_str} starts with SSI backslash")
     
     def test_pathlib_usage(self):
         """Test that root_path uses pathlib.Path."""
