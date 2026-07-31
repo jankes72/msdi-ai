@@ -214,15 +214,35 @@ SSI/v5/
 
 ---
 
+## Kierunek Rozwoju po Input Layer (Sprint 11.1-11.8)
+
+Po zakonczeniu Input Layer, SSI V5 bedzie rozwijany w kierunku:
+
+1. **SSI V5 CORE** - warstwa sterujaca i zarzadzajaca
+2. **AI Model Orchestrator** - zarzadzanie wieloma wyspecjalizowanymi modelami
+3. **State Management** - pamiec ciagla i odpornosc na awarie
+4. **Developer Gateway** - komunikacja z zewnetrznymi systemami
+5. **Network Architecture** - sieciowa architektura z wieloma wezlami
+
+Szczegolowy opis dostepny w: [SSI_V5_ARCHITECTURE_DIRECTION.md](./SSI_V5_ARCHITECTURE_DIRECTION.md)
+
+---
+
 ## KOLEJNE KROKI
 
 1. Zatwierdzic nowa architekture
 2. Zaktualizowac PROJECT_JOURNAL.md
 3. Zaimplementowac Sprint 11.2 (BaseCollector + V3DataCollector)
+4. Zapoznac sie z dokumentem [SSI_V5_ARCHITECTURE_DIRECTION.md](./SSI_V5_ARCHITECTURE_DIRECTION.md) przed kolejnymi sprintami
 
 ---
 
+## Referencje do Nowej Architektury
+
+- [SSI_V5_ARCHITECTURE_DIRECTION.md](./SSI_V5_ARCHITECTURE_DIRECTION.md) - Glowny dokument z kierunkiem architektonicznym
+- [SPRINT_11_REFACTORED.md](./SPRINT_11_REFACTORED.md) - Zaktualizowana wizja Sprintu 11
+
 Dokument: SSI_DOCUMENTATION/SSI_V5_ROADMAP.md
-Wersja: 2.0
+Wersja: 2.1
 Data: 2026-07-31
 Status: AKTYWNY

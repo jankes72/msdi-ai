@@ -567,6 +567,19 @@ SSI/tests/v5/
 
 ---
 
+## Kierunek Rozwoju Po Sprint 11
+
+Po zakonczeniu Sprintu 11 (Input Layer), system SSI V5 bedzie rozwijany w kierunku:
+
+- **SSI V5 CORE** - warstwa sterujaca (State Manager, Task Manager, Supervisor)
+- **AI Model Orchestrator** - zarzadzanie wieloma wyspecjalizowanymi modelami AI
+- **Developer Gateway** - komunikacja z zewnetrznymi systemami i programista
+- **Network Architecture** - sieciowa architektura z wieloma wezlami
+
+**Szczegolowa dokumentacja dostepna w:** [SSI_V5_ARCHITECTURE_DIRECTION.md](./SSI_V5_ARCHITECTURE_DIRECTION.md)
+
+---
+
 ## 🎯 NOWA MAPA PLIKÓW PO SPRINCIE 11
 
 ```
@@ -610,6 +623,34 @@ SSI/
         ├── task_queue.py             # Kolejka zadań
         ├── ollama_integration.py    # Integracja z Ollama
         └── model_config.py           # Konfiguracja modeli
+    │
+    └── core/                         # SSI V5 CORE - PRZYSZLOSC
+        ├── __init__.py
+        ├── bootloader.py            # Bootloader (Sprint 11.9)
+        ├── state_manager.py         # State Manager (Sprint 11.9)
+        ├── supervisor.py            # Supervisor (Sprint 11.9)
+        └── lifecycle.py              # Lifecycle Manager (Sprint 11.9)
+    │
+    └── orchestrator/                # AI Model Orchestrator - PRZYSZLOSC
+        ├── __init__.py
+        ├── model_registry.py        # Rejestr modeli (Sprint 11.10)
+        ├── task_scheduler.py        # Planowanie zadan (Sprint 11.10)
+        ├── model_executor.py        # Wykonawca modeli (Sprint 11.10)
+        └── orchestrator.py          # Glowny orkiestrator (Sprint 11.10)
+    │
+    └── developer_gateway/           # Developer Gateway - PRZYSZLOSC
+        ├── __init__.py
+        ├── input_handler.py         # Obsluga wejscia (Sprint 11.11)
+        ├── task_translator.py       # Tlumaczenie zadan (Sprint 11.11)
+        ├── result_aggregator.py      # Agregacja wynikow (Sprint 11.11)
+        └── communication_bridge.py  # Most komunikacyjny (Sprint 11.11)
+    │
+    └── network/                     # Network Communication - PRZYSZLOSC
+        ├── __init__.py
+        ├── protocol.py              # Protokol sieciowy (Sprint 11.12)
+        ├── message_queue.py         # Kolejka wiadomosci (Sprint 11.12)
+        ├── state_synchronizer.py    # Synchronizacja stanu (Sprint 11.12)
+        └── node_manager.py          # Zarzadzanie wezlami (Sprint 11.12)
 
 SSI/tests/
 └── v5/
@@ -622,11 +663,11 @@ SSI/tests/
     ├── test_classifier.py           # Testy Classifier (Sprint 11.6)
     ├── test_context_builder.py     # Testy Context (Sprint 11.7)
     ├── test_prompt_builder.py      # Testy Prompt (Sprint 11.7)
-    ├── test_ai_gateway.py          # Testy AI Gateway (Sprint 11.8)
-    └── test_input_layer_smoke.py   # Testy Smoke (Sprint 11.1)
+    └── test_ai_gateway.py          # Testy AI Gateway (Sprint 11.8)
 
 SSI_DOCUMENTATION/
-├── SSI_V5_ROADMAP.md              # Glowna mapa (do zaktualizowania)
+├── SSI_V5_ROADMAP.md              # Glowna mapa (zaktualizowana)
+├── SSI_V5_ARCHITECTURE_DIRECTION.md # Kierunek architektoniczny (NOWY)
 ├── SPRINT_11_IMPLEMENTATION.md    # Stary podzial (do archiwizacji)
 └── SPRINT_11_REFACTORED.md        # NOWY - Ten dokument
 ```
@@ -638,8 +679,9 @@ SSI_DOCUMENTATION/
 ### **Natychmiastowe:**
 1. ✅ **Zatwierdzić nową architekturę** (ten dokument)
 2. **Zarchiwizować** `SPRINT_11_IMPLEMENTATION.md` (stary podział)
-3. **Zaktualizować** `SSI_V5_ROADMAP.md` z nowym podziałem
+3. ✅ **Zaktualizować** `SSI_V5_ROADMAP.md` z nowym podziałem (zrobione)
 4. **Zaktualizować** `PROJECT_JOURNAL.md` z nowym planem
+5. **Przeczytać** [SSI_V5_ARCHITECTURE_DIRECTION.md](./SSI_V5_ARCHITECTURE_DIRECTION.md) - kierunek rozwoju po Input Layer
 
 ### **Implementacyjne:**
 1. **Sprint 11.2** - Utworzyć `BaseCollector` + `V3DataCollector`
@@ -650,9 +692,16 @@ SSI_DOCUMENTATION/
 6. **Sprint 11.7** - `ContextBuilder` + `PromptBuilder`
 7. **Sprint 11.8** - `AIModelGateway` + `OllamaIntegration`
 
+### **Po Sprint 11.8 (SSI V5 CORE):**
+1. **Sprint 11.9** - `SSI Lifecycle Manager` (Bootloader, State Manager, Supervisor)
+2. **Sprint 11.10** - `AI Model Orchestrator` (Model Registry, Task Scheduler, Model Executor)
+3. **Sprint 11.11** - `Developer Gateway` (Input Handler, Task Translator, Communication Bridge)
+4. **Sprint 11.12** - `Dual Environment Communication` (Network Protocol, State Synchronizer)
+
 ### **Długoterminowe:**
 - **Sprint 12+** - Kontynuować z pamięcią wejściową, modelami językowymi itd.
 - **Skalowanie** - Nowe komputery/Modele AI będą łatwe do dodania
+- **Architektura sieciowa** - Rozbudowa do wielowęzłowego systemu SSI Network
 
 ---
 
