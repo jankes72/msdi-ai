@@ -1,0 +1,37 @@
+[
+    {
+        "entry_id": "personality_03_001",
+        "created_at": "2026-07-31T22:49:46.664754",
+        "updated_at": "2026-07-31T22:49:46.664754",
+        "data": {},
+        "memory_type": "personality",
+        "tags": [
+            "initial",
+            "personality"
+        ],
+        "priority": 1,
+        "expiration": null,
+        "active": true,
+        "validated": false,
+        "risk": 0.5,
+        "analysis": 0.7,
+        "creativity": 0.6,
+        "trust_v2": 0.75,
+        "trust_v3": 0.75,
+        "trust_v4": 0.75,
+        "trust_external": 0.65,
+        "traits": {
+            "risk_tolerance": 0.5,
+            "analysis_depth": 0.7,
+            "creativity_level": 0.6,
+            "patience": 0.7
+        },
+        "description": "Balanced approach with medium risk and cooperation",
+        "agent_type": "balanced",
+        "priorities": [
+            "balance",
+            "efficiency",
+            "adaptability"
+        ]
+    }
+]

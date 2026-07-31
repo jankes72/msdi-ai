@@ -1,0 +1,29 @@
+[
+    {
+        "entry_id": "behavior_02_001",
+        "created_at": "2026-07-31T22:49:46.660664",
+        "updated_at": "2026-07-31T22:49:46.660664",
+        "data": {},
+        "memory_type": "behavior",
+        "tags": [
+            "initial",
+            "behavior"
+        ],
+        "priority": 1,
+        "expiration": null,
+        "active": true,
+        "validated": false,
+        "action": "initial_setup",
+        "behavior_type": "initialization",
+        "description": "Initial behavior configuration for Agent_02",
+        "context": {},
+        "data_sources": [],
+        "effectiveness": 0.0,
+        "success_rate": 0.0,
+        "usage_count": 0,
+        "first_used": "2026-07-31T22:49:46.660664",
+        "last_used": "2026-07-31T22:49:46.660664",
+        "errors": [],
+        "corrections": []
+    }
+]

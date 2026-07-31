@@ -125,8 +125,12 @@ $RECYCLE.BIN/
 # CSV files
 *.csv
 
-# JSON data files
+# JSON data files - ignore large data files
+# EXCEPT: SSI memory files and runtime state (critical for system operation)
 *.json
+!SSI/memory/**/*.json
+!SSI/v5/runtime/*.json
+!SSI/v5/runtime/*.log
 
 # Database files
 *.db

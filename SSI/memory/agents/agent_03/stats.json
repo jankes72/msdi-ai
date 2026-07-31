@@ -1,0 +1,26 @@
+{
+    "personality": {
+        "count": 0,
+        "size": 0
+    },
+    "behavior": {
+        "count": 0,
+        "size": 0
+    },
+    "strategy": {
+        "count": 0,
+        "size": 0
+    },
+    "history": {
+        "count": 0,
+        "size": 0
+    },
+    "relationship": {
+        "count": 0,
+        "size": 0
+    },
+    "prompt": {
+        "count": 0,
+        "size": 0
+    }
+}

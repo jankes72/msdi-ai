@@ -1,0 +1,37 @@
+[
+    {
+        "entry_id": "personality_01_001",
+        "created_at": "2026-07-31T22:49:46.655562",
+        "updated_at": "2026-07-31T22:49:46.655562",
+        "data": {},
+        "memory_type": "personality",
+        "tags": [
+            "initial",
+            "personality"
+        ],
+        "priority": 1,
+        "expiration": null,
+        "active": true,
+        "validated": false,
+        "risk": 0.3,
+        "analysis": 0.9,
+        "creativity": 0.4,
+        "trust_v2": 0.8,
+        "trust_v3": 0.8,
+        "trust_v4": 0.8,
+        "trust_external": 0.6,
+        "traits": {
+            "risk_tolerance": 0.3,
+            "analysis_depth": 0.9,
+            "creativity_level": 0.4,
+            "patience": 0.6
+        },
+        "description": "High exploration, medium risk, low cooperation",
+        "agent_type": "analytical",
+        "priorities": [
+            "accuracy",
+            "analysis",
+            "verification"
+        ]
+    }
+]

@@ -1,0 +1,37 @@
+[
+    {
+        "entry_id": "personality_06_001",
+        "created_at": "2026-07-31T22:49:46.678396",
+        "updated_at": "2026-07-31T22:49:46.678396",
+        "data": {},
+        "memory_type": "personality",
+        "tags": [
+            "initial",
+            "personality"
+        ],
+        "priority": 1,
+        "expiration": null,
+        "active": true,
+        "validated": false,
+        "risk": 0.8,
+        "analysis": 0.65,
+        "creativity": 0.7,
+        "trust_v2": 0.7,
+        "trust_v3": 0.7,
+        "trust_v4": 0.6,
+        "trust_external": 0.5,
+        "traits": {
+            "risk_tolerance": 0.8,
+            "analysis_depth": 0.65,
+            "creativity_level": 0.7,
+            "patience": 0.4
+        },
+        "description": "High risk, high potential reward, independent",
+        "agent_type": "aggressive",
+        "priorities": [
+            "profit",
+            "opportunity",
+            "independence"
+        ]
+    }
+]
