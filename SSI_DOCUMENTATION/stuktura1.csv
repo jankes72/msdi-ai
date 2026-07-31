@@ -1,0 +1,14 @@
+ID;Modul;Warstwa;Nazwa;Opis;Status;Priorytet;Zaleznosci;Data_Utworzenia;Data_Aktualizacji;Wersja
+V2-001;V2;Data Intelligence;pobieranieKursow.py;Pobieranie kursów bukmacherskich;operational;Krytyczny;-;2025-01-01;2026-07-28;2.0
+V2-002;V2;Data Intelligence;pobieranieWynikow.py;Pobieranie wyników meczów;operational;Krytyczny;-;2025-01-01;2026-07-28;2.0
+V2-003;V2;Data Intelligence;dodawanieWynikow.py;Dodawanie wyników do historii;operational;Krytyczny;pobieranieKursow.py,pobieranieWynikow.py;2025-01-01;2026-07-28;2.0
+V2-004;V2;Data Intelligence;generatorDataBase.py;Generowanie bazy danych meczów;operational;Krytyczny;pobieranieKursow.py,pobieranieWynikow.py,dodawanieWynikow.py;2025-01-01;2026-07-28;2.0
+V2-005;V2;Data Intelligence;generatorDataBaseTrendAnalisAll.py;Analiza trendów w danych;operational;Krytyczny;generatorDataBase.py;2025-01-01;2026-07-28;2.0
+V2-006;V2;Model Laboratory;siec_01_zmiana_kursow;Analiza zmian kursów (1, X, 2);implemented;Wysoki;Data Layer;2025-02-01;2026-07-28;3.0
+V2-007;V2;Model Laboratory;siec_02_amplituda;Analiza amplitudy zmian;implemented;Wysoki;Data Layer;2025-02-01;2026-07-28;3.0
+V2-008;V2;Model Laboratory;siec_03_tempo;Analiza tempa zmian;implemented;Wysoki;Data Layer;2025-02-01;2026-07-28;3.0
+V2-009;V2;Model Laboratory;siec_04_synchronizacja;Analiza synchronizacji kursów;implemented;Wysoki;Data Layer;2025-02-01;2026-07-28;3.0
+V2-010;V2;Model Laboratory;RandomForest;Klasyfikator lasu losowego;implemented;Wysoki;Data Layer;2025-02-01;2026-07-28;3.0
+V2-011;V2;Model Laboratory;Klasyfikatory;Inne klasyfikatory;implemented;Sredni;Data Layer;2025-02-01;2026-07-28;3.0
+V2-012;V2;Integration;V2ToV3Bridge;Most V2 do V3;implemented;Krytyczny;V2 Model Lab, V3 World System;2025-06-01;2026-07-28;1.0
+V2-013;V2;Integration;WorldDataPackage;Pakiet danych V2 do V3;implemented;Krytyczny;V2ToV3Bridge;2025-06-01;2026-07-28;1.0

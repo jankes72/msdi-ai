@@ -29,7 +29,7 @@ Dokumentacja ma na celu:
 
 ### 1.3 Struktura Dokumentacji
 
-Dokumentacja podzielona jest na **11 tematycznych plików**, z których każdy opisuje odrębny aspekt systemu:
+Dokumentacja podzielona jest na **12 tematycznych plików**, z których każdy opisuje odrębny aspekt systemu:
 
 ```
 SSI_DOCUMENTATION/
@@ -44,7 +44,8 @@ SSI_DOCUMENTATION/
 ├── 07_EVOLUTION_ENGINE.md        # Silnik ewolucji systemu
 ├── 08_LABORATORIES.md             # System laboratoriów decyzyjnych
 ├── 09_FEEDBACK_LOOP.md            # System pętli sprzężenia zwrotnego
-└── 10_IMPLEMENTATION_MAP.md       # Mapa implementacji i roadmap
+├── 10_IMPLEMENTATION_MAP.md       # Mapa implementacji i roadmap
+└── V3_V4_INTEGRATION.md          # Integracja V3-V4, kontrakty, ADR
 ```
 
 ---

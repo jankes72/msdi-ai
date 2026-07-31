@@ -1,0 +1,17 @@
+ID;Modul;Warstwa;Nazwa;Opis;Status;Priorytet;Zaleznosci;Data_Utworzenia;Data_Aktualizacji;Wersja
+V3-001;V3;World Structure;World;Klasa bazowa świata;implemented;Krytyczny;V2 Model Lab;2025-05-01;2026-07-28;2.0
+V3-002;V3;World Structure;WorldManager;Manager światów;implemented;Krytyczny;World,V2ToV3Bridge;2025-05-01;2026-07-28;2.0
+V3-003;V3;World Structure;WorldMemory;Pamięć świata;implemented;Krytyczny;World;2025-05-01;2026-07-28;2.0
+V3-004;V3;World Structure;WorldIntegration;Integracja światów V3;implemented;Wysoki;WorldManager,WorldMemory;2025-05-01;2026-07-28;1.0
+V3-005;V3;Memory System;MemoryManager;Główny manager pamięci;implemented;Krytyczny;-;2025-05-01;2026-07-28;2.0
+V3-006;V3;Memory System;WorldMemory;Pamięć światów;implemented;Wysoki;MemoryManager;2025-05-01;2026-07-28;2.0
+V3-007;V3;Memory System;GroupMemory;Pamięć grup;implemented;Wysoki;MemoryManager;2025-05-01;2026-07-28;2.0
+V3-008;V3;Memory System;PatternMemory;Pamięć wzorców;implemented;Wysoki;MemoryManager;2025-05-01;2026-07-28;2.0
+V3-009;V3;Memory System;HistoricalResults;Historia wyników;implemented;Wysoki;MemoryManager;2025-05-01;2026-07-28;2.0
+V3-010;V3;Metadata;TaggingSystem;System tagowania (7 kategorii);implemented;Wysoki;WorldMemory;2025-06-01;2026-07-28;1.0
+V3-011;V3;Metadata;EconomicAnalyzer;Analiza ekonomiczna;implemented;Wysoki;WorldMemory;2025-06-01;2026-07-28;1.0
+V3-012;V3;Metadata;PatternDetector;Wykrywanie wzorców;implemented;Wysoki;WorldMemory;2025-06-01;2026-07-28;1.0
+V3-013;V3;Metadata;EVCalculator;Kalkulator wartości oczekiwanej;implemented;Wysoki;EconomicAnalyzer;2025-06-01;2026-07-28;1.0
+V3-014;V3;Integration;V3Integration;Główny interfejs integracyjny V3;planned;Krytyczny;WorldManager,MemoryManager;2026-07-31;2026-07-31;1.0
+V3-015;V3;Integration;V3Config;Konfiguracja V3;planned;Krytyczny;-;2026-07-31;2026-07-31;1.0
+V3-016;V3;Integration;V3ToV4Bridge;Most V3 do V4;planned;Krytyczny;WorldManager,MemoryManager;2026-07-31;2026-07-31;1.0

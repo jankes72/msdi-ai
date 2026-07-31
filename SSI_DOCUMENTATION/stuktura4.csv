@@ -1,0 +1,34 @@
+ID;Modul;Warstwa;Nazwa;Opis;Status;Priorytet;Zaleznosci;Data_Utworzenia;Data_Aktualizacji;Wersja
+INT-001;Integration;V2-V3;V2ToV3Bridge;Most między V2 a V3;implemented;Krytyczny;V2 Model Lab, V3 World System;2025-06-01;2026-07-28;1.0
+INT-002;Integration;V3-V4;V3ToV4Bridge;Most między V3 a V4;planned;Krytyczny;V3 World System, V4 Agent System;2026-07-31;2026-07-31;1.0
+INT-003;Integration;V2-V3-V4;Full Flow;Pełny przepływ V2 do V4;planned;Krytyczny;INT-001,INT-002;2026-07-31;2026-07-31;1.0
+STR-001;Strategy;Core;StrategyObject;Obiekt strategii;planned;Krytyczny;V4 Agent System;2025-08-01;2026-07-31;1.0
+STR-002;Strategy;Core;StrategyManager;Manager strategii;planned;Wysoki;StrategyObject;2025-08-01;2026-07-31;1.0
+STR-003;Strategy;Generator;StrategyGenerator;Generator strategii;planned;Krytyczny;StrategyObject;2025-08-01;2026-07-31;1.0
+STR-004;Strategy;Life Cycle;StrategyLifeCycle;Cykl życia strategii;planned;Wysoki;StrategyGenerator;2025-08-01;2026-07-31;1.0
+STR-005;Strategy;League;StrategyLeagueSystem;System ligi strategii;planned;Wysoki;StrategyLifeCycle;2025-08-01;2026-07-31;1.0
+STR-006;Strategy;Experience;ExperienceTrace;Ślad doświadczenia strategii;planned;Sredni;StrategyLifeCycle;2025-08-01;2026-07-31;1.0
+LAB-001;Laboratories;Decision;DecisionLaboratory;Laboratorium decyzyjne;planned;Wysoki;V4 Agent System, Strategy System;2025-08-01;2026-07-31;1.0
+LAB-002;Laboratories;Group;GroupLaboratory;Laboratorium grupowe;planned;Wysoki;DecisionLaboratory;2025-08-01;2026-07-31;1.0
+LAB-003;Laboratories;Coupon;CouponLaboratory;Laboratorium kuponowe;planned;Wysoki;DecisionLaboratory;2025-08-01;2026-07-31;1.0
+LAB-004;Laboratories;Strategy;StrategyLaboratory;Laboratorium strategii;planned;Wysoki;DecisionLaboratory;2025-08-01;2026-07-31;1.0
+LAB-005;Laboratories;Meeting;AgentMeetingSystem;System spotkań agentów;planned;Sredni;DecisionLaboratory;2025-08-01;2026-07-31;1.0
+LAB-006;Laboratories;Meeting;DecisionMeeting;Spotkanie decyzyjne;planned;Sredni;AgentMeetingSystem;2025-08-01;2026-07-31;1.0
+LAB-007;Laboratories;Meeting;GroupMeeting;Spotkanie grupowe;planned;Sredni;AgentMeetingSystem;2025-08-01;2026-07-31;1.0
+LAB-008;Laboratories;Meeting;CouponMeeting;Spotkanie kuponowe;planned;Sredni;AgentMeetingSystem;2025-08-01;2026-07-31;1.0
+LAB-009;Laboratories;Meeting;MainMeeting;Spotkanie główne;planned;Sredni;AgentMeetingSystem;2025-08-01;2026-07-31;1.0
+LAB-010;Laboratories;Meeting;ConsensusDetector;Wykrywanie konsensusu;planned;Sredni;AgentMeetingSystem;2025-08-01;2026-07-31;1.0
+FBK-001;Feedback;Loop;FeedbackLoop;Pętla zwrotna;planned;Wysoki;Strategy System, Laboratories;2025-08-01;2026-07-31;1.0
+FBK-002;Feedback;Individual;IndividualFeedback;Feedback indywidualny;planned;Wysoki;FeedbackLoop;2025-08-01;2026-07-31;1.0
+FBK-003;Feedback;Group;GroupFeedback;Feedback grupowy;planned;Wysoki;FeedbackLoop;2025-08-01;2026-07-31;1.0
+FBK-004;Feedback;System;SystemFeedback;Feedback systemowy;planned;Wysoki;FeedbackLoop;2025-08-01;2026-07-31;1.0
+FBK-005;Feedback;Analysis;ErrorAnalyzer;Analizator błędów;planned;Sredni;FeedbackLoop;2025-08-01;2026-07-31;1.0
+FBK-006;Feedback;Analysis;TrendDetector;Wykrywanie trendów;planned;Sredni;FeedbackLoop;2025-08-01;2026-07-31;1.0
+EVO-001;Evolution;Personality;PersonalityEvolutionEngine;Ewolucja osobowości;planned;Wysoki;FeedbackLoop;2025-08-01;2026-07-31;1.0
+EVO-002;Evolution;Strategy;StrategyEvolutionEngine;Ewolucja strategii;planned;Wysoki;FeedbackLoop;2025-08-01;2026-07-31;1.0
+EVO-003;Evolution;Memory;MemoryEvolutionSystem;Ewolucja pamięci;planned;Wysoki;FeedbackLoop;2025-08-01;2026-07-31;1.0
+EVO-004;Evolution;Adaptation;AdaptationMechanisms;Mechanizmy adaptacji;planned;Sredni;FeedbackLoop;2025-08-01;2026-07-31;1.0
+DEC-001;Decision;Engine;DecisionEngine;Silnik decyzyjny;planned;Wysoki;Laboratories, Strategy System;2025-08-01;2026-07-31;1.0
+DEC-002;Decision;Assessment;ValueAssessor;Ocena wartości;planned;Wysoki;DecisionEngine;2025-08-01;2026-07-31;1.0
+DEC-003;Decision;Management;RiskManager;Zarządzanie ryzykiem;planned;Wysoki;DecisionEngine;2025-08-01;2026-07-31;1.0
+DEC-004;Decision;Optimization;StrategyOptimizer;Optymalizacja strategii;planned;Wysoki;DecisionEngine;2025-08-01;2026-07-31;1.0

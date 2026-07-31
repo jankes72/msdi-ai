@@ -1,0 +1,22 @@
+ID;Modul;Warstwa;Nazwa;Opis;Status;Priorytet;Zaleznosci;Data_Utworzenia;Data_Aktualizacji;Wersja
+V4-001;V4;Agent Core;Agent;Klasa bazowa agenta;implemented;Krytyczny;-;2025-07-01;2026-07-28;2.0
+V4-002;V4;Agent Core;AgentStatus;Statusy agenta;implemented;Krytyczny;Agent;2025-07-01;2026-07-28;2.0
+V4-003;V4;Agent Core;AgentConfig;Konfiguracja agenta;implemented;Wysoki;Agent;2025-07-01;2026-07-28;2.0
+V4-004;V4;Agent Core;AgentManager;Manager agentów;implemented;Wysoki;Agent;2025-07-01;2026-07-28;2.0
+V4-005;V4;Personality;PersonalityVector;Wektor osobowości (8 parametrów);implemented;Wysoki;Agent;2025-07-01;2026-07-28;2.0
+V4-006;V4;Personality;PersonalityVectorEngine;Silnik wektora osobowości;implemented;Wysoki;PersonalityVector;2025-07-01;2026-07-28;1.0
+V4-007;V4;Personality;PersonalityEvolutionEngine;Ewolucja osobowości;implemented;Wysoki;PersonalityVector;2025-07-01;2026-07-28;1.0
+V4-008;V4;Emotions;EmotionalControlSystem;System kontroli emocji (5 parametrów);implemented;Wysoki;Agent;2025-07-01;2026-07-28;2.0
+V4-009;V4;Trust;TrustMemory;Pamięć zaufania;implemented;Wysoki;Agent;2025-07-01;2026-07-28;2.0
+V4-010;V4;Trust;TrustMatrix;Macierz zaufania;implemented;Wysoki;TrustMemory;2025-07-01;2026-07-28;1.0
+V4-011;V4;Trust;ReputationSystem;System reputacji;implemented;Wysoki;TrustMemory;2025-07-01;2026-07-28;1.0
+V4-012;V4;Memory;AgentMemory;Pamięć agenta;implemented;Wysoki;Agent;2025-07-01;2026-07-28;2.0
+V4-013;V4;Memory;GlobalMemory;Pamięć globalna;implemented;Wysoki;AgentMemory;2025-07-01;2026-07-28;1.0
+V4-014;V4;Memory;PrivateNotebook;Prywatny notes;implemented;Wysoki;AgentMemory;2025-07-01;2026-07-28;1.0
+V4-015;V4;Memory;ExperienceTrace;Ślad doświadczenia;implemented;Wysoki;AgentMemory;2025-07-01;2026-07-28;1.0
+V4-016;V4;Birth System;AgentBirthSystem;System narodzin agentów;implemented;Krytyczny;Agent;2025-07-01;2026-07-28;2.0
+V4-017;V4;Birth System;ROOM_CORE;Pokój narodzin i komunikacji;implemented;Krytyczny;AgentBirthSystem;2025-07-01;2026-07-28;2.0
+V4-018;V4;Agent Types;EkspertMentalny;Agent ekspert mentalny;implemented;Wysoki;AgentBirthSystem;2025-07-01;2026-07-28;1.0
+V4-019;V4;Agent Types;LowcaWzorców;Agent łowca wzorców;implemented;Wysoki;AgentBirthSystem;2025-07-01;2026-07-28;1.0
+V4-020;V4;Agent Types;StrategWartosci;Agent strateg wartości;implemented;Wysoki;AgentBirthSystem;2025-07-01;2026-07-28;1.0
+V4-021;V4;Integration;V4_V3_Integration;Integracja V4 z V3;planned;Krytyczny;V3Integration;2026-07-31;2026-07-31;1.0

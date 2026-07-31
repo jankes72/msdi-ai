@@ -246,6 +246,13 @@ modele_kursy_przygotowane/
 !data/fixtures/**/*.yaml
 !data/fixtures/**/__init__.py
 
+# Wersjonowane pliki struktury wymagań (Sprint 9)
+# Zgodnie z dokumentacją: stuktura1.csv - stuktura4.csv są źródłem prawdy
+!SSI_DOCUMENTATION/stuktura1.csv
+!SSI_DOCUMENTATION/stuktura2.csv
+!SSI_DOCUMENTATION/stuktura3.csv
+!SSI_DOCUMENTATION/stuktura4.csv
+
 # ============================================================================
 # EXCEPTIONS - Files that SHOULD be in Git
 # ============================================================================
