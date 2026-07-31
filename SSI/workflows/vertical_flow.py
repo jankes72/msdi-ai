@@ -12,6 +12,7 @@ import uuid
 import time
 import logging
 import importlib
+import sys
 
 from SSI.contracts import (
     V2ToV3Contract,
@@ -624,29 +625,42 @@ def run_smoke_test(
 
 
 if __name__ == "__main__":
-    print("Testing Vertical Flow...")
+    from SSI.core.logging_config import (
+        setup_logging, get_logger, set_correlation_id, generate_correlation_id
+    )
+    
+    # Skonfiguruj logging
+    setup_logging(level=logging.INFO, json_format=False)
+    logger = get_logger(__name__)
+    
+    # Ustaw correlation_id
+    correlation_id = generate_correlation_id()
+    set_correlation_id(correlation_id)
+    
+    logger.info("Testing Vertical Flow...", extra={"correlation_id": correlation_id})
     
     # Uruchom smoke test
     result = run_smoke_test()
     
-    print(f"\nResult:")
-    print(f"  Success: {result.success}")
-    print(f"  Execution time: {result.execution_time_ms:.2f}ms")
+    logger.info(f"Result: Success={result.success}, Execution time={result.execution_time_ms:.2f}ms",
+                extra={"correlation_id": correlation_id})
     
-    print(f"\nStep times:")
-    for step, time_ms in result.step_times.items():
-        print(f"  {step}: {time_ms:.2f}ms")
+    if result.step_times:
+        logger.info("Step times:", extra={"correlation_id": correlation_id})
+        for step, time_ms in result.step_times.items():
+            logger.info(f"  {step}: {time_ms:.2f}ms", extra={"correlation_id": correlation_id})
     
     if result.errors:
-        print(f"\nErrors:")
+        logger.warning("Errors found:", extra={"correlation_id": correlation_id})
         for error in result.errors:
-            print(f"  - {error}")
+            logger.error(f"  - {error}", extra={"correlation_id": correlation_id})
     
     if result.lineage:
-        print(f"\n{result.lineage.get_summary()}")
+        logger.info(f"Lineage: {result.lineage.get_summary()}", 
+                    extra={"correlation_id": correlation_id})
     
     if not result.success:
-        print("\n❌ Smoke test FAILED")
-        exit(1)
+        logger.error("Smoke test FAILED", extra={"correlation_id": correlation_id})
+        sys.exit(1)
     
-    print("\n✅ Smoke test PASSED")
+    logger.info("✅ Smoke test PASSED", extra={"correlation_id": correlation_id})

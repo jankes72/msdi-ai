@@ -4,11 +4,11 @@ SSI Paths Tests - Verification of path configuration correctness
 Version: 1.0
 Date: 2026-07-31
 """
+import pytest
 
 import os
 import sys
 from pathlib import Path
-import unittest
 import tempfile
 import shutil
 
@@ -19,7 +19,7 @@ from SSI.config.paths import SSIPaths
 from SSI.config.validator import SSIConfigValidator, validate_paths, ConfigValidationError
 
 
-class TestSSIPaths(unittest.TestCase):
+class TestSSIPaths:
     """Tests for SSIPaths class."""
     
     def setUp(self):
@@ -45,8 +45,8 @@ class TestSSIPaths(unittest.TestCase):
         
         for path in module_paths:
             path_str = str(path)
-            self.assertNotIn("SSI/SSI", path_str, f"Path {path_str} contains double SSI/SSI prefix")
-            self.assertNotIn("SSI\\SSI", path_str, f"Path {path_str} contains double SSI\\SSI prefix")
+            assert "SSI/SSI" not in path_str, f"Path {path_str} contains double SSI/SSI prefix"
+            assert "SSI\\SSI" not in path_str, f"Path {path_str} contains double SSI\\SSI prefix"
         
         # Check all data paths
         data_paths = [
@@ -56,16 +56,16 @@ class TestSSIPaths(unittest.TestCase):
         
         for path in data_paths:
             path_str = str(path)
-            self.assertNotIn("SSI/SSI", path_str, f"Path {path_str} contains double SSI/SSI prefix")
-            self.assertNotIn("SSI\\SSI", path_str, f"Path {path_str} contains double SSI\\SSI prefix")
+            assert "SSI/SSI" not in path_str, f"Path {path_str} contains double SSI/SSI prefix"
+            assert "SSI\\SSI" not in path_str, f"Path {path_str} contains double SSI\\SSI prefix"
         
         # Check configuration paths
         config_paths = [paths.config_path, paths.utils_path, paths.tests_path]
         
         for path in config_paths:
             path_str = str(path)
-            self.assertNotIn("SSI/SSI", path_str, f"Path {path_str} contains double SSI/SSI prefix")
-            self.assertNotIn("SSI\\SSI", path_str, f"Path {path_str} contains double SSI\\SSI prefix")
+            assert "SSI/SSI" not in path_str, f"Path {path_str} contains double SSI/SSI prefix"
+            assert "SSI\\SSI" not in path_str, f"Path {path_str} contains double SSI\\SSI prefix"
     
     def test_get_absolute_path_returns_path_object(self):
         """Test that get_absolute_path returns a Path object."""
@@ -86,16 +86,16 @@ class TestSSIPaths(unittest.TestCase):
         for relative_path in test_paths:
             absolute_path = paths.get_absolute_path(relative_path)
             path_str = str(absolute_path)
-            self.assertNotIn("SSI/SSI", path_str, 
-                           f"Absolute path {path_str} contains SSI/SSI")
-            self.assertNotIn("SSI\\SSI", path_str,
-                           f"Absolute path {path_str} contains SSI\\SSI")
+            assert "SSI/SSI" not in path_str, 
+                           f"Absolute path {path_str} contains SSI/SSI"
+            assert "SSI\\SSI" not in path_str,
+                           f"Absolute path {path_str} contains SSI\\SSI"
     
     def test_root_path_resolves_correctly(self):
         """Test that root_path is correctly set."""
         paths = SSIPaths()
         # root_path should be SSI directory
-        self.assertTrue(paths.root_path.exists() or paths.root_path.name == "SSI")
+        assert paths.root_path.exists( or paths.root_path.name == "SSI")
     
     def test_paths_are_relative(self):
         """Test that module paths are relative (do not start with SSI/)."""
@@ -110,9 +110,9 @@ class TestSSIPaths(unittest.TestCase):
         
         for path in module_paths:
             path_str = str(path)
-            self.assertFalse(path_str.startswith("SSI/"), 
+            assert not path_str.startswith("SSI/", 
                            f"Path {path_str} starts with SSI/")
-            self.assertFalse(path_str.startswith("SSI" + chr(92)),
+            assert not path_str.startswith("SSI" + chr(92),
                            f"Path {path_str} starts with SSI backslash")
     
     def test_pathlib_usage(self):
@@ -121,32 +121,32 @@ class TestSSIPaths(unittest.TestCase):
         self.assertIsInstance(paths.root_path, Path)
 
 
-class TestPathValidator(unittest.TestCase):
+class TestPathValidator:
     """Tests for path validator."""
     
     def test_validate_paths_no_double_prefix(self):
         """Test that validate_paths does not report errors for correct paths."""
         try:
             result = validate_paths()
-            self.assertTrue(result)
+            assert result
         except ConfigValidationError:
-            self.fail("validate_paths() reported errors for correct paths")
+            assert False, "validate_paths( reported errors for correct paths")
     
     def test_validator_path_no_ssi_ssi(self):
         """Test validate_path_no_ssi_ssi method."""
         validator = SSIConfigValidator()
         
         # Correct paths
-        self.assertTrue(validator.validate_path_no_ssi_ssi("v2/test"))
-        self.assertTrue(validator.validate_path_no_ssi_ssi("data/raw"))
-        self.assertTrue(validator.validate_path_no_ssi_ssi("SSI/v2"))
+        assert validator.validate_path_no_ssi_ssi("v2/test")
+        assert validator.validate_path_no_ssi_ssi("data/raw")
+        assert validator.validate_path_no_ssi_ssi("SSI/v2")
         
         # Incorrect paths
-        self.assertFalse(validator.validate_path_no_ssi_ssi("SSI/SSI/v2"))
-        self.assertFalse(validator.validate_path_no_ssi_ssi("SSI\\SSI\\v2"))
+        assert not validator.validate_path_no_ssi_ssi("SSI/SSI/v2")
+        assert not validator.validate_path_no_ssi_ssi("SSI\\SSI\\v2")
 
 
-class TestImportPortability(unittest.TestCase):
+class TestImportPortability:
     """Test import portability."""
     
     def test_warstwa5_generator_import_no_io(self):
@@ -183,8 +183,8 @@ class TestImportPortability(unittest.TestCase):
                     new_files = files_after - files_before
                     
                     # Import should not create new files in temp directory
-                    self.assertEqual(len(new_files), 0, 
-                                   f"Import created files: {new_files}")
+                    assert len(new_files) == 0, 
+                                   f"Import created files: {new_files}"
                 except FileNotFoundError:
                     # This is expected - paths are relative
                     # but should not create files
@@ -193,8 +193,8 @@ class TestImportPortability(unittest.TestCase):
                     # Other errors are acceptable, important that no files are created
                     files_after = set(os.listdir(temp_dir))
                     new_files = files_after - files_before
-                    self.assertEqual(len(new_files), 0,
-                                   f"Import created files before error: {new_files}")
+                    assert len(new_files) == 0,
+                                   f"Import created files before error: {new_files}"
                     
         finally:
             os.chdir(original_cwd)
@@ -202,7 +202,7 @@ class TestImportPortability(unittest.TestCase):
             shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-class TestWorkingDirectoryIndependence(unittest.TestCase):
+class TestWorkingDirectoryIndependence:
     """Test independence from working directory."""
     
     def test_paths_independent_of_cwd(self):
@@ -224,12 +224,10 @@ class TestWorkingDirectoryIndependence(unittest.TestCase):
             paths2 = SSIPaths()
             
             # root_path should be the same
-            self.assertEqual(paths1.root_path, paths2.root_path)
+            assert paths1.root_path == paths2.root_path
             
         finally:
             os.chdir(original_cwd)
             shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-if __name__ == "__main__":
-    unittest.main()

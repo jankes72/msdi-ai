@@ -10,8 +10,8 @@ Zawiera testy:
 - Polityki podziału danych
 - Walidacji kontraktów
 """
+import pytest
 
-import unittest
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -47,24 +47,24 @@ from SSI.contracts import (
 )
 
 
-class TestV2ToV3Contract(unittest.TestCase):
+class TestV2ToV3Contract:
     """Testy kontraktu V2->V3."""
     
     def test_create_empty_contract(self):
         """Test tworzenia pustego kontraktu."""
         contract = V2ToV3Contract()
-        self.assertIsNotNone(contract.metadata)
-        self.assertEqual(contract.metadata.source, "V2")
-        self.assertEqual(contract.metadata.target, "V3")
-        self.assertEqual(len(contract.observations), 0)
-        self.assertEqual(len(contract.statistics), 0)
-        self.assertEqual(len(contract.patterns), 0)
+        assert contract.metadata is not None
+        assert contract.metadata.source == "V2"
+        assert contract.metadata.target == "V3"
+        assert len(contract.observations) == 0
+        assert len(contract.statistics) == 0
+        assert len(contract.patterns) == 0
     
     def test_validate_empty_contract(self):
         """Test walidacji pustego kontraktu - powinien być poprawny."""
         contract = V2ToV3Contract()
         # Powinno przejść - metadane będą ustawione domyślnie
-        self.assertTrue(contract.validate())
+        assert contract.validate()
     
     def test_create_contract_with_observations(self):
         """Test tworzenia kontraktu z obserwacjami."""
@@ -89,8 +89,8 @@ class TestV2ToV3Contract(unittest.TestCase):
         contract.observations.append(obs)
         
         # Walidacja
-        self.assertTrue(contract.validate())
-        self.assertEqual(len(contract.observations), 1)
+        assert contract.validate()
+        assert len(contract.observations) == 1
     
     def test_invalid_confidence(self):
         """Test nieprawidłowej wartości confidence."""
@@ -138,9 +138,9 @@ class TestV2ToV3Contract(unittest.TestCase):
         # Deserializacja
         contract_restored = V2ToV3Contract.from_dict(contract_dict)
         
-        self.assertEqual(len(contract_restored.observations), 1)
-        self.assertEqual(contract_restored.observations[0].observation_id, "obs_001")
-        self.assertEqual(contract_restored.data_version, "v1.0.0")
+        assert len(contract_restored.observations) == 1
+        assert contract_restored.observations[0].observation_id == "obs_001"
+        assert contract_restored.data_version == "v1.0.0"
     
     def test_legacy_contract_conversion(self):
         """Test konwersji z formatu dziedzictwa."""
@@ -170,22 +170,22 @@ class TestV2ToV3Contract(unittest.TestCase):
         
         contract = V2ToV3Contract.from_legacy_dict(legacy_data)
         
-        self.assertEqual(len(contract.observations), 1)
-        self.assertEqual(contract.observations[0].observation_id, "obs_001")
-        self.assertTrue(contract.validate())
+        assert len(contract.observations) == 1
+        assert contract.observations[0].observation_id == "obs_001"
+        assert contract.validate()
 
 
-class TestV3ToV4Contract(unittest.TestCase):
+class TestV3ToV4Contract:
     """Testy kontraktu V3->V4."""
     
     def test_create_empty_contract(self):
         """Test tworzenia pustego kontraktu."""
         contract = V3ToV4Contract()
-        self.assertIsNotNone(contract.metadata)
-        self.assertEqual(contract.metadata.source, "V3")
-        self.assertEqual(contract.metadata.target, "V4")
-        self.assertEqual(len(contract.worlds), 0)
-        self.assertEqual(len(contract.patterns), 0)
+        assert contract.metadata is not None
+        assert contract.metadata.source == "V3"
+        assert contract.metadata.target == "V4"
+        assert len(contract.worlds) == 0
+        assert len(contract.patterns) == 0
     
     def test_create_contract_with_worlds(self):
         """Test tworzenia kontraktu ze światami."""
@@ -208,8 +208,8 @@ class TestV3ToV4Contract(unittest.TestCase):
         contract.worlds.append(world)
         
         # Walidacja
-        self.assertTrue(contract.validate())
-        self.assertEqual(len(contract.worlds), 1)
+        assert contract.validate()
+        assert len(contract.worlds) == 1
     
     def test_invalid_world_confidence(self):
         """Test nieprawidłowej pewności świata."""
@@ -262,12 +262,12 @@ class TestV3ToV4Contract(unittest.TestCase):
         # Deserializacja
         contract_restored = V3ToV4Contract.from_dict(contract_dict)
         
-        self.assertEqual(len(contract_restored.worlds), 1)
-        self.assertEqual(contract_restored.worlds[0].world_id, "world_001")
-        self.assertEqual(contract_restored.data_version, "v1.0.0")
+        assert len(contract_restored.worlds) == 1
+        assert contract_restored.worlds[0].world_id == "world_001"
+        assert contract_restored.data_version == "v1.0.0"
 
 
-class TestContractValidation(unittest.TestCase):
+class TestContractValidation:
     """Testy walidacji kontraktów."""
     
     def test_validate_empty_metadata(self):
@@ -282,8 +282,8 @@ class TestContractValidation(unittest.TestCase):
         contract = V2ToV3Contract()
         validator = ContractValidator()
         
-        self.assertTrue(validator.validate(contract))
-        self.assertEqual(len(validator.get_errors()), 0)
+        assert validator.validate(contract)
+        assert len(validator.get_errors()) == 0
     
     def test_validate_invalid_contract(self):
         """Test walidacji nieprawidłowego kontraktu."""
@@ -306,34 +306,34 @@ class TestContractValidation(unittest.TestCase):
         contract.observations.append(obs)
         
         validator = ContractValidator()
-        self.assertFalse(validator.validate(contract))
-        self.assertGreater(len(validator.get_errors()), 0)
+        assert not validator.validate(contract)
+        assert len(validator.get_errors()) > 0
     
     def test_version_compatibility_checker(self):
         """Test VersionCompatibilityChecker."""
         checker = VersionCompatibilityChecker()
         
         # Test kompatybilności
-        self.assertTrue(checker.is_compatible("1.0", "1.0"))
-        self.assertTrue(checker.is_compatible("1.0", "1.1"))
-        self.assertFalse(checker.is_compatible("1.0", "2.0"))
+        assert checker.is_compatible("1.0", "1.0")
+        assert checker.is_compatible("1.0", "1.1")
+        assert not checker.is_compatible("1.0", "2.0")
         
         # Test dostępnych wersji kompatybilnych
         compatible = checker.get_compatible_versions("1.0")
-        self.assertIn("1.0", compatible)
-        self.assertIn("1.1", compatible)
+        assert "1.0" in compatible
+        assert "1.1" in compatible
 
 
-class TestDataSplitPolicy(unittest.TestCase):
+class TestDataSplitPolicy:
     """Testy polityki podziału danych."""
     
     def test_standard_policy_ratios(self):
         """Test standardowej polityki 50/10/40."""
         policy = DataSplitPolicy.standard_50_10_40()
         
-        self.assertEqual(policy.train_ratio, 0.50)
-        self.assertEqual(policy.validation_ratio, 0.10)
-        self.assertEqual(policy.observation_ratio, 0.40)
+        assert policy.train_ratio == 0.50
+        assert policy.validation_ratio == 0.10
+        assert policy.observation_ratio == 0.40
     
     def test_policy_normalization(self):
         """Test normalizacji polityki."""
@@ -365,12 +365,12 @@ class TestDataSplitPolicy(unittest.TestCase):
         result = splitter.split_data(data, seed=42)
         
         # Sprawdź rozmiary
-        self.assertEqual(len(result.train_data), 50)
-        self.assertEqual(len(result.validation_data), 10)
-        self.assertEqual(len(result.observation_data), 40)
+        assert len(result.train_data) == 50
+        assert len(result.validation_data) == 10
+        assert len(result.observation_data) == 40
         
         total = len(result.train_data) + len(result.validation_data) + len(result.observation_data)
-        self.assertEqual(total, 100)
+        assert total == 100
     
     def test_split_reproducibility(self):
         """Test powtarzalności podziału."""
@@ -383,9 +383,9 @@ class TestDataSplitPolicy(unittest.TestCase):
         result1 = splitter.split_data(data, seed=42)
         result2 = splitter.split_data(data, seed=42)
         
-        self.assertEqual(result1.train_indices, result2.train_indices)
-        self.assertEqual(result1.validation_indices, result2.validation_indices)
-        self.assertEqual(result1.observation_indices, result2.observation_indices)
+        assert result1.train_indices == result2.train_indices
+        assert result1.validation_indices == result2.validation_indices
+        assert result1.observation_indices == result2.observation_indices
     
     def test_validate_split_result(self):
         """Test walidacji wyniku podziału."""
@@ -396,7 +396,7 @@ class TestDataSplitPolicy(unittest.TestCase):
         result = splitter.split_data(data, seed=42)
         
         # Walidacja powinna przejść
-        self.assertTrue(validate_split_result(result, policy))
+        assert validate_split_result(result, policy)
     
     def test_validate_invalid_split(self):
         """Test walidacji nieprawidłowego podziału."""
@@ -415,7 +415,7 @@ class TestDataSplitPolicy(unittest.TestCase):
             validate_split_result(result, policy)
 
 
-class TestVersionIdentifiers(unittest.TestCase):
+class TestVersionIdentifiers:
     """Testy identyfikatorów wersji."""
     
     def test_data_version(self):
@@ -426,14 +426,14 @@ class TestVersionIdentifiers(unittest.TestCase):
             description="Test data"
         )
         
-        self.assertTrue(dv.validate())
-        self.assertEqual(dv.version, "1.0.0")
+        assert dv.validate()
+        assert dv.version == "1.0.0"
         
         # Test serializacji
         dv_dict = dv.to_dict()
         dv_restored = DataVersion.from_dict(dv_dict)
-        self.assertEqual(dv_restored.version, "1.0.0")
-        self.assertEqual(dv_restored.source, "v2_models")
+        assert dv_restored.version == "1.0.0"
+        assert dv_restored.source == "v2_models"
     
     def test_model_version(self):
         """Test ModelVersion."""
@@ -444,9 +444,9 @@ class TestVersionIdentifiers(unittest.TestCase):
             accuracy=0.85
         )
         
-        self.assertTrue(mv.validate())
-        self.assertEqual(mv.version, "1.0.0")
-        self.assertEqual(mv.accuracy, 0.85)
+        assert mv.validate()
+        assert mv.version == "1.0.0"
+        assert mv.accuracy == 0.85
     
     def test_invalid_model_accuracy(self):
         """Test nieprawidłowej dokładności modelu."""
@@ -479,13 +479,13 @@ class TestVersionIdentifiers(unittest.TestCase):
         # Finalizacja
         lineage_info = lineage.finalize()
         
-        self.assertEqual(len(lineage_info.data_versions), 1)
-        self.assertEqual(len(lineage_info.model_versions), 1)
-        self.assertEqual(len(lineage_info.config_versions), 1)
-        self.assertEqual(len(lineage_info.result_versions), 1)
+        assert len(lineage_info.data_versions) == 1
+        assert len(lineage_info.model_versions) == 1
+        assert len(lineage_info.config_versions) == 1
+        assert len(lineage_info.result_versions) == 1
 
 
-class TestMigrationPolicy(unittest.TestCase):
+class TestMigrationPolicy:
     """Testy polityki migracji."""
     
     def test_compatibility_policy(self):
@@ -494,28 +494,28 @@ class TestMigrationPolicy(unittest.TestCase):
         
         # Test kompatybilności
         level = policy.get_compatibility("1.0", "1.0")
-        self.assertEqual(level, CompatibilityLevel.FULL)
+        assert level == CompatibilityLevel.FULL
         
         level = policy.get_compatibility("1.0", "1.1")
-        self.assertEqual(level, CompatibilityLevel.BACKWARD)
+        assert level == CompatibilityLevel.BACKWARD
     
     def test_migration_strategy(self):
         """Test strategii migracji."""
         policy = CompatibilityPolicy()
         
         strategy = policy.get_migration_strategy("1.0", "1.0")
-        self.assertEqual(strategy, MigrationStrategy.AUTOMATIC)
+        assert strategy == MigrationStrategy.AUTOMATIC
         
         strategy = policy.get_migration_strategy("1.0", "1.1")
-        self.assertEqual(strategy, MigrationStrategy.CONVERT)
+        assert strategy == MigrationStrategy.CONVERT
     
     def test_can_migrate(self):
         """Test możliwości migracji."""
         policy = CompatibilityPolicy()
         
-        self.assertTrue(policy.can_migrate("1.0", "1.0"))
-        self.assertTrue(policy.can_migrate("1.0", "1.1"))
-        self.assertFalse(policy.can_migrate("1.0", "2.0"))
+        assert policy.can_migrate("1.0", "1.0")
+        assert policy.can_migrate("1.0", "1.1")
+        assert not policy.can_migrate("1.0", "2.0")
     
     def test_migration_policy_validation(self):
         """Test walidacji kompatybilności."""
@@ -524,15 +524,15 @@ class TestMigrationPolicy(unittest.TestCase):
         contract = V2ToV3Contract()
         
         # Wersja 1.0 powinna być kompatybilna z 1.0
-        self.assertTrue(policy.validate_compatibility(contract, "1.0"))
+        assert policy.validate_compatibility(contract, "1.0")
         
         # Wersja 1.0 nie powinna być kompatybilna z 2.0 (chyba że allow_version_mismatch=True)
         contract.metadata.version = ContractVersion.V2_0
         policy.allow_version_mismatch = False
-        self.assertFalse(policy.validate_compatibility(contract, "1.0"))
+        assert not policy.validate_compatibility(contract, "1.0")
 
 
-class TestContractMigration(unittest.TestCase):
+class TestContractMigration:
     """Testy migracji kontraktów."""
     
     def test_migrate_contract_same_version(self):
@@ -543,7 +543,7 @@ class TestContractMigration(unittest.TestCase):
         result = policy.migrate(contract, "1.0")
         
         self.assertIsInstance(result, V2ToV3Contract)
-        self.assertEqual(result.metadata.version.value, "1.0")
+        assert result.metadata.version.value == "1.0"
     
     def test_migration_history(self):
         """Test historii migracji."""
@@ -552,9 +552,7 @@ class TestContractMigration(unittest.TestCase):
         
         policy.migrate(contract, "1.0")
         
-        self.assertEqual(len(policy.migration_history), 1)
-        self.assertEqual(policy.migration_history[0]["contract_type"], "V2ToV3Contract")
+        assert len(policy.migration_history) == 1
+        assert policy.migration_history[0]["contract_type"] == "V2ToV3Contract"
 
 
-if __name__ == "__main__":
-    unittest.main()

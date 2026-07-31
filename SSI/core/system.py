@@ -106,10 +106,9 @@ class SSISystem:
         logger.info(f"SSI System zainicjowany. Wersja: {self.metadata.version}")
     
     def _setup_logging(self) -> None:
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
+        # Użyj centralnej konfiguracji logowania
+        from SSI.core.logging_config import setup_logging
+        setup_logging(level=logging.INFO, json_format=False)
     
     def register_module(self, module_name: str, module_type: str, version: str, 
                        dependencies: List[str] = None, priority: int = 0,

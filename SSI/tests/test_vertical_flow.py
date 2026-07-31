@@ -11,8 +11,8 @@ Zawiera testy:
 - Lineage tracking
 - Powtarzalności wyników
 """
+import pytest
 
-import unittest
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -42,20 +42,20 @@ from SSI.contracts.policies import DataSplitPolicy, SplitResult
 from SSI.data.policies import DataQualityPolicy, DataRetentionPolicy
 
 
-class TestVerticalFlowConfig(unittest.TestCase):
+class TestVerticalFlowConfig:
     """Testy konfiguracji pionowego przepływu."""
     
     def test_default_config(self):
         """Test domyślnej konfiguracji."""
         config = VerticalFlowConfig()
         
-        self.assertIsNotNone(config.split_policy)
-        self.assertEqual(config.split_policy.train_ratio, 0.50)
-        self.assertEqual(config.split_policy.validation_ratio, 0.10)
-        self.assertEqual(config.split_policy.observation_ratio, 0.40)
-        self.assertEqual(config.seed, 42)
-        self.assertTrue(config.enable_lineage)
-        self.assertTrue(config.enable_validation)
+        assert config.split_policy is not None
+        assert config.split_policy.train_ratio == 0.50
+        assert config.split_policy.validation_ratio == 0.10
+        assert config.split_policy.observation_ratio == 0.40
+        assert config.seed == 42
+        assert config.enable_lineage
+        assert config.enable_validation
     
     def test_custom_config(self):
         """Test niestandardowej konfiguracji."""
@@ -72,24 +72,24 @@ class TestVerticalFlowConfig(unittest.TestCase):
             enable_validation=False
         )
         
-        self.assertEqual(config.split_policy.train_ratio, 0.60)
-        self.assertEqual(config.seed, 123)
-        self.assertFalse(config.enable_validation)
+        assert config.split_policy.train_ratio == 0.60
+        assert config.seed == 123
+        assert not config.enable_validation
 
 
-class TestFlowResult(unittest.TestCase):
+class TestFlowResult:
     """Testy wyniku przepływu."""
     
     def test_empty_result(self):
         """Test pustego wyniku."""
         result = FlowResult()
         
-        self.assertTrue(result.success)
-        self.assertIsNone(result.v2_result)
-        self.assertIsNone(result.v3_result)
-        self.assertIsNone(result.v4_result)
-        self.assertEqual(len(result.errors), 0)
-        self.assertEqual(len(result.warnings), 0)
+        assert result.success
+        assert result.v2_result is None
+        assert result.v3_result is None
+        assert result.v4_result is None
+        assert len(result.errors) == 0
+        assert len(result.warnings) == 0
     
     def test_result_serialization(self):
         """Test serializacji wyniku."""
@@ -102,24 +102,24 @@ class TestFlowResult(unittest.TestCase):
         
         result_dict = result.to_dict()
         
-        self.assertIn("success", result_dict)
-        self.assertIn("execution_time_ms", result_dict)
-        self.assertIn("errors", result_dict)
-        self.assertIn("warnings", result_dict)
-        self.assertEqual(result_dict["success"], True)
-        self.assertEqual(result_dict["execution_time_ms"], 100.5)
-        self.assertEqual(len(result_dict["errors"]), 1)
+        assert "success" in result_dict
+        assert "execution_time_ms" in result_dict
+        assert "errors" in result_dict
+        assert "warnings" in result_dict
+        assert result_dict["success"] == True
+        assert result_dict["execution_time_ms"] == 100.5
+        assert len(result_dict["errors"]) == 1
 
 
-class TestLineageTracker(unittest.TestCase):
+class TestLineageTracker:
     """Testy tracker'a lineage."""
     
     def test_create_tracker(self):
         """Test tworzenia trackera."""
         tracker = LineageTracker()
         
-        self.assertIsNotNone(tracker.workflow_id)
-        self.assertIsNotNone(tracker.start_time)
+        assert tracker.workflow_id is not None
+        assert tracker.start_time is not None
         # end_time nie jest ustawione przy inicjalizacji
     
     def test_add_data_version(self):
@@ -131,9 +131,9 @@ class TestLineageTracker(unittest.TestCase):
         tracker.add_config_version("v1.0.0")
         
         # Sprawdź w trackera
-        self.assertEqual(len(tracker.data_versions), 1)
-        self.assertEqual(len(tracker.model_versions), 1)
-        self.assertEqual(len(tracker.config_versions), 1)
+        assert len(tracker.data_versions) == 1
+        assert len(tracker.model_versions) == 1
+        assert len(tracker.config_versions) == 1
     
     def test_finalize(self):
         """Test finalizacji trackera."""
@@ -142,12 +142,12 @@ class TestLineageTracker(unittest.TestCase):
         tracker.add_data_version("v1.0.0")
         lineage = tracker.finalize()
         
-        self.assertIsNotNone(lineage)
-        self.assertIsNotNone(lineage.end_time)
-        self.assertGreater(lineage.duration_ms, 0)
+        assert lineage is not None
+        assert lineage.end_time is not None
+        assert lineage.duration_ms > 0
 
 
-class TestVerticalFlow(unittest.TestCase):
+class TestVerticalFlow:
     """Testy pionowego przepływu."""
     
     def test_create_flow(self):
@@ -155,9 +155,9 @@ class TestVerticalFlow(unittest.TestCase):
         config = VerticalFlowConfig()
         flow = VerticalFlow(config)
         
-        self.assertIsNotNone(flow.config)
-        self.assertIsNotNone(flow.lineage_tracker)
-        self.assertEqual(flow.config.seed, 42)
+        assert flow.config is not None
+        assert flow.lineage_tracker is not None
+        assert flow.config.seed == 42
     
     def test_flow_with_custom_config(self):
         """Test przepływu z niestandardową konfiguracją."""
@@ -168,8 +168,8 @@ class TestVerticalFlow(unittest.TestCase):
         )
         flow = VerticalFlow(config)
         
-        self.assertEqual(flow.config.seed, 999)
-        self.assertTrue(flow.config.enable_lineage)
+        assert flow.config.seed == 999
+        assert flow.config.enable_lineage
     
     def test_prepare_fixture_data(self):
         """Test przygotowania danych fixture."""
@@ -196,9 +196,9 @@ class TestVerticalFlow(unittest.TestCase):
         split_result = splitter.split_data(test_data, seed=42)
         
         self.assertIsInstance(split_result, object)  # SplitResult
-        self.assertEqual(len(split_result.train_data), 50)
-        self.assertEqual(len(split_result.validation_data), 10)
-        self.assertEqual(len(split_result.observation_data), 40)
+        assert len(split_result.train_data) == 50
+        assert len(split_result.validation_data) == 10
+        assert len(split_result.observation_data) == 40
     
     def test_split_data_reproducibility(self):
         """Test powtarzalności podziału danych."""
@@ -213,8 +213,8 @@ class TestVerticalFlow(unittest.TestCase):
         result2 = splitter.split_data(test_data, seed=42)
         
         # Ten sam seed powinien dać ten sam podział
-        self.assertEqual(result1.train_indices, result2.train_indices)
-        self.assertEqual(result1.validation_indices, result2.validation_indices)
+        assert result1.train_indices == result2.train_indices
+        assert result1.validation_indices == result2.validation_indices
     
     def test_create_v2_contract(self):
         """Test tworzenia kontraktu V2->V3."""
@@ -222,8 +222,8 @@ class TestVerticalFlow(unittest.TestCase):
         contract = V2ToV3Contract()
         
         self.assertIsInstance(contract, V2ToV3Contract)
-        self.assertIsNotNone(contract.metadata)
-        self.assertTrue(contract.validate())
+        assert contract.metadata is not None
+        assert contract.validate()
     
     def test_create_v3_contract(self):
         """Test tworzenia kontraktu V3->V4."""
@@ -231,10 +231,10 @@ class TestVerticalFlow(unittest.TestCase):
         contract = V3ToV4Contract()
         
         self.assertIsInstance(contract, V3ToV4Contract)
-        self.assertIsNotNone(contract.metadata)
+        assert contract.metadata is not None
 
 
-class TestSmokeTest(unittest.TestCase):
+class TestSmokeTest:
     """Testy smoke testu."""
     
     def test_run_smoke_test(self):
@@ -245,7 +245,7 @@ class TestSmokeTest(unittest.TestCase):
         self.assertIsInstance(result, FlowResult)
         # Smoke test może się nie powieść, jeśli brakuje komponentów
         # ale powinien zwrócić FlowResult
-        self.assertIsNotNone(result.execution_time_ms)
+        assert result.execution_time_ms is not None
         self.assertIsInstance(result.execution_time_ms, float)
     
     def test_smoke_test_with_lineage(self):
@@ -256,7 +256,7 @@ class TestSmokeTest(unittest.TestCase):
         )
         result = run_smoke_test(config=config)
         
-        self.assertIsNotNone(result.lineage)
+        assert result.lineage is not None
         
         # Sprawdź czy zawierają wersje
         self.assertGreaterEqual(len(result.lineage.data_versions), 0)
@@ -270,11 +270,11 @@ class TestSmokeTest(unittest.TestCase):
         
         # Ten sam seed powinien dać te same czasy wykonania (przybliżone)
         # i tę samą liczbę błędów
-        self.assertEqual(len(result1.errors), len(result2.errors))
-        self.assertEqual(result1.success, result2.success)
+        assert len(result1.errors) == len(result2.errors)
+        assert result1.success == result2.success
 
 
-class TestVersionCompatibilityInFlow(unittest.TestCase):
+class TestVersionCompatibilityInFlow:
     """Testy kompatybilności wersji w przepływie."""
     
     def test_contract_version_validation(self):
@@ -285,8 +285,8 @@ class TestVersionCompatibilityInFlow(unittest.TestCase):
         
         # Walidacja powinna przejść
         validator = ContractValidator()
-        self.assertTrue(validator.validate(v2_contract))
-        self.assertTrue(validator.validate(v3_contract))
+        assert validator.validate(v2_contract)
+        assert validator.validate(v3_contract)
     
     def test_incompatible_contract_version(self):
         """Test niekompatybilnej wersji kontraktu."""
@@ -305,10 +305,10 @@ class TestVersionCompatibilityInFlow(unittest.TestCase):
         
         # Walidacja metadanych powinna nie przejść
         validator = ContractValidator()
-        self.assertFalse(validator.validate(v2_contract))
+        assert not validator.validate(v2_contract)
 
 
-class TestLineageInFlow(unittest.TestCase):
+class TestLineageInFlow:
     """Testy lineage w przepływie."""
     
     def test_lineage_contains_all_versions(self):
@@ -321,7 +321,7 @@ class TestLineageInFlow(unittest.TestCase):
         )
         result = run_smoke_test(config=config)
         
-        self.assertIsNotNone(result.lineage)
+        assert result.lineage is not None
         
         # Sprawdź czy mamy damals wersje
         if result.lineage:
@@ -335,9 +335,7 @@ class TestLineageInFlow(unittest.TestCase):
         
         if result.lineage:
             summary = result.lineage.get_summary()
-            self.assertIn("Lineage", summary)
-            self.assertIn("Data versions", summary)
+            assert "Lineage" in summary
+            assert "Data versions" in summary
 
 
-if __name__ == "__main__":
-    unittest.main()

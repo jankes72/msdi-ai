@@ -17,6 +17,7 @@ import random
 import numpy as np
 from collections import defaultdict
 from datetime import datetime, timedelta
+import sys
 
 # Re-export z SSI.contracts.policies dla spójności
 from SSI.contracts.policies import (
@@ -326,33 +327,49 @@ def create_standard_data_policies() -> Tuple[
 # =============================================================================
 
 if __name__ == "__main__":
-    print("Testing SSI Data Policies...")
+    import logging
+    from SSI.core.logging_config import (
+        setup_logging, get_logger, set_correlation_id, generate_correlation_id
+    )
+    
+    # Skonfiguruj logging
+    setup_logging(level=logging.INFO, json_format=False)
+    logger = get_logger(__name__)
+    
+    # Ustaw correlation_id
+    correlation_id = generate_correlation_id()
+    set_correlation_id(correlation_id)
+    
+    logger.info("Testing SSI Data Policies...", extra={"correlation_id": correlation_id})
     
     # Test polityki podziału
-    print("\n1. Testing DataSplitPolicy:")
+    logger.info("[1] Testing DataSplitPolicy:", extra={"correlation_id": correlation_id})
     policy = DataSplitPolicy.standard_50_10_40()
-    print(f"   Policy: {policy.policy_name}")
-    print(f"   Ratios: Train={policy.train_ratio}, Validation={policy.validation_ratio}, Observation={policy.observation_ratio}")
+    logger.info(f"   Policy: {policy.policy_name}", extra={"correlation_id": correlation_id})
+    logger.info(f"   Ratios: Train={policy.train_ratio}, Validation={policy.validation_ratio}, Observation={policy.observation_ratio}",
+                extra={"correlation_id": correlation_id})
     
     # Test splittera
     data = list(range(100))
     splitter = DataSplitter(policy)
     result = splitter.split_data(data, seed=42)
-    print(f"   Split result: Train={len(result.train_data)}, Validation={len(result.validation_data)}, Observation={len(result.observation_data)}")
+    logger.info(f"   Split result: Train={len(result.train_data)}, Validation={len(result.validation_data)}, Observation={len(result.observation_data)}",
+                extra={"correlation_id": correlation_id})
     
     # Walidacja
     try:
         validate_split_result(result, policy)
-        print("   ✓ Split validation passed")
+        logger.info("   ✓ Split validation passed", extra={"correlation_id": correlation_id})
     except ValueError as e:
-        print(f"   ✗ Split validation failed: {e}")
+        logger.error(f"   ✗ Split validation failed: {e}", extra={"correlation_id": correlation_id})
     
     # Test standard_split
     result2 = standard_split(data, seed=42)
-    print(f"   Standard split: Train={len(result2.train_data)}, Validation={len(result2.validation_data)}, Observation={len(result2.observation_data)}")
+    logger.info(f"   Standard split: Train={len(result2.train_data)}, Validation={len(result2.validation_data)}, Observation={len(result2.observation_data)}",
+                extra={"correlation_id": correlation_id})
     
     # Test polityki jakości
-    print("\n2. Testing DataQualityPolicy:")
+    logger.info("[2] Testing DataQualityPolicy:", extra={"correlation_id": correlation_id})
     quality_policy = DataQualityPolicy(
         required_fields=["id", "value"],
         field_validators={"value": lambda x: 0 <= x <= 100}
@@ -360,10 +377,11 @@ if __name__ == "__main__":
     
     test_data = {"id": "test1", "value": 50, "extra": "field"}
     is_valid, quality, errors = quality_policy.validate_data(test_data)
-    print(f"   Valid: {is_valid}, Quality: {quality.name}, Errors: {errors}")
+    logger.info(f"   Valid: {is_valid}, Quality: {quality.name}, Errors: {errors}",
+                extra={"correlation_id": correlation_id})
     
     # Test polityki retencji
-    print("\n3. Testing DataRetentionPolicy:")
+    logger.info("[3] Testing DataRetentionPolicy:", extra={"correlation_id": correlation_id})
     retention_policy = DataRetentionPolicy(
         retention_periods={
             "temp": RetentionPeriod.ONE_DAY.value,
@@ -375,8 +393,19 @@ if __name__ == "__main__":
     old_date = datetime.now() - RetentionPeriod.TWO_WEEKS.value
     new_date = datetime.now() - RetentionPeriod.ONE_DAY.value
     
-    print(f"   Temp data (old): should_retain={retention_policy.should_retain('temp', old_date)}")
-    print(f"   Temp data (new): should_retain={retention_policy.should_retain('temp', new_date)}")
-    print(f"   Log data (old): should_retain={retention_policy.should_retain('log', old_date)}")
+    logger.info(f"   Temp data (old): should_retain={retention_policy.should_retain('temp', old_date)}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"   Temp data (new): should_retain={retention_policy.should_retain('temp', new_date)}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"   Log data (old): should_retain={retention_policy.should_retain('log', old_date)}",
+                extra={"correlation_id": correlation_id})
     
-    print("\n✓ All tests passed!")
+    # Sprawdź, czy były błędy w testach
+    test_failed = not is_valid or errors
+    
+    if test_failed:
+        logger.error("Some Data Policies tests FAILED!",
+                      extra={"correlation_id": correlation_id})
+        sys.exit(1)
+    
+    logger.info("✓ All tests passed!", extra={"correlation_id": correlation_id})

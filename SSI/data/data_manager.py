@@ -22,6 +22,7 @@ import logging
 import random
 import hashlib
 from pathlib import Path
+import sys
 
 from .data_structures import (
     CourseData, MatchData, TrendData, DataMetadata,
@@ -700,8 +701,21 @@ def set_data_world_manager(manager: DataWorldManager) -> None:
 
 
 if __name__ == "__main__":
+    import logging
+    from SSI.core.logging_config import (
+        setup_logging, get_logger, set_correlation_id, generate_correlation_id
+    )
+    
+    # Skonfiguruj logging
+    setup_logging(level=logging.INFO, json_format=False)
+    logger = get_logger(__name__)
+    
+    # Ustaw correlation_id
+    correlation_id = generate_correlation_id()
+    set_correlation_id(correlation_id)
+    
     # Testy
-    print("Testing DataWorldManager...")
+    logger.info("Testing DataWorldManager...", extra={"correlation_id": correlation_id})
     
     # Test 1: Tworzenie i inicjalizacja
     manager = create_data_world_manager(
@@ -709,14 +723,23 @@ if __name__ == "__main__":
         auto_initialize=False
     )
     
-    print(f"Manager utworzony: {manager.initialized}")
+    logger.info(f"Manager utworzony: {manager.initialized}",
+                extra={"correlation_id": correlation_id})
     
     # Test 2: Podsumowanie
     summary = manager.get_summary()
-    print(f"Podsumowanie: {summary}")
+    logger.info(f"Podsumowanie: {summary}", extra={"correlation_id": correlation_id})
     
     # Test 3: Walidacja bez danych
     validation = manager.validate_data_integrity()
-    print(f"Walidacja: {validation}")
+    logger.info(f"Walidacja: {validation}", extra={"correlation_id": correlation_id})
     
-    print("\nAll basic tests passed!")
+    # Sprawdź, czy manager jest zainicjalizowany i walidacja przebiegła pomyślnie
+    test_failed = not manager.initialized or not validation.get("valid", False)
+    
+    if test_failed:
+        logger.error("Some Data Manager tests FAILED!",
+                      extra={"correlation_id": correlation_id})
+        sys.exit(1)
+    
+    logger.info("All basic tests passed!", extra={"correlation_id": correlation_id})
