@@ -30,10 +30,11 @@ class SSISettings:
     v4_enabled: bool = True
     v4_initial_population: int = 3
     
-    strategy_enabled: bool = True
-    labs_enabled: bool = True
-    feedback_enabled: bool = True
-    decision_engine_enabled: bool = True
+    # Modules not implemented - disabled by default
+    strategy_enabled: bool = False
+    labs_enabled: bool = False
+    feedback_enabled: bool = False
+    decision_engine_enabled: bool = False
     
     def to_dict(self) -> Dict[str, Any]:
         return {
