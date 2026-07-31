@@ -153,11 +153,11 @@ $RECYCLE.BIN/
 # Large prediction database file (do not analyze)
 generatorDataBaseTrendAnalisAll.py
 
-# Prepared data files
+# Prepared data files (ignore CSV files but keep directories)
 kursy_przygotowane.csv
 wyniki/
 
-# Model files
+# Model files (binary, large)
 dataBase_futbol_trendijerison01.joblib
 dataBase_futbol_trend.joblib
 dataBase_futbol_trend joblib/
@@ -166,35 +166,51 @@ dataBase_futbol_trend joblib/
 # SSI DIRECTORIES - Code only, no data
 # ============================================================================
 
-# Data directories (contents ignored)
+# Data directories (contents ignored, but keep .gitkeep files)
 SSI/data/raw/*
+!SSI/data/raw/.gitkeep
 SSI/data/processed/*
+!SSI/data/processed/.gitkeep
 SSI/data/worlds/*
+!SSI/data/worlds/.gitkeep
 SSI/data/results/*
+!SSI/data/results/.gitkeep
 
-# V3 Memory (large files)
+# V3 Memory (large files - ignore contents but keep .gitkeep)
 SSI/v3/memory/*
+!SSI/v3/memory/.gitkeep
 SSI/v3/metadata/*
+!SSI/v3/metadata/.gitkeep
 SSI/v3/relationships/*
+!SSI/v3/relationships/.gitkeep
 
 # V2 Models output
 SSI/v2/models/*
+!SSI/v2/models/.gitkeep
 SSI/v2/training/*
+!SSI/v2/training/.gitkeep
 SSI/v2/observation/*
+!SSI/v2/observation/.gitkeep
 
 # V4 Agents
 SSI/v4/agents/*
+!SSI/v4/agents/.gitkeep
 SSI/v4/population/*
+!SSI/v4/population/.gitkeep
 
 # Laboratories
 SSI/laboratories/*/*
+!SSI/laboratories/*/.gitkeep
 
 # Feedback and evolution
 SSI/feedback/*
+!SSI/feedback/.gitkeep
 SSI/evolution/*
+!SSI/evolution/.gitkeep
 
 # Strategy
 SSI/strategy/*
+!SSI/strategy/.gitkeep
 
 # ============================================================================
 # OTHER RESULT DIRECTORIES
@@ -209,11 +225,26 @@ laboratorium/
 modele_dataBase_futbol_trend/
 modele_kursy_przygotowane/
 
-pamiec_modeli_v2/
+# ============================================================================
+# KATALOGI, KTÓRE MUSZĄ BYĆ W GIT (Zgodnie z PROJECT_RULES.md)
+# ============================================================================
 
-WORLD/aktualny/
+# pamiec_modeli_v2 - KOD ŹRÓDŁOWY
+# Zgodnie z PROJECT_RULES.md linia 232: !SSI/**/*.py
+# i linia 232: „Kod źródłowy” - *.py TAK (Git)
+# CRITICAL: NIE MOŻE BYĆ WYKLUCZONY!
+!pamiec_modeli_v2/
+!pamiec_modeli_v2/**/*.py
+!pamiec_modeli_v2/**/__init__.py
 
-warstwa5_generator/dane/
+# Fixture testowe - wersjonowane dane testowe
+# Zgodnie z Sprint 7.1: Fixture danych przeznaczony wyłącznie do testów
+!data/fixtures/
+!data/fixtures/**/*.py
+!data/fixtures/**/*.csv
+!data/fixtures/**/*.json
+!data/fixtures/**/*.yaml
+!data/fixtures/**/__init__.py
 
 # ============================================================================
 # EXCEPTIONS - Files that SHOULD be in Git

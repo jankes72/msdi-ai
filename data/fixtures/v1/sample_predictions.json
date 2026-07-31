@@ -1,0 +1,82 @@
+{
+  "# SSI Fixture v1 - Sample Predictions Data": {
+    "description": "Małe dane predykcji do smoke testów",
+    "version": "1.0.0",
+    "date": "2026-07-28",
+    "sprint": "7.1",
+    "note": "NIE zawiera danych produkcyjnych"
+  },
+  "predictions": [
+    {
+      "id_modelu": "AGGREGATOR_HYBRID",
+      "id_meczu": "match_001",
+      "id_grupy": "test_group_a",
+      "wynik_predykcji": "2:1",
+      "confidence": 0.85,
+      "timestamp": "2026-07-28T10:00:00",
+      "sieci_skladowe": {
+        "siec_01_zmiana_kursow": {"wynik": "2:1", "confidence": 0.8},
+        "siec_02_amplituda": {"wynik": "2:1", "confidence": 0.75},
+        "siec_03_tempo": {"wynik": "1:1", "confidence": 0.6}
+      }
+    },
+    {
+      "id_modelu": "AGGREGATOR_HYBRID",
+      "id_meczu": "match_002",
+      "id_grupy": "test_group_a",
+      "wynik_predykcji": "1:0",
+      "confidence": 0.78,
+      "timestamp": "2026-07-28T10:00:00",
+      "sieci_skladowe": {
+        "siec_01_zmiana_kursow": {"wynik": "1:0", "confidence": 0.82},
+        "siec_02_amplituda": {"wynik": "1:0", "confidence": 0.75},
+        "siec_03_tempo": {"wynik": "X:X", "confidence": 0.55}
+      }
+    },
+    {
+      "id_modelu": "AGGREGATOR_HYBRID",
+      "id_meczu": "match_003",
+      "id_grupy": "test_group_b",
+      "wynik_predykcji": "0:0",
+      "confidence": 0.65,
+      "timestamp": "2026-07-28T10:00:00",
+      "sieci_skladowe": {
+        "siec_01_zmiana_kursow": {"wynik": "0:0", "confidence": 0.7},
+        "siec_02_amplituda": {"wynik": "0:0", "confidence": 0.6},
+        "siec_03_tempo": {"wynik": "1:1", "confidence": 0.5}
+      }
+    },
+    {
+      "id_modelu": "AGGREGATOR_HYBRID",
+      "id_meczu": "match_004",
+      "id_grupy": "test_group_b",
+      "wynik_predykcji": "1:1",
+      "confidence": 0.72,
+      "timestamp": "2026-07-28T10:00:00",
+      "sieci_skladowe": {
+        "siec_01_zmiana_kursow": {"wynik": "1:1", "confidence": 0.78},
+        "siec_02_amplituda": {"wynik": "1:1", "confidence": 0.7},
+        "siec_03_tempo": {"wynik": "2:0", "confidence": 0.65}
+      }
+    },
+    {
+      "id_modelu": "AGGREGATOR_HYBRID",
+      "id_meczu": "match_005",
+      "id_grupy": "test_group_c",
+      "wynik_predykcji": "2:0",
+      "confidence": 0.88,
+      "timestamp": "2026-07-28T10:00:00",
+      "sieci_skladowe": {
+        "siec_01_zmiana_kursow": {"wynik": "2:0", "confidence": 0.9},
+        "siec_02_amplituda": {"wynik": "2:0", "confidence": 0.85},
+        "siec_03_tempo": {"wynik": "2:0", "confidence": 0.8}
+      }
+    }
+  ],
+  "statistics": {
+    "total_predictions": 5,
+    "average_confidence": 0.776,
+    "groups": ["test_group_a", "test_group_b", "test_group_c"],
+    "models": ["AGGREGATOR_HYBRID"]
+  }
+}

@@ -1,0 +1,248 @@
+[build-system]
+# Sprint 7.1: Reprodukowalne środowisko uruchomieniowe
+# Konfiguracja systemu build z pip (PEP 517/518)
+requires = ["setuptools>=61.0.0", "wheel", "pip>=23.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# Podstawowa identyfikacja projektu
+name = "MSDI-AI-SSI"
+version = "1.0.0"
+description = "Self Learning Intelligence Ecosystem - Autonomiczny system analizy danych, pamięci, strategii i ewolucji decyzji"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11,<3.12"
+authors = [
+    {name = "MSDI AI Team", email = "vibe@mistral.ai"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: Maturity :: 4 - Beta",
+]
+keywords = [
+    "ai", "machine-learning", "prediction", "betting", "strategy", 
+    "self-learning", "evolution", "agents", "memory", "knowledge"
+]
+
+# Zależności runtime (wymagane do uruchomienia systemu)
+dependencies = [
+    # Core dependencies (wszystkie warstwy)
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+    
+    # Machine Learning (V2 Model Laboratory)
+    "scikit-learn>=1.3.0",
+    "joblib>=1.3.0",
+    
+    # TensorFlow (V2 Neural Networks)
+    "tensorflow>=2.12.0",
+    
+    # Data processing
+    "statsmodels>=0.14.0",
+    
+    # Configuration & Data
+    "PyYAML>=6.0.0",
+    "pydantic>=2.0.0",
+    
+    # Evolution & Optimization (V4 Agents)
+    "deap>=1.4.0",
+    
+    # HTTP client
+    "requests>=2.31.0",
+]
+
+# Zależności opcjonalne
+optional-dependencies = {}
+
+[project.scripts]
+# Entry points - główne punkty wejścia systemu
+msdi-ssi = "SSI.__main__:main"
+ssi-v2 = "SSI.v2.__main__:main"
+ssi-v3 = "SSI.v3.__main__:main"
+ssi-v4 = "SSI.v4.__main__:main"
+pamiec-modeli-v2 = "pamiec_modeli_v2.integration:main"
+
+[project.urls]
+Homepage = "https://github.com/msdi-ai/ssi"
+Documentation = "https://github.com/msdi-ai/ssi/blob/main/SSI_DOCUMENTATION"
+Repository = "https://github.com/msdi-ai/ssi"
+Issues = "https://github.com/msdi-ai/ssi/issues"
+
+[projectEntryPoints]
+# Dodatkowe entry points
+console_scripts = [
+    "ssi-cli = SSI.__main__:cli_main",
+]
+
+# =============================================================================
+# TOOL CONFIGURATIONS
+# =============================================================================
+
+[tool.setuptools]
+# Konfiguracja setuptools
+packages = ["SSI", "SSI.v2", "SSI.v3", "SSI.v4", "pamiec_modeli_v2"]
+package-dir = {"" = "."}
+zip-safe = false
+include-package-data = true
+
+# Pliki do włączenia w pakiecie
+package-data = {
+    "SSI" = ["py.typed"],
+}
+
+# Exclude patterns
+exclude-package-data = {
+    "" = [
+        "*.csv",
+        "*.json",
+        "*.joblib",
+        "*.pkl",
+        "*.h5",
+        "*.sqlite",
+        "*.log",
+        "__pycache__/*",
+        "*.pyc",
+    ]
+}
+
+[tool.setuptools.packages.find]
+# Automatyczne znalezienie pakietów
+where = ["."]
+include = ["SSI*", "pamiec_modeli_v2*"]
+exclude = ["tests*", "docs*", "venv*", ".venv*", "build*", "dist*", "*.egg-info*"]
+
+# =============================================================================
+# BLACK - Formater kodu (PEP 8 compliant)
+# =============================================================================
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+include = "\\.pyi?$"
+exclude = """
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+"""
+
+# =============================================================================
+# ISORT - Sortowanie importów
+# =============================================================================
+[tool.isort]
+profile = "black"
+py_version = 311
+line_length = 120
+known_first_party = ["SSI", "pamiec_modeli_v2"]
+known_third_party = [
+    "numpy", "pandas", "scipy",
+    "scikit-learn", "tensorflow", "joblib",
+    "statsmodels", "PyYAML", "pydantic",
+    "deap", "requests"
+]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+# =============================================================================
+# MYPY - Typowanie statyczne
+# =============================================================================
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+
+# Wyłączone pliki (zbyt duże, złożone)
+exclude = [
+    "generatorDataBaseTrendAnalisAll\.py$",
+]
+
+# =============================================================================
+# PYTEST - Testy
+# =============================================================================
+[tool.pytest.ini_options]
+testpaths = ["SSI/tests", "tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "-v --tb=short --color=yes"
+filterwarnings = [
+    "error::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+# =============================================================================
+# FLAKE8 - Linting
+# =============================================================================
+[tool.flake8]
+max-line-length = 120
+python-version = 3.11
+extend-select = [
+    "B",   # bugbear
+    "C4",  # flake8-comprehensions
+    "S",   # flake8-bandit (bezpieczeństwo)
+    "W",   # pycodestyle warnings
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+]
+exclude = [
+    "SSI/v2/generatorDataBaseTrendAnalisAll.py",
+    "venv",
+    ".venv",
+    "build",
+    "dist",
+]
+ignore = [
+    "E203",  # Whitespace before ':' (konflikt z Black)
+    "W503",  # Line break before binary operator (konflikt z Black)
+    "B008",  # Do not perform function calls in argument defaults
+]
+
+# =============================================================================
+# COVERAGE - Pokrycie testów
+# =============================================================================
+[tool.coverage.run]
+source = ["SSI", "pamiec_modeli_v2"]
+branch = true
+parallel = true
+omit = [
+    "*tests*",
+    "*__main__*",
+    "generatorDataBaseTrendAnalisAll.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+# =============================================================================
+# BANDIT - Bezpieczeństwo
+# =============================================================================
+[tool.bandit]
+skips = ["B101"]  # assert_used - używane w testach

@@ -1,0 +1,90 @@
+# SSI/MSDI AI - Machine Learning Dependencies
+# ==============================================================================
+# Wersja: 1.0.0 (Sprint 7.1 - Reprodukowalne środowisko)
+# Data: 2026-07-28
+#
+# Zależności SPECYFICZNE DLA ML - Opcjonalne rozszerzenia
+# Używane do:
+# - Zaawansowanych modeli sieci neuronowych
+# - Optymalizacji hiperparametrów
+# - Eksperymentów z różnymi frameworkami
+#
+# Użycie:
+#   pip install -r requirements-ml.txt
+#   lub: pip install MSDI-AI-SSI[ml] (gdy zdefiniowane w pyproject.toml)
+#
+# =============================================================================
+# NEURAL NETWORKS - Alternatywne frameworki
+# ============================================================================= 
+
+# PyTorch (alternatywa dla TensorFlow)
+torch>=2.0.0,<3.0.0
+# torchaudio>=2.0.0,<3.0.0
+# torchvision>=0.15.0,<1.0.0
+
+# ONNX Runtime (inferencja modeli ONNX)
+# onnxruntime>=1.15.0,<2.0.0
+# onnx>=1.14.0,<2.0.0
+
+# Keras (standalone, opcjonalne)
+# keras>=2.12.0,<3.0.0
+
+# =============================================================================
+# OPTIMIZATION & HYPERPARAMETER TUNING
+# =============================================================================
+
+# Optuna (optymalizacja hiperparametrów)
+optuna>=3.2.0,<4.0.0
+
+# Ray Tune (rozwiązana optymalizacja)
+# ray[tune]>=2.6.0,<3.0.0
+
+# Hyperopt (Bayesian Optimization)
+# hyperopt>=0.1.2,<1.0.0
+
+# Scikit-optimize
+# scikit-optimize>=0.9.0,<1.0.0
+
+# =============================================================================
+# ADVANCED MACHINE LEARNING
+# =============================================================================
+
+# XGBoost (gradient boosting)
+# xgboost>=1.7.0,<2.0.0
+
+# LightGBM
+# lightgbm>=3.3.0,<4.0.0
+
+# CatBoost
+# catboost>=1.1.0,<2.0.0
+
+# =============================================================================
+# DEEP LEARNING UTILITIES
+# =============================================================================
+
+# TensorFlow Addons
+# tensorflow-addons>=0.21.0,<0.22.0
+
+# TensorFlow Probability (modelowanie probabilistyczne)
+# tensorflow-probability>=0.20.0,<0.21.0
+
+# =============================================================================
+# COMPUTER VISION (dla analizy wzorców wizualnych - przyszłe rozszerzenia)
+# =============================================================================
+
+# OpenCV
+# opencv-python>=4.7.0,<5.0.0
+# opencv-contrib-python>=4.7.0,<5.0.0
+
+# PIL/Pillow (obsługa obrazów)
+# Pillow>=9.5.0,<10.0.0
+
+# =============================================================================
+# GPU ACCELERATION
+# =============================================================================
+
+# CUDA Toolkit (sto játszy ku GPU)
+# NVIDIA GPU Drivers (system-level, not pip-installable)
+
+# cuDNN (dla TensorFlow/PyTorch)
+# Wymaga ręcznej instalacji z NVIDIA

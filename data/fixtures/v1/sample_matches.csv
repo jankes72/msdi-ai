@@ -1,0 +1,14 @@
+# SSI Fixture v1 - Sample Matches Data
+# Małe dane testowe do smoke testów
+# NIE zawiera danych produkcyjnych
+#
+# Format:
+# mecz_id,grupa_id,zmiana_1,zmiana_X,zmiana_2,amplituda_1,amplituda_X,amplituda_2,tempo_1,tempo_X,tempo_2,max_wahanie_1,max_wahanie_X,max_wahanie_2,start_1_raw,start_X_raw,start_2_raw,koniec_1_raw,koniec_X_raw,koniec_2_raw,log_start_1,log_start_X,log_start_2,log_koniec_1,log_koniec_X,log_koniec_2,ratio_1X_start,ratio_1_2_start,ratio_X2_start,ratio_1X_koniec,ratio_1_2_koniec,ratio_X2_koniec,mean_1,mean_X,mean_2,median_1,median_X,median_2,stdev_1,stdev_X,stdev_2,czas_h,wynik_rzeczywisty
+
+# 5 rekordów testowych (minimalny zestaw do testów)
+
+match_001,test_group_a,0.5,0.3,0.2,0.1,0.2,0.15,0.05,0.03,0.02,0.1,0.08,0.12,1.5,4.0,5.0,1.6,4.2,5.5,0.5,0.7,0.8,0.55,0.75,0.85,1.5,2.0,0.75,1.6,2.2,0.8,1.55,4.1,5.25,1.55,4.1,5.25,0.1,0.2,0.3,24.0,2:1
+match_002,test_group_a,0.4,0.4,0.2,0.15,0.15,0.1,0.04,0.04,0.02,0.12,0.1,0.08,1.8,3.5,4.5,1.9,3.6,4.6,0.6,0.8,0.9,0.65,0.85,0.95,1.4,1.8,0.8,1.5,1.9,0.85,1.85,3.5,4.55,1.85,3.55,4.55,0.15,0.25,0.2,24.0,1:0
+match_003,test_group_b,-0.2,0.1,0.3,0.2,0.1,0.05,0.06,0.03,0.15,0.12,0.09,1.2,4.5,6.0,1.1,4.4,5.8,0.4,0.9,1.0,0.35,0.88,0.92,1.1,1.5,0.72,1.0,1.4,0.78,1.15,4.45,5.95,1.15,4.45,5.95,0.2,0.3,0.4,48.0,0:0
+match_004,test_group_b,0.3,0.2,0.1,0.1,0.15,0.2,0.03,0.02,0.01,0.08,0.05,0.04,2.0,3.0,4.0,2.1,3.1,4.1,0.7,0.6,0.8,0.75,0.65,0.85,2.0,1.5,0.75,2.1,1.55,0.78,2.05,3.05,4.05,2.05,3.05,4.05,0.1,0.1,0.1,12.0,1:1
+match_005,test_group_c,0.6,0.1,0.3,0.05,0.3,0.15,0.07,0.04,0.03,0.15,0.1,0.05,2.5,3.5,4.5,2.7,3.7,4.7,0.9,0.7,0.8,0.95,0.75,0.88,2.5,1.4,0.78,2.7,1.45,0.82,2.6,3.6,4.6,2.6,3.6,4.6,0.2,0.3,0.1,6.0,2:0

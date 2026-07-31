@@ -1,0 +1,73 @@
+# SSI/MSDI AI - Runtime Dependencies
+# ==============================================================================
+# Wersja: 1.0.0 (Sprint 7.1 - Reprodukowalne środowisko)
+# Data: 2026-07-28
+#
+# Zależności NECESSARY do uruchomienia systemu w produkcji
+# NIE zawierają zależności developerskich (testy, linting, debug)
+#
+# Użycie:
+#   pip install -r requirements-runtime.txt
+#   lub: pip install MSDI-AI-SSI (z pyproject.toml)
+#
+# =============================================================================
+# SYSTEM WYMAGAN
+# =============================================================================
+# Wymagana wersja Python: 3.11.x
+# Zgodnie z pyproject.toml: requires-python = ">=3.11,<3.12"
+
+# =============================================================================
+# CORE DEPENDENCIES (Infraustruktura - wszystkie warstwy)
+# =============================================================================
+
+# Obliczenia numeryczne i DataFrames
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0,<3.0.0
+scipy>=1.10.0,<2.0.0
+
+# =============================================================================
+# V2 MODEL LABORATORY (Modele i uczenie maszynowe)
+# =============================================================================
+
+# Machine Learning - RandomForest, klasyfikatory, metryki
+scikit-learn>=1.3.0,<2.0.0
+
+# Serializacja modeli
+joblib>=1.3.0,<1.4.0
+
+# Sieci neuronowe - TensorFlow/Keras (dla sieci trendów i kursów)
+tensorflow>=2.12.0,<3.0.0
+
+# Modele statystyczne, analiza czasowa
+statsmodels>=0.14.0,<1.0.0
+
+# =============================================================================
+# V3 WORLD KNOWLEDGE ENGINE (Pamięć i wiedza)
+# =============================================================================
+
+# Obsługa plików YAML (konfiguracja światów)
+PyYAML>=6.0.0,<7.0.0
+
+# Walidacja danych i konfiguracji
+pydantic>=2.0.0,<3.0.0
+
+# =============================================================================
+# V4 AUTONOMOUS AGENT ECOSYSTEM (Agenci i ewolucja)
+# =============================================================================
+
+# Ewolucja genetyczna, algorytmy ewolucyjne
+deap>=1.4.0,<2.0.0
+
+# =============================================================================
+# INTEGRATION & COMMUNICATION
+# =============================================================================
+
+# HTTP client (pobieranie danych, API)
+requests>=2.31.0,<3.0.0
+
+# =============================================================================
+# PLATFORM-SPECIFIC
+# =============================================================================
+
+# Windows-specific (kompatybilność)
+colorama>=0.4.6,<1.0.0

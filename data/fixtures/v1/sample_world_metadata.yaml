@@ -1,0 +1,117 @@
+# SSI Fixture v1 - Sample World Metadata
+# Metadane światów dla testów
+# NIE zawiera danych produkcyjnych
+#
+# Wersja: 1.0.0
+# Data: 2026-07-28
+# Sprint: 7.1
+
+worlds:
+  - id: test_world_a
+    name: "Test World A - Zmiany Kursów"
+    type: TREND
+    description: "Świat testowy oparty na zmianach kursów"
+    source: V2
+    version: "1.0.0"
+    created: "2026-07-28T10:00:00"
+    features:
+      - zmiana_1
+      - zmiana_X
+      - zmiana_2
+      - amplituda_1
+      - amplituda_X
+      - amplituda_2
+    metrics:
+      accuracy: 0.85
+      confidence: 0.78
+      coverage: 0.95
+    status: ACTIVE
+    
+  - id: test_world_b
+    name: "Test World B - Amplituda"
+    type: AMPLITUDE
+    description: "Świat testowy oparty na amplitudzie zmian"
+    source: V2
+    version: "1.0.0"
+    created: "2026-07-28T10:00:00"
+    features:
+      - amplituda_1
+      - amplituda_X
+      - amplituda_2
+      - max_wahanie_1
+      - max_wahanie_X
+      - max_wahanie_2
+    metrics:
+      accuracy: 0.82
+      confidence: 0.75
+      coverage: 0.92
+    status: ACTIVE
+    
+  - id: test_world_c
+    name: "Test World C - Tempo"
+    type: TEMPO
+    description: "Świat testowy oparty na tempie zmian"
+    source: V2
+    version: "1.0.0"
+    created: "2026-07-28T10:00:00"
+    features:
+      - tempo_1
+      - tempo_X
+      - tempo_2
+      - ratio_1X_start
+      - ratio_1_2_start
+      - ratio_X2_start
+    metrics:
+      accuracy: 0.78
+      confidence: 0.72
+      coverage: 0.88
+    status: ACTIVE
+
+# Relacje między światami
+relationships:
+  - world_a: test_world_a
+    world_b: test_world_b
+    type: COMPLEMENTARY
+    strength: 0.85
+    description: "Świat改 i B uzupełniają się w analizie zmian"
+    
+  - world_a: test_world_a
+    world_b: test_world_c
+    type: HIERARCHICAL
+    strength: 0.75
+    description: "Świat A zawiera informacje wyższego poziomu niż C"
+    
+  - world_a: test_world_b
+    world_b: test_world_c
+    type: INDEPENDENT
+    strength: 0.6
+    description: "Światy B i C są względnie niezależne"
+
+# Wzorce
+patterns:
+  - id: pattern_test_001
+    name: "Wzorzec Testowy 1"
+    description: "Testowy wzorzec do smoke testów"
+    world: test_world_a
+    frequency: 0.75
+    confidence: 0.8
+    examples:
+      - match_001
+      - match_002
+    
+  - id: pattern_test_002
+    name: "Wzorzec Testowy 2"
+    description: "Testowy wzorzec remisu"
+    world: test_world_b
+    frequency: 0.6
+    confidence: 0.7
+    examples:
+      - match_003
+      - match_004
+
+statistics:
+  total_worlds: 3
+  total_relationships: 3
+  total_patterns: 2
+  version: "1.0.0"
+  generated: "2026-07-28T10:00:00"

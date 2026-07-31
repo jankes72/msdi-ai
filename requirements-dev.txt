@@ -1,0 +1,90 @@
+# SSI/MSDI AI - Development Dependencies
+# ==============================================================================
+# Wersja: 1.0.0 (Sprint 7.1 - Reprodukowalne środowisko)
+# Data: 2026-07-28
+#
+# Zależności DEVELOPERSKIE - NIE wymagane w produkcji
+# Używane do:
+# - Testowania
+# - Lintingu i formatowania kodu
+# - Typowania statycznego
+# - Bezpieczeństwa
+#
+# Użycie:
+#   pip install -r requirements-dev.txt
+#   lub: pip install MSDI-AI-SSI[dev] (gdy zdefiniowane w pyproject.toml)
+#
+# =============================================================================
+# TESTING & QUALITY ASSURANCE
+# =============================================================================
+
+# --- Testing Frameworks ---
+pytest>=7.4.0,<8.0.0
+pytest-cov>=4.1.0,<5.0.0
+pytest-mock>=3.11.0,<4.0.0
+pytest-asyncio>=0.21.0,<1.0.0
+pytest-xdist>=3.3.0,<4.0.0  # Równoległe wykonywanie testów
+hypothesis>=6.80.0,<7.0.0  # Property-based testing
+
+# --- Coverage & Analysis ---
+coverage>=7.2.0,<8.0.0
+coverage-badge>=1.1.0,<2.0.0
+
+# =============================================================================
+# LINTING & FORMATTING
+# =============================================================================
+
+# --- Formatting ---
+black>=23.0.0,<24.0.0
+isort>=5.12.0,<6.0.0
+
+# --- Static Type Checking ---
+mypy>=1.4.0,<2.0.0
+mypy-extensions>=1.0.0,<2.0.0
+
+# --- Linting ---
+flake8>=6.0.0,<7.0.0
+flake8-bugbear>=23.7.0,<24.0.0
+flake8-comprehensions>=3.14.0,<4.0.0
+flake8-simplify>=0.20.0,<1.0.0
+flake8-docstrings>=1.7.0,<2.0.0
+flake8-annotations>=3.0.0,<4.0.0
+pylint>=2.17.0,<3.0.0
+pylint-mccabe>=0.1.0  # Wtyczka McCabe complexity dla Pylint
+
+# =============================================================================
+# SECURITY ANALYSIS
+# =============================================================================
+
+bandit>=1.7.5,<2.0.0
+safety>=2.3.0,<3.0.0
+
+# =============================================================================
+# DOCUMENTATION
+# =============================================================================
+
+# Generowanie dokumentacji
+mkdocs>=1.4.0,<2.0.0
+mkdocs-material>=9.1.0,<10.0.0
+mdx_truly_sane_lists>=3.0.0  # Fix Markdown list rendering
+
+# =============================================================================
+# BUILD & PACKAGING
+# =============================================================================
+
+build>=1.0.0,<2.0.0
+twine>=4.0.0,<5.0.0
+setuptools>=61.0.0,<70.0.0
+wheel>=0.40.0,<1.0.0
+pip>=23.0.0,<24.0.0
+
+# =============================================================================
+# IDE & UTILITIES
+# =============================================================================
+
+# IPython (lepsze REPL)
+ipython>=8.0.0,<9.0.0
+ipdb>=0.13.0,<1.0.0  # Debugger dla IPython
+
+# Progress bars
+rich>=13.0.0,<14.0.0
