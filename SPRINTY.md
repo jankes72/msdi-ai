@@ -152,6 +152,69 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 ### Dziennik
 
 > Dodano mechanizm synchronizacji wiedzy pomiędzy V3 i V4.
+>
+> **Implementacja**:
+> - Utworzono `SSI/v3/integration/memory_sync.py` (~1300 linii) z klasami: MemorySynchronizer, MemorySyncConfig, ChangeTracker, ConflictResolver
+> - Zaimplementowano tryby synchronizacji: FULL, INCREMENTAL, SELECTIVE
+> - Zaimplementowano kierunki synchronizacji: V3_TO_V4, V4_TO_V3, BIDIRECTIONAL
+> - Zaimplementowano obsługę wszystkich typów pamięci: WORLD, PATTERN, OBSERVATION, METADATA, RELATIONSHIP
+> - Zaimplementowano mechanizmy: automatyczna synchronizacja, śledzenie zmian, rozwiązywanie konfliktów (4 strategie)
+> - Rozszerzono V3ToV4Bridge, V3Integration i WorldIntegration o obsługę synchronizacji
+> - Zaktualizowano eksporty w SSI/v3/integration/__init__.py i SSI/v3/__init__.py
+> - Dodano testy synchronizacji w sekcjach __main__ wszystkich modułów
+>
+> **Status**: ✅ Zakończony (2026-07-28)
+
+---
+
+# Sprint 7.1 – Reprodukowalne środowisko uruchomieniowe
+
+### Zadanie
+
+* Ustal Python 3.11 jako wspieraną wersję interpretera.
+* Dodaj pyproject.toml z konfiguracją projektu i narzędzi developerskich.
+* Rozdziel zależności runtime, development i ML.
+* Dodaj deterministyczny lockfile zależności.
+* Przygotuj instrukcję utworzenia .venv i instalacji projektu z czystego checkoutu.
+* Dodaj mały, wersjonowany fixture danych przeznaczony wyłącznie do testów.
+* Zapewnij, że cały kod wymagany przez główny entrypoint jest śledzony przez Git.
+
+### Wymagania
+
+* Kod pamiec_modeli_v2/**/*.py nie może być wykluczony przez .gitignore.
+* Dane, modele, archiwa i wyniki runtime nadal muszą pozostać ignorowane.
+* python -m pip check musi kończyć się kodem 0.
+* Instalacja nie może zależeć od globalnego środowiska Python użytkownika.
+* Dokumentacja uruchomienia musi używać rzeczywistej składni podkomend CLI.
+
+### Kryteria akceptacji
+
+* Czysty checkout daje się uruchomić według jednej udokumentowanej procedury.
+* python --version zwraca wspieraną wersję 3.11.x.
+* Instalacja z lockfile kończy się bez konfliktów zależności.
+* Import pamiec_modeli_v2.integration działa bez ręcznej zmiany PYTHONPATH.
+* Fixture danych jest wystarczający do smoke testu i nie zawiera danych produkcyjnych.
+
+### Dziennik
+
+> **Status**: ✅ Zakończony (2026-07-28)
+>
+> **Implementacja**:
+> - Utworzono `pyproject.toml` (PEP 621) z pełną konfiguracją projektu
+> - Rozdzielono zależności na: requirements-runtime.txt, requirements-dev.txt, requirements-ml.txt
+> - Utworzono `INSTALL.md` z szczegółową procedurą setupu środowiska
+> - Dodano fixture testowy v1 (data/fixtures/v1/) z sample data (CSV, JSON, YAML)
+> - Poprawiono `.gitignore` - pamiec_modeli_v2/**/*.py nie jest ignorowane
+> - Dodano `memory_sync.py` - synchronizacja pamięci V3↔V4 (Sprint 7 uzupełnienie)
+> - Dodano testy dla V3 (imports, integration, memory_sync, v3_to_v4_bridge, world_integration)
+>
+> **Weryfikacja kryteriów akceptacji**:
+> ✅ pyproject.toml z Python 3.11 jako wymaganą wersją
+> ✅ Zależności podzielone na runtime/dev/ML
+> ✅ INSTALL.md z procedurą czystego checkoutu
+> ✅ Fixture testowy dostępny i wystarczający
+> ✅ import pamiec_modeli_v2.integration działa
+> ✅ .gitignore zgodny z PROJECT_RULES.md
 
 ---
 
