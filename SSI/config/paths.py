@@ -1,12 +1,13 @@
 """
-SSI Paths - Ścieżki systemu SSI
+SSI Paths - Sciezki systemu SSI
 
-Wersja: 1.0
-Data: 2026-07-28
+Wersja: 2.0
+Data: 2026-07-31
 """
 
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
+from pathlib import Path
 import os
 import logging
 
@@ -15,41 +16,53 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SSIPaths:
-    """Główna klasa ścieżek systemu SSI"""
-    root_path: str = "."
-    ssi_root: str = "SSI"
+    """Glowna klasa sciezek systemu SSI"""
+    root_path: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent.resolve())
     
-    # Moduły
-    v2_path: str = "SSI/v2"
-    v3_path: str = "SSI/v3"
-    v4_path: str = "SSI/v4"
-    strategy_path: str = "SSI/strategy"
-    laboratories_path: str = "SSI/laboratories"
-    feedback_path: str = "SSI/feedback"
-    decision_path: str = "SSI/decision"
-    evolution_path: str = "SSI/evolution"
+    # Moduly - sciezki wzgledne od root_path
+    v2_path: str = "v2"
+    v3_path: str = "v3"
+    v4_path: str = "v4"
+    strategy_path: str = "strategy"
+    laboratories_path: str = "laboratories"
+    feedback_path: str = "feedback"
+    decision_path: str = "decision"
+    evolution_path: str = "evolution"
     
-    # Dane
-    data_root: str = "SSI/data"
-    raw_data_path: str = "SSI/data/raw"
-    processed_data_path: str = "SSI/data/processed"
-    worlds_data_path: str = "SSI/data/worlds"
-    results_data_path: str = "SSI/data/results"
+    # Dane - sciezki wzgledne od root_path
+    data_root: str = "data"
+    raw_data_path: str = "data/raw"
+    processed_data_path: str = "data/processed"
+    worlds_data_path: str = "data/worlds"
+    results_data_path: str = "data/results"
     
-    # Konfiguracja
-    config_path: str = "SSI/config"
-    utils_path: str = "SSI/utils"
-    tests_path: str = "SSI/tests"
+    # Konfiguracja - sciezki wzgledne od root_path
+    config_path: str = "config"
+    utils_path: str = "utils"
+    tests_path: str = "tests"
     
-    # Pliki wejściowe
+    # Pliki wejsciowe
     input_courses_file: str = "kursy_przygotowane.csv"
     
-    def get_absolute_path(self, relative_path: str) -> str:
-        return os.path.join(self.root_path, self.ssi_root, relative_path.lstrip('/\\'))
+    def get_absolute_path(self, relative_path: str) -> Path:
+        """
+        Zwraca bezwzgledna sciezke na podstawie sciezki wzglednej.
+        
+        Args:
+            relative_path: Sciezka wzgledna wzgledem root_path
+            
+        Returns:
+            Bezwzgledna sciezka jako Path
+        """
+        return (self.root_path / relative_path).resolve()
     
     def create_directory_structure(self) -> bool:
+        """
+        Tworzy strukture katalogow SSI.
+        Uwaga: Ta metoda NIE powinna byc wywolywana podczas importu.
+        """
         directories = [
-            self.ssi_root, self.data_root, self.raw_data_path, self.processed_data_path,
+            self.data_root, self.raw_data_path, self.processed_data_path,
             self.worlds_data_path, self.results_data_path, self.v2_path, self.v3_path,
             self.v4_path, self.strategy_path, self.laboratories_path, self.feedback_path,
             self.decision_path, self.evolution_path, self.config_path, self.utils_path, self.tests_path
@@ -60,7 +73,7 @@ class SSIPaths:
                 os.makedirs(full_path, exist_ok=True)
             return True
         except Exception as e:
-            logger.error(f"Błąd tworzenia katalogów: {e}")
+            logger.error(f"Blad tworzenia katalogow: {e}")
             return False
 
 
