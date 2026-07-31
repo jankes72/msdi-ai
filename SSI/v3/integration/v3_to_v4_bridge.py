@@ -206,6 +206,10 @@ class V3ToV4Bridge:
         self.transfer_history: List[Dict[str, Any]] = []  # Historia transferów
         self._transfer_counter: int = 0
         
+        # SPRINT 7: Synchronizacja pamięci (domyślnie wyłączona, można włączyć)
+        self._sync_enabled = False
+        self._memory_synchronizer = None
+        
         self._logger.info(f"V3ToV4Bridge zainicjowany z konfiguracją: {self.config.to_dict()}")
     
     def _setup_logger(self) -> logging.Logger:
@@ -652,6 +656,136 @@ class V3ToV4Bridge:
             "transfer_history_count": len(self.transfer_history),
             "config": self.config.to_dict()
         }
+    
+    # =============================================================================
+    # ROZSZERZENIE SPRINT 7: Obsługa synchronizacji dwukierunkowej
+    # =============================================================================
+    
+    def enable_memory_sync(self, memory_synchronizer: Optional[Any] = None) -> bool:
+        """
+        Włącza mechanizm synchronizacji pamięci (Sprint 7).
+        
+        Args:
+            memory_synchronizer: Instancja MemorySynchronizer (opcjonalnie)
+            
+        Returns:
+            True jeśli włączono pomyślnie
+        """
+        try:
+            if memory_synchronizer is not None:
+                self._memory_synchronizer = memory_synchronizer
+            else:
+                # Import dynamiczny, aby uniknąć cyklicznych zależności
+                from .memory_sync import MemorySynchronizer, MemorySyncConfig
+                self._memory_synchronizer = MemorySynchronizer(
+                    config=MemorySyncConfig(),
+                    v3_integration=self._v3_integration,
+                    v4_bridge=self
+                )
+            
+            self._sync_enabled = True
+            self._logger.info("Memory synchronization enabled (Sprint 7)")
+            return True
+            
+        except Exception as e:
+            self._logger.error(f"Błąd włączania synchronizacji pamięci: {e}")
+            self._sync_enabled = False
+            return False
+    
+    def is_sync_enabled(self) -> bool:
+        """Sprawdza, czy synchronizacja pamięci jest włączona"""
+        return getattr(self, '_sync_enabled', False)
+    
+    def sync_memory(
+        self,
+        direction: Optional[str] = None,
+        memory_types: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """
+        Wykona synchronizację pamięci (Sprint 7).
+        
+        Args:
+            direction: Kierunek synchronizacji ('v3_to_v4', 'v4_to_v3', 'bidirectional')
+            memory_types: Lista typów pamięci ('WORLD', 'PATTERN', 'METADATA', etc.)
+            
+        Returns:
+            Statystyki synchronizacji
+        """
+        if not self.is_sync_enabled():
+            self._logger.warning("Synchronizacja pamięci nie jest włączona. Wywołaj enable_memory_sync()")
+            return {"status": "error", "message": "Memory sync not enabled"}
+        
+        try:
+            # Konwersja parametrów
+            from .memory_sync import SyncDirection, MemoryType
+            
+            sync_direction = None
+            if direction:
+                try:
+                    sync_direction = SyncDirection[direction.upper()]
+                except KeyError:
+                    self._logger.warning(f"Nieznany kierunek: {direction}, używam domyślnego")
+            
+            sync_memory_types = None
+            if memory_types:
+                try:
+                    sync_memory_types = {MemoryType[t.upper()] for t in memory_types}
+                except KeyError as e:
+                    self._logger.warning(f"Nieznany typ pamięci: {e}, pomijam")
+            
+            # Wykonaj synchronizację
+            result = self._memory_synchronizer.sync_all(
+                direction=sync_direction,
+                memory_types=sync_memory_types
+            )
+            
+            # Zaktualizuj historię transferów
+            self.transfer_history.append({
+                "transfer_id": self._transfer_counter,
+                "timestamp": datetime.now().isoformat(),
+                "type": "memory_sync",
+                "direction": direction or "bidirectional",
+                "memory_types": memory_types or [t.name for t in self._memory_synchronizer.config.SYNC_MEMORY_TYPES],
+                "status": result.get("status", "unknown"),
+                "changes_synced": result.get("changes_synced", 0)
+            })
+            self._transfer_counter += 1
+            
+            return result
+            
+        except Exception as e:
+            self._logger.error(f"Błąd synchronizacji pamięci: {e}")
+            return {"status": "error", "message": str(e)}
+    
+    def start_auto_memory_sync(self) -> bool:
+        """Uruchamia automatyczną synchronizację pamięci"""
+        if not self.is_sync_enabled():
+            self.enable_memory_sync()
+        
+        try:
+            result = self._memory_synchronizer.start_auto_sync()
+            self._logger.info("Automatyczna synchronizacja pamięci uruchomiona")
+            return result
+        except Exception as e:
+            self._logger.error(f"Błąd uruchamiania automatycznej synchronizacji: {e}")
+            return False
+    
+    def stop_auto_memory_sync(self) -> None:
+        """Zatrzymuje automatyczną synchronizację pamięci"""
+        if hasattr(self, '_memory_synchronizer') and self._memory_synchronizer:
+            self._memory_synchronizer.stop_auto_sync()
+            self._logger.info("Automatyczna synchronizacja pamięci zatrzymana")
+    
+    def get_memory_sync_status(self) -> Dict[str, Any]:
+        """Zwraca status synchronizacji pamięci"""
+        if not self.is_sync_enabled():
+            return {"enabled": False, "message": "Memory sync not enabled"}
+        
+        return {
+            "enabled": True,
+            "status": self._memory_synchronizer.get_status().name,
+            "statistics": self._memory_synchronizer.get_statistics()
+        }
 
 
 # =============================================================================
@@ -717,4 +851,26 @@ if __name__ == "__main__":
     # Test historia transferów
     print(f"Historia transferów: {len(bridge_with_v3.transfer_history)} wpisów")
     
-    print("\nV3ToV4Bridge - Pełna implementacja Sprint 4 - gotowy!")
+    # SPRINT 7: Test synchronizacji pamięci
+    print("\n[Sprint 7 Test] Synchronizacja pamięci")
+    try:
+        # Włącz synchronizację pamięci
+        sync_enabled = bridge_with_v3.enable_memory_sync()
+        print(f"✓ Synchronizacja pamięci włączona: {sync_enabled}")
+        
+        # Sprawdź status
+        sync_status = bridge_with_v3.is_sync_enabled()
+        print(f"✓ Status synchronizacji: {sync_status}")
+        
+        # Wykonaj synchronizację
+        sync_result = bridge_with_v3.sync_memory()
+        print(f"✓ Wynik synchronizacji: {sync_result.get('status')}")
+        
+        # Sprawdź status synchronizacji
+        memory_sync_status = bridge_with_v3.get_memory_sync_status()
+        print(f"✓ Status sync pamięci: {memory_sync_status.get('enabled')}")
+        
+    except Exception as e:
+        print(f"⚠ Test synchronizacji pamięci: {e}")
+    
+    print("\nV3ToV4Bridge - Pełna implementacja Sprint 4 + Rozszerzenie Sprint 7 - gotowy!")

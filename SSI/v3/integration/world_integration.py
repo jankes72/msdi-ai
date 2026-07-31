@@ -577,6 +577,10 @@ class WorldIntegration:
         
         self._lock = threading.Lock()
         
+        # SPRINT 7: Synchronizacja pamięci (domyślnie wyłączona)
+        self._sync_enabled = False
+        self._memory_synchronizer = None
+    
     def receive_from_v2(self, data_package: WorldDataPackage) -> Dict[str, Any]:
         """
         Odbiera pakiet danych z V2.
@@ -981,6 +985,103 @@ class WorldIntegration:
         except Exception as e:
             self._logger.error(f"Błąd tworzenia mostu V3ToV4: {e}")
             return None
+    
+    # =============================================================================
+    # ROZSZERZENIE SPRINT 7: Obsługa synchronizacji pamięci
+    # =============================================================================
+    
+    def enable_memory_sync(self) -> bool:
+        """
+        Włącza mechanizm synchronizacji pamięci (Sprint 7).
+        
+        Returns:
+            True jeśli włączono pomyślnie
+        """
+        try:
+            # Import dynamiczny
+            from .memory_sync import MemorySynchronizer, MemorySyncConfig
+            
+            # Utwórz synchronizator
+            self._memory_synchronizer = MemorySynchronizer(
+                config=MemorySyncConfig(),
+                v3_integration=None,  # WorldIntegration nie ma bezpośredniego V3Integration
+                v4_bridge=self.v3_to_v4_bridge
+            )
+            self._sync_enabled = True
+            self._logger.info("Memory synchronization enabled in WorldIntegration (Sprint 7)")
+            
+            # Połącz synchronizator z mostem V4
+            if self.v3_to_v4_bridge:
+                self._memory_synchronizer.connect(
+                    v3_integration=None,
+                    v4_bridge=self.v3_to_v4_bridge
+                )
+            
+            return True
+            
+        except Exception as e:
+            self._logger.error(f"Błąd włączania synchronizacji pamięci: {e}")
+            self._sync_enabled = False
+            return False
+    
+    def is_sync_enabled(self) -> bool:
+        """Sprawdza, czy synchronizacja pamięci jest włączona"""
+        return getattr(self, '_sync_enabled', False)
+    
+    def sync_memory(
+        self,
+        direction: Optional[str] = None,
+        memory_types: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """
+        Wykona synchronizację pamięci (Sprint 7).
+        
+        Args:
+            direction: Kierunek synchronizacji ('v3_to_v4', 'v4_to_v3', 'bidirectional')
+            memory_types: Lista typów pamięci ('WORLD', 'PATTERN', 'METADATA', etc.)
+            
+        Returns:
+            Statystyki synchronizacji
+        """
+        if not self.is_sync_enabled():
+            self._logger.warning("Synchronizacja pamięci nie jest włączona. Wywołaj enable_memory_sync()")
+            return {"status": "error", "message": "Memory sync not enabled"}
+        
+        try:
+            return self._memory_synchronizer.sync_all(direction=direction, memory_types=memory_types)
+        except Exception as e:
+            self._logger.error(f"Błąd synchronizacji pamięci: {e}")
+            return {"status": "error", "message": str(e)}
+    
+    def get_memory_sync_status(self) -> Dict[str, Any]:
+        """Zwraca status synchronizacji pamięci"""
+        if not self.is_sync_enabled():
+            return {"enabled": False, "message": "Memory sync not enabled"}
+        
+        return {
+            "enabled": True,
+            "status": self._memory_synchronizer.get_status().name,
+            "statistics": self._memory_synchronizer.get_statistics()
+        }
+    
+    def start_auto_memory_sync(self) -> bool:
+        """Uruchamia automatyczną synchronizację pamięci"""
+        if not self.is_sync_enabled():
+            self.enable_memory_sync()
+        
+        try:
+            result = self._memory_synchronizer.start_auto_sync()
+            self._logger.info("Automatyczna synchronizacja pamięci uruchomiona w WorldIntegration")
+            return result
+        except Exception as e:
+            self._logger.error(f"Błąd uruchamiania automatycznej synchronizacji: {e}")
+            return False
+    
+    def stop_auto_memory_sync(self) -> None:
+        """Zatrzymuje automatyczną synchronizację pamięci"""
+        if hasattr(self, '_memory_synchronizer') and self._memory_synchronizer:
+            self._memory_synchronizer.stop_auto_sync()
+            self._logger.info("Automatyczna synchronizacja pamięci zatrzymana w WorldIntegration")
 
 
 # =============================================================================
@@ -1136,4 +1237,22 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Błąd tworzenia mostu V3ToV4: {e}")
     
-    print("\nAll WorldIntegration tests passed! (Sprint 5 - SEND_TO_V4 implemented)")
+    # SPRINT 7: Test synchronizacji pamięci
+    print("\n[Sprint 7 Test] Synchronizacja pamięci w WorldIntegration")
+    try:
+        # Włącz synchronizację pamięci
+        sync_enabled = integration.enable_memory_sync()
+        print(f"✓ Synchronizacja pamięci włączona: {sync_enabled}")
+        
+        # Sprawdź status
+        sync_status = integration.is_sync_enabled()
+        print(f"✓ Status synchronizacji: {sync_status}")
+        
+        # Sprawdź status synchronizacji
+        memory_sync_status = integration.get_memory_sync_status()
+        print(f"✓ Status sync pamięci: {memory_sync_status.get('enabled')}")
+        
+    except Exception as e:
+        print(f"⚠ Test synchronizacji pamięci: {e}")
+    
+    print("\nAll WorldIntegration tests passed! (Sprint 5 - SEND_TO_V4 + Sprint 7 - Memory Sync) implemented")

@@ -263,6 +263,10 @@ class V3Integration:
         # Logger
         self._logger = self._setup_logger()
         
+        # SPRINT 7: Synchronizacja pamięci (domyślnie wyłączona)
+        self._sync_enabled = False
+        self._memory_synchronizer = None
+        
         # Inicjalizacja komponentów
         self._initialize_components()
         
@@ -610,6 +614,95 @@ class V3Integration:
             self._logger.error(f"Błąd wysyłania do V4: {e}")
             return {"status": "error", "message": str(e)}
     
+    # =============================================================================
+    # ROZSZERZENIE SPRINT 7: Obsługa synchronizacji pamięci
+    # =============================================================================
+    
+    def enable_memory_sync(self) -> bool:
+        """
+        Włącza mechanizm synchronizacji pamięci (Sprint 7).
+        
+        Returns:
+            True jeśli włączono pomyślnie
+        """
+        try:
+            # Import dynamiczny
+            from .integration.memory_sync import MemorySynchronizer, MemorySyncConfig
+            
+            # Utwórz synchronizator
+            self._memory_synchronizer = MemorySynchronizer(
+                config=MemorySyncConfig(),
+                v3_integration=self,
+                v4_bridge=getattr(self, '_v3_to_v4_bridge', None)
+            )
+            self._sync_enabled = True
+            self._logger.info("Memory synchronization enabled in V3Integration (Sprint 7)")
+            return True
+            
+        except Exception as e:
+            self._logger.error(f"Błąd włączania synchronizacji pamięci: {e}")
+            self._sync_enabled = False
+            return False
+    
+    def is_sync_enabled(self) -> bool:
+        """Sprawdza, czy synchronizacja pamięci jest włączona"""
+        return getattr(self, '_sync_enabled', False)
+    
+    def sync_memory(
+        self,
+        direction: Optional[str] = None,
+        memory_types: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """
+        Wykona synchronizację pamięci (Sprint 7).
+        
+        Args:
+            direction: Kierunek synchronizacji ('v3_to_v4', 'v4_to_v3', 'bidirectional')
+            memory_types: Lista typów pamięci ('WORLD', 'PATTERN', 'METADATA', etc.)
+            
+        Returns:
+            Statystyki synchronizacji
+        """
+        if not self.is_sync_enabled():
+            self._logger.warning("Synchronizacja pamięci nie jest włączona. Wywołaj enable_memory_sync()")
+            return {"status": "error", "message": "Memory sync not enabled"}
+        
+        try:
+            return self._memory_synchronizer.sync_all(direction=direction, memory_types=memory_types)
+        except Exception as e:
+            self._logger.error(f"Błąd synchronizacji pamięci: {e}")
+            return {"status": "error", "message": str(e)}
+    
+    def get_memory_sync_status(self) -> Dict[str, Any]:
+        """Zwraca status synchronizacji pamięci"""
+        if not self.is_sync_enabled():
+            return {"enabled": False, "message": "Memory sync not enabled"}
+        
+        return {
+            "enabled": True,
+            "status": self._memory_synchronizer.get_status().name,
+            "statistics": self._memory_synchronizer.get_statistics()
+        }
+    
+    def start_auto_memory_sync(self) -> bool:
+        """Uruchamia automatyczną synchronizację pamięci"""
+        if not self.is_sync_enabled():
+            self.enable_memory_sync()
+        
+        try:
+            result = self._memory_synchronizer.start_auto_sync()
+            self._logger.info("Automatyczna synchronizacja pamięci uruchomiona w V3Integration")
+            return result
+        except Exception as e:
+            self._logger.error(f"Błąd uruchamiania automatycznej synchronizacji: {e}")
+            return False
+    
+    def stop_auto_memory_sync(self) -> None:
+        """Zatrzymuje automatyczną synchronizację pamięci"""
+        if hasattr(self, '_memory_synchronizer') and self._memory_synchronizer:
+            self._memory_synchronizer.stop_auto_sync()
+            self._logger.info("Automatyczna synchronizacja pamięci zatrzymana w V3Integration")
+    
     # =========================================================================
     # METODY POMOCNICZE
     # =========================================================================
@@ -774,6 +867,24 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"✗ Test 7 FAILED: {e}")
     
+    # SPRINT 7: Test synchronizacji pamięci
+    print("\n[Sprint 7 Test] Synchronizacja pamięci w V3Integration")
+    try:
+        # Włącz synchronizację pamięci
+        sync_enabled = integration.enable_memory_sync()
+        print(f"✓ Synchronizacja pamięci włączona: {sync_enabled}")
+        
+        # Sprawdź status
+        sync_status = integration.is_sync_enabled()
+        print(f"✓ Status synchronizacji: {sync_status}")
+        
+        # Sprawdź status synchronizacji
+        memory_sync_status = integration.get_memory_sync_status()
+        print(f"✓ Status sync pamięci: {memory_sync_status.get('enabled')}")
+        
+    except Exception as e:
+        print(f"⚠ Test synchronizacji pamięci: {e}")
+    
     print("\n" + "="*50)
-    print("V3Integration tests completed!")
+    print("V3Integration tests completed! (Sprint 7)")
     print("="*50)

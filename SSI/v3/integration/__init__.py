@@ -43,6 +43,24 @@ from ...v2.integration.v2_to_v3_bridge import (
     WorldDataPackage
 )
 
+# SPRINT 7: Memory Synchronization
+from .memory_sync import (
+    MemorySynchronizer,
+    MemorySyncConfig,
+    SyncDirection,
+    SyncMode,
+    SyncStatus,
+    MemoryType,
+    MemoryChange,
+    SyncPackage,
+    SyncStatistics,
+    ChangeTracker,
+    ConflictResolver,
+    tworz_memory_synchronizer,
+    get_memory_synchronizer,
+    reset_memory_synchronizer
+)
+
 __all__ = [
     # V3 Integration
     'WorldIntegration',
@@ -56,6 +74,22 @@ __all__ = [
     'AgentKnowledgePackage',
     'BridgeStatus',
     'tworz_v3_to_v4_bridge',
+    
+    # SPRINT 7: Memory Synchronization
+    'MemorySynchronizer',
+    'MemorySyncConfig',
+    'SyncDirection',
+    'SyncMode',
+    'SyncStatus',
+    'MemoryType',
+    'MemoryChange',
+    'SyncPackage',
+    'SyncStatistics',
+    'ChangeTracker',
+    'ConflictResolver',
+    'tworz_memory_synchronizer',
+    'get_memory_synchronizer',
+    'reset_memory_synchronizer',
     
     # Re-exported from V2
     'V2ToV3Bridge',

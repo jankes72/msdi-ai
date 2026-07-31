@@ -83,6 +83,18 @@ from .integration import (
     tworz_integracje_v3 as tworz_world_integration
 )
 
+# SPRINT 7: Memory Synchronization
+from .integration.memory_sync import (
+    MemorySynchronizer,
+    MemorySyncConfig,
+    SyncDirection,
+    SyncMode,
+    SyncStatus,
+    MemoryType,
+    tworz_memory_synchronizer,
+    get_memory_synchronizer
+)
+
 # Re-export V2ToV3Bridge from V2 for backward compatibility
 from ..v2.integration.v2_to_v3_bridge import (
     V2ToV3Bridge, BridgeConfig, WorldDataPackage
@@ -126,6 +138,16 @@ __all__ = [
     
     # World Integration (Etap 3C)
     'tworz_world_integration',
+    
+    # SPRINT 7: Memory Synchronization
+    'MemorySynchronizer',
+    'MemorySyncConfig',
+    'SyncDirection',
+    'SyncMode',
+    'SyncStatus',
+    'MemoryType',
+    'tworz_memory_synchronizer',
+    'get_memory_synchronizer',
     
     # Re-exported from V2 for backward compatibility
     'V2ToV3Bridge', 'BridgeConfig', 'WorldDataPackage'
