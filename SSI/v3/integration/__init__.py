@@ -36,11 +36,31 @@ from .v3_to_v4_bridge import (
     tworz_v3_to_v4_bridge
 )
 
+# V3 Integration (Sprint 3)
+from ..v3_integration import (
+    V3Integration,
+    V3IntegrationConfig,
+    IntegrationStatistics,
+    ComponentStatus,
+    tworz_v3_integration,
+    get_v3_integration,
+    reset_v3_integration
+)
+
 # Re-export V2ToV3Bridge z V2
 from ...v2.integration.v2_to_v3_bridge import (
     V2ToV3Bridge,
     BridgeConfig,
     WorldDataPackage
+)
+
+# Re-export V3Config
+from ..config import (
+    V3Config,
+    IntegrationConfig,
+    V4BridgeConfig,
+    MemoryConfig,
+    WorldConfig
 )
 
 # SPRINT 7: Memory Synchronization
@@ -62,11 +82,27 @@ from .memory_sync import (
 )
 
 __all__ = [
-    # V3 Integration
+    # V3 Integration (Sprint 3)
     'WorldIntegration',
     'WorldIntegrationConfig',
     'IntegrationStatus',
     'tworz_integracje_v3',
+    
+    # Main V3 Integration (Sprint 3)
+    'V3Integration',
+    'V3IntegrationConfig',
+    'IntegrationStatistics',
+    'ComponentStatus',
+    'tworz_v3_integration',
+    'get_v3_integration',
+    'reset_v3_integration',
+    
+    # V3 Config
+    'V3Config',
+    'IntegrationConfig',
+    'V4BridgeConfig',
+    'MemoryConfig',
+    'WorldConfig',
     
     # V3 to V4 Bridge (Sprint 4)
     'V3ToV4Bridge',

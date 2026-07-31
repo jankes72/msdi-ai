@@ -80,7 +80,17 @@ from .v3_integration import (
 # Integration
 from .integration import (
     WorldIntegration, WorldIntegrationConfig, IntegrationStatus,
-    tworz_integracje_v3 as tworz_world_integration
+    tworz_integracje_v3 as tworz_world_integration,
+    # V3 to V4 Bridge (Sprint 4)
+    V3ToV4Bridge, V3ToV4BridgeConfig,
+    AgentKnowledgePackage, BridgeStatus,
+    tworz_v3_to_v4_bridge,
+    # Main V3 Integration (Sprint 3)
+    V3Integration, V3IntegrationConfig, IntegrationStatistics,
+    ComponentStatus,
+    tworz_v3_integration, get_v3_integration, reset_v3_integration,
+    # V3 Config
+    V3Config, IntegrationConfig, V4BridgeConfig, MemoryConfig, WorldConfig
 )
 
 # SPRINT 7: Memory Synchronization
@@ -135,6 +145,11 @@ __all__ = [
     # Integration
     'WorldIntegration', 'WorldIntegrationConfig', 'IntegrationStatus',
     'tworz_integracje_v3',
+    
+    # V3 to V4 Bridge (Sprint 4)
+    'V3ToV4Bridge', 'V3ToV4BridgeConfig',
+    'AgentKnowledgePackage', 'BridgeStatus',
+    'tworz_v3_to_v4_bridge',
     
     # World Integration (Etap 3C)
     'tworz_world_integration',
