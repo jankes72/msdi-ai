@@ -1,0 +1,55 @@
+[flake8]
+# SSI Flake8 Configuration
+# ========================
+
+# Ogólne
+max-line-length = 120
+max-complexity = 10
+exclude = 
+    .venv,
+    venv,
+    __pycache__,
+    *.pyc,
+    .git,
+    build,
+    dist,
+    pamiec_modeli_v2/archiwum,
+    test_data
+
+# Ignorowane błędy (tylko te, które są celowo pomijane)
+ignore = 
+    E203,  # Whitespace before ':' (konflikt z black)
+    W503,  # Line break before binary operator (konflikt z black)
+    E501,  # Line too long (obsługiwane przez black)
+    W605,  # Invalid escape sequence
+    F401,  # Imported but unused (tylko dla __init__.py)
+    F403,  # Wildcard import
+    E402,  # Module level import not at top of file
+    E731    # Do not use lambda for assignment
+
+# Inne ustawienia
+select = 
+    E,
+    F,
+    W,
+    C,
+    B,
+    T
+
+# Wzmocnione sprawdzanie
+strict = true
+
+# Błędy krytyczne (zawsze zgłaszane)
+per-file-ignores = 
+    SSI/v2/models/*.py: F401,F403
+    SSI/v3/*.py: F401,F403
+    SSI/v4/*.py: F401,F403
+    tests/*: F401,F403
+
+# Statystyki
+count = true
+statistics = true
+
+# Formatowanie wyjścia
+show-source = true
+format = dos

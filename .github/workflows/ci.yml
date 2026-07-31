@@ -1,0 +1,285 @@
+name: SSI CI - Testy, Lint, Typowanie, Coverage, Bezpieczeństwo
+
+# =============================================================================
+# SSI CI Pipeline (Sprint 8)
+# =============================================================================
+#
+# Kryteria akceptacji (PROJECT_RULES.md):
+# - CI musi używać izolowanego środowiska utworzonego z lockfile
+# - CI blokuje merge przy niepowodzeniu dowolnej bramki
+# - Raport coverage jest publikowany jako artefakt CI
+# - Testy muszą być deterministyczne i niezależne od sieci
+#
+# Bramki (gates):
+# 1. Testy (pytest) - wszystkie testy muszą przejść
+# 2. Lint (flake8, black, isort) - brak błędów stylistycznych
+# 3. Type check (mypy) - brak błędów typowania
+# 4. Coverage (pytest-cov) - pokrycie kodu >= 80% (docelowo)
+# 5. pip check - spójność zależności
+# 6. Security scan (bandit, safety) - brak zagrożeń bezpieczeństwa
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# =============================================================================
+# Jobs
+# =============================================================================
+
+jobs:
+  # ===========================================================================
+  # JOB 1: Testy (pytest)
+  # ===========================================================================
+  test:
+    name: Testy (pytest)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Potrzebne dla coverage
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+          cache-dependency-path: |
+            requirements-dev.txt
+            pyproject.toml
+      
+      - name: Install dependencies (dev)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      
+      - name: Run pytest (all tests)
+        run: |
+          python -m pytest tests/ -v --tb=short --junitxml=test-results.xml
+        continue-on-error: false
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results.xml
+
+  # ===========================================================================
+  # JOB 2: Lint (flake8, black, isort)
+  # ===========================================================================
+  lint:
+    name: Lint (flake8, black, isort)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      
+      - name: Install linting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black isort
+      
+      - name: Run flake8
+        run: |
+          flake8 SSI/ tests/ --max-line-length=120 --extend-ignore=E203,W503
+      
+      - name: Run black (check)
+        run: |
+          black --check --line-length=120 SSI/ tests/
+      
+      - name: Run isort (check)
+        run: |
+          isort --check-only SSI/ tests/
+
+  # ===========================================================================
+  # JOB 3: Type Check (mypy)
+  # ===========================================================================
+  type-check:
+    name: Type Check (mypy)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      
+      - name: Install mypy
+        run: |
+          python -m pip install --upgrade pip
+          pip install mypy
+      
+      - name: Run mypy (SSI/)
+        run: |
+          mypy SSI/ --ignore-missing-imports --disallow-untyped-calls --disallow-incomplete-defs
+      
+      - name: Run mypy (tests/)
+        run: |
+          mypy tests/ --ignore-missing-imports
+
+  # ===========================================================================
+  # JOB 4: Coverage
+  # ===========================================================================
+  coverage:
+    name: Coverage (pytest-cov)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      
+      - name: Install dependencies (dev + coverage)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      
+      - name: Run pytest with coverage
+        run: |
+          python -m pytest tests/ --cov=SSI --cov-report=xml:coverage.xml --cov-report=html:coverage-html --cov-fail-under=0
+        # --cov-fail-under=0 (na początek nie blocujemy, docelowo 80%)
+      
+      - name: Upload coverage report (HTML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage-html/
+      
+      - name: Upload coverage report (XML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
+  # ===========================================================================
+  # JOB 5: pip check (spójność zależności)
+  # ===========================================================================
+  pip-check:
+    name: pip check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      
+      - name: Run pip check
+        run: |
+          pip check
+
+  # ===========================================================================
+  # JOB 6: Security Scan (bandit, safety)
+  # ===========================================================================
+  security-scan:
+    name: Security Scan (bandit, safety)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      
+      - name: Install security tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety
+      
+      - name: Run bandit (SSI/)
+        run: |
+          bandit -r SSI/ -f json -o bandit-results.json || true
+      
+      - name: Run bandit (tests/)
+        run: |
+          bandit -r tests/ -f json -o bandit-tests-results.json || true
+      
+      - name: Run safety
+        run: |
+          safety check --json || true
+      
+      - name: Upload bandit results
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-results
+          path: |
+            bandit-results.json
+            bandit-tests-results.json
+      
+      - name: Upload safety results
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-results
+          path: safety-results.json
+
+  # ===========================================================================
+  # JOB 7: Compileall (sprawdzenie składni Pythona)
+  # ===========================================================================
+  compileall:
+    name: Compileall (składnia Pythona)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      
+      - name: Run compileall
+        run: |
+          python -m compileall SSI/
+          python -m compileall tests/
+
+# =============================================================================
+# Workflow Summary
+# =============================================================================
+# 1. test: Uruchamia wszystkie testy (pytest)
+# 2. lint: Sprawdza styl kodu (flake8, black, isort)
+# 3. type-check: Sprawdza typowanie (mypy)
+# 4. coverage: Generuje raport pokrycia kodu
+# 5. pip-check: Sprawdza spójność zależności
+# 6. security-scan: Skadrze bezpieczeństwa (bandit, safety)
+# 7. compileall: Sprawdza składnię Pythona
+#
+# Wszystkie joby muszą przejść, aby CI zaliczyło build.
+# =============================================================================

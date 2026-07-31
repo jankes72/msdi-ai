@@ -1,0 +1,71 @@
+# SSI Coverage Configuration
+# ==========================
+
+[run]
+# Katalogi do analizy
+source = SSI
+omit = 
+    */tests/*
+    */__pycache__/*
+    */.venv/*
+    */venv/*
+    */build/*
+    */dist/*
+    */pamiec_modeli_v2/archiwum/*
+    */pamiec_modeli_v2/pamiec/repozytorium.py
+    */SSI/v3/tests/*
+    */SSI/v2/integration/*
+
+# Pliki wzorcowe do pominięcia
+omit_include = False
+
+# Wączenie branch coverage
+branch = True
+
+# Dynamiczne analizowanie kodu (wolniejsze, ale dokładniejsze)
+dynamic = True
+
+[report]
+# Minimalne pokrycie (docelowo 80%)
+# fail_under = 80  # Na początek wyłączone, później włączone
+
+# Wyąerta pliki z raportu
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    def __str__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @property
+    @setter
+
+# Ignoruj błędy w plikach __init__.py
+ignore_errors = True
+
+# Formaty raportów
+output = 
+    coverage.xml
+    coverage.html
+
+# Raport HTML
+directory = coverage-html
+
+[html]
+# Directory for HTML report
+directory = coverage-html
+
+[xml]
+# Output file for XML report (dla CI)
+output = coverage.xml
+
+[paths]
+# Ścieżki do źródeł
+source =
+    SSI/
+    */SSI/*
+
+# Mapy ścieżek (dla CI)
+paths =
+    source
