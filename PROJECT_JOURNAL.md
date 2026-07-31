@@ -178,132 +178,53 @@
 - **Efekt**: Pełna funkcjonalność transferu wiedzy, gotowy do integracji z agentami V4
 - **Status**: ✅ Zakończony (Sprint 4 z SPRINTY.md)
 
-#### 2026-07-28 - Sprint 5: Rozbudowa World Integration - Obsługa SEND_TO_V4
-- **Zmiana**: Rozbudowa world_integration.py o obsługę SEND_TO_V4 i podłączenie V3ToV4Bridge
-- **Opis**:
-  - **Nowe metody WorldIntegration**:
-    - `send_to_v4()` - Wysyłanie wiedzy do V4 przez V3ToV4Bridge z obsługą world_ids, agent_id i custom knowledge_data
-    - `_create_knowledge_package()` - Tworzenie pakietów wiedzy (AgentKnowledgePackage) z światami, wzorcami i metadanymi
-    - `connect_to_v4()` - Połączenie z istniejącym mostem V3ToV4Bridge
-    - `setup_v4_bridge()` - Automatyczne tworzenie i konfiguracja mostu V3ToV4Bridge
-  - **Nowe pola**: `v3_to_v4_bridge` w klasie WorldIntegration
-  - **Nowe ustawienia konfiguracji**: `AUTO_SEND_TO_V4`, `V4_BRIDGE_ENABLED` w WorldIntegrationConfig
-  - **Rozszerzona fabryka**: `tworz_integracje_v3()` teraz obsługuje parametry `v3_to_v4_bridge` i `enable_v4_bridge`
-  - **Integracja**: Pełne połączenie z V3ToV4Bridge, automatyczne tworzenie mostu przy inicjalizacji
-  - **Statystyki**: Dodane `total_sent_to_v4` do statystyk integracyjnych
-  - **Plik**: `SSI/v3/integration/world_integration.py` (rozbudowany)
-- **Powód**: Konieczność rozszerzenia integracji światów o możliwość przekazywania danych do V4 zgodnie z SPRINTY.md (Sprint 5)
-- **Efekt**: Pełna obsługa SEND_TO_V4, gotowa do użycia przez V4 Agent Core
-- **Status**: ✅ Zakończony (Sprint 5 z SPRINTY.md)
+#### 2026-07-30 - Audyt zgodności, runtime i mapa stabilizacji
 
-#### 2026-07-28 - Sprint 6: Integracja Agent Core z V3 World Memory System
-- **Zmiana**: Dodano integrację V3 w agent_core.py, udostępniono agentom World Memory i Pattern Memory
-- **Opis**:
-  - **Nowe pola klasy Agent**:
-    - `_v3_integration`, `_v3_memory_manager`, `_v3_world_memory`, `_v3_pattern_memory`, `_v3_metadata_memory`, `_v3_observation_memory`
-    - `_v3_available` - flaga dostępności V3
-  - **Nowe metody klasy Agent**:
-    - `is_v3_available()` - sprawdza dostępność V3
-    - `connect_to_v3()`, `disconnect_from_v3()` - zarządzanie połączeniem z V3
-    - `get_world_memory()`, `get_pattern_memory()`, `get_metadata_memory()`, `get_observation_memory()` - dostęp do pamięci (tylko odczyt)
-    - `get_worlds_from_v3()`, `get_patterns_from_v3()`, `get_metadata_from_v3()` - pobieranie konkretnych danych
-    - `get_v3_integration()`, `get_v3_knowledge_summary()` - dostęp do integracji i podsumowania
-    - `_initialize_v3_integration()` - automatyczna inicjalizacja połączenia z V3
-    - `_connect_to_v3_integration()` - łączenie z konkretną instancją V3Integration
-    - `_get_v3_knowledge_for_decision()` - pobieranie wiedzy V3 do podejmowania decyzji
-  - **Zaktualizowane metody**:
-    - `_analyze_context()` - zintegrowano z wiedzą V3
-    - `__init__()` - dodano inicjalizację V3
-  - **Nowe ustawienia AgentConfig**:
-    - `v3_world_memory_access`, `v3_pattern_memory_access`, `v3_metadata_access`, `use_v3_knowledge`
-  - **Rozszerzona fabryka**: `tworz_agent()` obsługuje parametry `v3_integration` i `enable_v3_access`
-  - **Testy**: Dodano testy integracji V3 w sekcji `__main__`
-  - **Plik**: `SSI/v4/agent_core.py` (1876+ linii)
-- **Powód**: Konieczność udostępnienia agentom V4 dostępu do wiedzy zgromadzonej w V3 (World Memory, Pattern Memory, Metadata Memory) zgodnie z SPRINTY.md (Sprint 6)
-- **Efekt**: Agenci V4 mają dostęp do pełnej wiedzy V3 (tylko odczyt) i korzystają z niej przy podejmowaniu decyzji
-- **Status**: ✅ Zakończony (Sprint 6 z SPRINTY.md)
-
-#### 2026-07-28 - Sprint 7: Synchronizacja pamięci V3 ↔ V4
-- **Zmiana**: Dodano mechanizm synchronizacji pamięci pomiędzy V3 i V4
-- **Opis**:
-  - **Nowy moduł**: `SSI/v3/integration/memory_sync.py` (~1300 linii) - Główny mechanizm synchronizacji
-  - **Klasy i struktury**:
-    - `MemorySynchronizer` - Główny synchronizator z obsługą trybów FULL, INCREMENTAL, SELECTIVE
-    - `MemorySyncConfig` - Konfiguracja synchronizacji (kierunek, tryb, automatyzacja, konflikty)
-    - `SyncDirection` - Enum: V3_TO_V4, V4_TO_V3, BIDIRECTIONAL
-    - `SyncMode` - Enum: FULL, INCREMENTAL, SELECTIVE
-    - `SyncStatus` - Enum: IDLE, PREPARING, SYNCING, COMPLETED, FAILED, CONFLICT
-    - `MemoryType` - Enum: WORLD, PATTERN, OBSERVATION, METADATA, RELATIONSHIP, ALL
-    - `MemoryChange` - Struktura pojedynczej zmiany w pamięci
-    - `SyncPackage` - Pakiet synchronizacji
-    - `SyncStatistics` - Statystyki synchronizacji
-    - `ChangeTracker` - Śledzenie zmian dla trybu INCREMENTAL
-    - `ConflictResolver` - Rozwiązywanie konfliktów z 4 strategiami (v3_priority, v4_priority, newest, manual)
-  - **Funkcjonalności**:
-    - Synchronizacja dwukierunkowa V3↔V4
-    - Obsługa wszystkich typów pamięci (Worlds, Patterns, Observations, Metadata, Relationships)
-    - Tryb automatyczny z ustawialnym interwałem
-    - Śledzenie zmian (ChangeTracker) z buforem 1000 zmian
-    - Wykrywanie i rozwiązywanie konfliktów (ConflictResolver)
-    - Thread-safe z użyciem RLock
-    - Obsługa priorytetów zmian
-    - Fabryka i Singleton pattern
-  - **Integracja**:
-    - Rozszerzony `V3ToV4Bridge` o metody: `enable_memory_sync()`, `sync_memory()`, `start_auto_memory_sync()`, `stop_auto_memory_sync()`, `get_memory_sync_status()`
-    - Rozszerzona `V3Integration` o metody: `enable_memory_sync()`, `sync_memory()`, `start_auto_memory_sync()`, `stop_auto_memory_sync()`, `get_memory_sync_status()`
-    - Rozszerzona `WorldIntegration` o metody: `enable_memory_sync()`, `sync_memory()`, `start_auto_memory_sync()`, `stop_auto_memory_sync()`, `get_memory_sync_status()`
-  - **Eksporty**: Zaktualizowano `SSI/v3/integration/__init__.py` i `SSI/v3/__init__.py` z nowymi klasami i funkcjami
-  - **Testy**: Dodano testy synchronizacji w sekcjach `__main__` wszystkich modułów
-- **Powód**: Konieczność zapewnienia synchronizacji wiedzy między V3 a V4, obsługi aktualizacji i odświeżania, zapewnienia spójności danych zgodnie z SPRINTY.md (Sprint 7) i PROJECT_RULES.md
-- **Efekt**: Pełny mechanizm synchronizacji pamięci V3↔V4 gotowy do użycia, bezpieczny dla wielu agentów, z obsługą różnych trybów i rozwiązywaniem konfliktów
-- **Status**: ✅ Zakończony (Sprint 7 z SPRINTY.md)
-
-#### 2026-07-28 - Sprint 7.1: Reprodukowalne środowisko uruchomieniowe
-- **Zmiana**: Pełna implementacja reprodukowalnego środowiska uruchomieniowego
-- **Opis**:
-  - **Nowy plik**: `pyproject.toml` (PEP 621) - Główny plik konfiguracji projektu
-    - `build-system`: setuptools>=61.0.0, wheel, pip>=23.0.0
-    - `project`: MSDI-AI-SSI v1.0.0, Python>=3.11,<3.12
-    - `dependencies`: numpy, pandas, scipy, scikit-learn, tensorflow, joblib, statsmodels, PyYAML, pydantic, deap, requests, colorama
-    - `optional-dependencies`: dev (pytest, flake8, black, mypy), ml (torch, optuna)
-    - Entry points: msdi-ssi, ssi-v2, ssi-v3, ssi-v4, pamiec-modeli-v2
-    - Tools config: black, isort, mypy, pytest, flake8, coverage, bandit
-  - **Nowe pliki**:
-    - `requirements-runtime.txt` - Zależności produkcji
-    - `requirements-dev.txt` - Zależności developerskie
-    - `requirements-ml.txt` - Zależności ML (opcjonalne)
-  - **Dokumentacja**: `INSTALL.md` - Pełna instrukcja setupu środowiska
-    - Wymagania systemowe (Python 3.11.x)
-    - Procedura krok-po-kroku (git clone, venv, activate, pip install)
-    - Weryfikacja instalación (4 testy kryteriów akceptacji)
-    - Rozwiązywanie problemów (5 typowych scenariuszy)
-    - Aktualizacja środowiska
-    - Generowanie lockfile (pip-tools)
-  - **Fixture testowy**: `data/fixtures/v1/` - Wersjonowane dane testowe
-    - `sample_matches.csv` - 5 rekordów meczów testowych
-    - `sample_predictions.json` - 5 predykcji testowych
-    - `sample_world_metadata.yaml` - 3 światy testowe + relacje + wzorce
-    - `data/fixtures/v1/__init__.py` - API dostępu do fixture
-    - `data/.gitkeep` - Zachowanie struktury katalogów
-  - **Poprawki**: `.gitignore` - Zgodność z PROJECT_RULES.md
-    - Dodano: `!pamiec_modeli_v2/**/*.py` (kod źródłowy NIE ignorowany)
-    - Dodano: `!data/fixtures/**/*` (fixture w Git)
-    - Dodano: `!data/.gitkeep` (zachowanie struktury)
-    - Zaaktualizowano komentarze i organizację
-  - **Synchronizacja**: `SSI/v3/integration/memory_sync.py` - Mechanizm synchronizacji V3↔V4
-    - MemorySynchronizer, MemorySyncConfig, SyncDirection, SyncMode, SyncStatus, MemoryType
-    - ChangeTracker, ConflictResolver, SyncPackage, SyncStatistics
-    - Obsługa FULL, INCREMENTAL, SELECTIVE sync
-    - Thread-safe, obsługa konfliktów, automatyczne odświeżanie
-  - **Testy**: `SSI/v3/tests/` - Sieg testów jednostkowych
-    - `test_imports.py` - Testy importów
-    - `test_v3_integration.py` - Testy V3Integration
-    - `test_world_integration.py` - Testy WorldIntegration
-    - `test_v3_to_v4_bridge.py` - Testy mostu V3→V4
-    - `test_memory_sync.py` - Testy MemorySynchronizer
-- **Powód**: Konieczność zapewnienia reprodukowalności systemu, zgodności z PROJECT_RULES.md Sprint 7.1, możliwości łatwego setupu przez nowych developerów, oddzielenia środowisk produkcji i rozwoju
-- **Efekt**: System można zainstalować z czystego checkoutu wg jednej procedury, wszystkie zależności są określane, importy działają bez ręcznej zmiany PYTHONPATH, dostępne są dane testowe do smoke testów
-- **Status**: ✅ Zakończony (Sprint 7.1 z SPRINTY.md)
+- **Autor / zespół audytowy**: `nullhnters auditors`
+- **Typ zmiany**: AUDIT / DOCS / GOVERNANCE
+- **Zakres**:
+  - audyt zgodności developmentu z dokumentacją;
+  - ocena gotowości projektu do dalszego skalowania;
+  - wykonawcza weryfikacja runtime na Pythonie 3.11.9;
+  - aktualizacja roadmapy Sprintów 7.1–10;
+  - aktualizacja zasad pracy dla programisty i jego asystenta.
+- **Utworzony artefakt**:
+  - `SSI_DOCUMENTATION/AUDYT_ZGODNOSCI_I_GOTOWOSCI_DO_SKALOWANIA_2026-07-30.md`
+- **Zaktualizowane pliki**:
+  - `SPRINTY.md` - dodano Sprinty 7.1–7.5 oraz wykonywalne kryteria dla Sprintów 8–10;
+  - `PROJECT_RULES.md` - dodano mapę operacyjną, Definition of Done, statusy funkcjonalności i bramkę `GO/NO-GO`;
+  - `PROJECT_JOURNAL.md` - niniejszy wpis.
+- **Wykonane kontrole**:
+  - Python 3.11.9, 64-bit - interpreter uruchomiony poprawnie;
+  - `python -m compileall -q .` - PASS;
+  - import smoke - 26/27 kluczowych modułów zaimportowano poprawnie;
+  - CLI `uruchom_system_v2.py --help` - PASS;
+  - `python -m pip check` - FAIL, wykryto dwa konflikty zależności;
+  - pytest discovery - BLOCKED, brak `pytest` w aktywnym środowisku;
+  - wbudowana komenda `test` - FAIL, wywołanie nieistniejącego `integration.main()`, błędny exit code `0`;
+  - demonstracje V3/V4 - TIMEOUT;
+  - test ścieżek - potwierdzono błędne `SSI/SSI/data` i `SSI/SSI/tests`.
+- **Najważniejsze ustalenia**:
+  - brak repozytoryjnego test suite i CI mimo wcześniejszych deklaracji;
+  - `pamiec_modeli_v2/` zawiera kod wymagany przez entrypoint, ale jest ignorowany przez Git;
+  - `Agent.make_decision()` ma reprodukowalny deadlock wynikający z ponownego przejęcia niereentrantnego locka;
+  - `warstwa5_generator` nie jest przenośny z powodu zakodowanej ścieżki `D:\sts\aplikacjaTyperBetAi`;
+  - dokumentacja, roadmapa i implementacja mają niespójne statusy V3/V4;
+  - brak lockfile, izolowanego środowiska, health checks, metryk i bramek jakości.
+- **Decyzja**:
+  - `NO-GO` dla skalowania produkcyjnego;
+  - `GO` dla dalszego developmentu po realizacji działań P0;
+  - brak dowodu testowego nie może być traktowany jako sukces.
+- **Plan naprawczy**:
+  - Sprint 7.1 - reprodukowalne środowisko;
+  - Sprint 7.2 - konfiguracja i przenośność;
+  - Sprint 7.3 - bezpieczeństwo współbieżności V4;
+  - Sprint 7.4 - kontrakty V2→V3→V4;
+  - Sprint 7.5 - obserwowalność i kontrola błędów;
+  - Sprint 8 - automatyczne testy i CI;
+  - Sprint 9 - dokumentacja wykonywalna i źródło prawdy;
+  - Sprint 10 - bramka gotowości do skalowania.
+- **Status**: ✅ Audyt i dokumentacja zarządcza zakończone; implementacja działań naprawczych oczekuje na realizację.
 
 ---
 
@@ -473,7 +394,6 @@
 - `SSI/v3/integration/__init__.py` (2026-07-28 - Sprint 1)
 - `SSI/v3/integration/world_integration.py` (2026-07-28)
 - `SSI/v3/integration/v3_to_v4_bridge.py` (2026-07-28 - Sprint 4 - Pełna implementacja mostu V3→V4)
-- `SSI/v3/integration/memory_sync.py` (2026-07-28 - Sprint 7 - Mechanizm synchronizacji pamięci)
 - `SSI/v3/config.py` (2026-07-28 - Sprint 2 - Centralna konfiguracja V3)
 - `SSI/v3/v3_integration.py` (2026-07-28 - Sprint 3 - Główny punkt integracyjny)
 - `requirements.txt` (2026-07-28)
@@ -563,18 +483,15 @@
 
 ## 11. Statystyki Projektu
 
-- **Liczba plików kodu**: 35 (stan na 2026-07-28)
-- **Liczba linii kodu**: ~107,000+ (stan na 2026-07-28)
+- **Liczba plików kodu**: 34 (stan na 2026-07-28)
+- **Liczba linii kodu**: ~90,000+ (stan na 2026-07-28)
 - **Pokrycie testami**: 0% (testy jeszcze nie zaimplementowane)
-- **Liczba modułów**: 13 (core, config, data, v2, v3/config, v3/memory, v3/worlds, v3/integration, v3/v3_integration, v3/intelligence, v3/bridge, v3/memory_sync, v4 - w budowie)
+- **Liczba modułów**: 12 (core, config, data, v2, v3/config, v3/memory, v3/worlds, v3/integration, v3/v3_integration, v3/intelligence, v3/bridge, v4 - w budowie)
 - **Pamięć systemowa**: ~30k linii (memory_manager.py)
 - **Integracja**: ~1000 linii (v3_to_v4_bridge.py - pełna implementacja)
 - **Konfiguracja**: ~500 linii (config.py)
 - **Główna Integracja**: ~700 linii (v3_integration.py)
-- **V3ToV4Bridge**: ~900 linii (pełna implementacja Sprint 4 + synchronizacja Sprint 7)
-- **WorldIntegration (Sprint 5)**: ~1230 linii (z obsługą SEND_TO_V4 + synchronizacja Sprint 7)
-- **Agent Core (Sprint 6)**: ~1876 linii (z integracją V3)
-- **MemorySynchronizer (Sprint 7)**: ~1300 linii (pełny mechanizm synchronizacji)
+- **V3ToV4Bridge**: ~800 linii (pełna implementacja Sprint 4)
 
 ---
 
@@ -594,7 +511,30 @@ Stworzyć autonomiczny ekosystem uczących się agentów, który rozumie, analiz
 
 ---
 
+#### 2026-07-31 - Sprint 7.4: Kontrakty i walidacja przepływu V2 → V3 → V4
+- **Zmiana**: Implementacja wersjonowanych kontraktów danych i pionowego przepływu
+- **Opis**:
+  - **Nowy moduł**: `SSI/contracts/` (~1500 linii) - System wersjonowanych kontraktów
+    - `data_contracts.py`: V2ToV3Contract, V3ToV4Contract, DataContract, ContractValidationError, ContractVersion, ContractMetadata
+    - `version_identifiers.py`: DataVersion, ModelVersion, ConfigVersion, ResultVersion, LineageInfo z metodami add_*_version() i finalize()
+    - `policies.py`: DataSplitPolicy (50/10/40), SplitRatio, SplitResult, DataSplitter, standard_split(), validate_split_result()
+    - `validation.py`: ContractValidator, validate_contract(), VersionCompatibilityChecker, ContractMigrationPath
+    - `migration.py`: CompatibilityLevel, MigrationStrategy, CompatibilityRule, CompatibilityPolicy, MigrationPolicy, create_default_*()
+    - `__init__.py`: Eksporty wszystkich klas i funkcji
+  - **Nowy moduł**: `SSI/workflows/` - Orkiestracja pionowego przepływu
+    - `vertical_flow.py`: VerticalFlow, VerticalFlowConfig, FlowResult, LineageTracker, run_smoke_test()
+    - `__init__.py`: Eksporty workflow
+  - **Nowy fixture**: `data/fixtures/v1/sample_observations.json` - Testowe dane obserwacji
+  - **Testy**:
+    - `SSI/tests/test_contracts.py` (31 testów) - Kontrakty, walidacja, polityki, migracja, wersje
+    - `SSI/tests/test_vertical_flow.py` (21 testów) - Pionowy przepływ, lineage, smoke test
+- **Powód**: Implementacja Sprint 7.4 z SPRINTY.md - Konieczność zdefiniowania kontraktów między warstwami, zapewnienia walidacji, lineage tracking i powtarzalności
+- **Efekt**: wersjonowane kontrakty z walidacją, polityka podziału 50/10/40, lineage tracking, 52 nowych testów, gotowość do integracji V2→V3→V4
+- **Status**: ✅ Zakończony (Sprint 7.4 z SPRINTY.md)
+
+---
+
 **Status Dokumentu:** Aktywny  
-**Wersja:** 2.7  
-**Ostatnia Aktualizacja:** 2026-07-28 (Sprint 7 - Synchronizacja Pamięci V3↔V4)
+**Wersja:** 2.5  
+**Ostatnia Aktualizacja:** 2026-07-31 (Sprint 7.4 - Kontrakty i walidacja przepływu V2→V3→V4)
 **Autor:** MSDI AI / SSI System + Mistral Vibe
