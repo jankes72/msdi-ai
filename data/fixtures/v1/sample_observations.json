@@ -1,0 +1,72 @@
+[
+  {
+    "observation_id": "obs_001",
+    "match_id": "match_001",
+    "group_id": "group_001",
+    "model_id": "model_001",
+    "prediction": "2:1",
+    "reality": "2:1",
+    "hit": true,
+    "hit_group": true,
+    "confidence": 0.85,
+    "exact_class": "2:1",
+    "group_class": "2",
+    "timestamp": "2026-07-31T00:00:00"
+  },
+  {
+    "observation_id": "obs_002",
+    "match_id": "match_002",
+    "group_id": "group_001",
+    "model_id": "model_001",
+    "prediction": "1:0",
+    "reality": "1:0",
+    "hit": true,
+    "hit_group": false,
+    "confidence": 0.75,
+    "exact_class": "1:0",
+    "group_class": "1",
+    "timestamp": "2026-07-31T00:01:00"
+  },
+  {
+    "observation_id": "obs_003",
+    "match_id": "match_003",
+    "group_id": "group_002",
+    "model_id": "model_002",
+    "prediction": "2:0",
+    "reality": "1:1",
+    "hit": false,
+    "hit_group": false,
+    "confidence": 0.60,
+    "exact_class": "2:0",
+    "group_class": "X",
+    "timestamp": "2026-07-31T00:02:00"
+  },
+  {
+    "observation_id": "obs_004",
+    "match_id": "match_004",
+    "group_id": "group_002",
+    "model_id": "model_002",
+    "prediction": "1:1",
+    "reality": "1:1",
+    "hit": true,
+    "hit_group": true,
+    "confidence": 0.90,
+    "exact_class": "1:1",
+    "group_class": "X",
+    "timestamp": "2026-07-31T00:03:00"
+  },
+  {
+    "observation_id": "obs_005",
+    "match_id": "match_005",
+    "group_id": "group_003",
+    "model_id": "model_003",
+    "prediction": "0:0",
+    "reality": "0:0",
+    "hit": true,
+    "hit_group": true,
+    "confidence": 0.80,
+    "exact_class": "0:0",
+    "group_class": "0",
+    "timestamp": "2026-07-31T00:04:00"
+  }
+]

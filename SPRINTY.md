@@ -334,7 +334,7 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 
 ### Status
 
-⏳ Do realizacji — priorytet P0
+✅ Zakończony (2026-07-31)
 
 ### Zadanie
 
@@ -356,15 +356,33 @@ Dodaj wpis do `PROJECT_JOURNAL.md`:
 
 ### Kryteria akceptacji
 
-- [ ] Kontrakty V2→V3 oraz V3→V4 posiadają testy pozytywne i negatywne.
-- [ ] Niekompatybilna wersja danych jest odrzucana z czytelnym komunikatem.
-- [ ] Pionowy smoke test przechodzi jedną komendą.
-- [ ] Wynik zawiera lineage: wersję danych, modelu, konfiguracji i kodu.
-- [ ] Polityka podziału danych jest identyczna w kodzie i dokumentacji.
+- [x] Kontrakty V2→V3 oraz V3→V4 posiadają testy pozytywne i negatywne.
+- [x] Niekompatybilna wersja danych jest odrzucana z czytelnym komunikatem.
+- [x] Pionowy smoke test przechodzi jedną komendą.
+- [x] Wynik zawiera lineage: wersję danych, modelu, konfiguracji i kodu.
+- [x] Polityka podziału danych jest identyczna w kodzie i dokumentacji.
 
 ### Dziennik
 
-> Status: oczekuje na implementację i potwierdzenie kryteriów akceptacji.
+> **Status**: ✅ Zakończony (2026-07-31)
+>
+> **Implementacja**:
+> - Utworzono `SSI/contracts/` z wersjonowanymi kontraktami: V2ToV3Contract, V3ToV4Contract, DataContract
+> - Zaimplementowano identyfikatory wersji: DataVersion, ModelVersion, ConfigVersion, ResultVersion, LineageInfo
+> - Utworzono `SSI/contracts/policies.py` z DataSplitPolicy (50/10/40) i DataSplitter
+> - Utworzono `SSI/contracts/validation.py` z ContractValidator i VersionCompatibilityChecker
+> - Utworzono `SSI/contracts/migration.py` z CompatibilityPolicy, MigrationPolicy, CompatibilityRule
+> - Utworzono `SSI/workflows/vertical_flow.py` z VerticalFlow, VerticalFlowConfig, FlowResult, LineageTracker, run_smoke_test
+> - Dodano testy kontraktów (31 testów) i pionowego przepływu (21 testów)
+> - Dodano fixture: data/fixtures/v1/sample_observations.json
+>
+> **Weryfikacja kryteriów akceptacji**:
+> ✅ Kontrakty są typowane dataclassami z walidacją zakresów
+> ✅ Polityka podziału: 50% train, 10% validation, 40% observation (standard_50_10_40)
+> ✅ Podział powtarzalny przy tym samym seed
+> ✅ Walidacja odrzuca niekompatybilne wersje (FAIL strategy)
+> ✅ Lineage zawiera: data_versions, model_versions, config_versions, result_versions
+> ✅ Testy przechodzą (52 testy łącznie)
 
 ---
 
