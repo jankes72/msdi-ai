@@ -296,6 +296,239 @@ class V2DataPackage:
 
 
 # =============================================================================
+# MODELE DANYCH DLA V3
+# =============================================================================
+
+@dataclass
+class WorldInfo:
+    """Informacje o jednym świecie w V3"""
+    world_name: str
+    world_type: str
+    status: str
+    version: str
+    description: str = ""
+    classification: Dict[str, Any] = field(default_factory=dict)
+    dependencies: List[str] = field(default_factory=list)
+    created: datetime = field(default_factory=datetime.now)
+    source: DataSource = DataSource.V3_KNOWLEDGE
+    category: DataCategory = DataCategory.KNOWLEDGE
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "world_name": self.world_name,
+            "world_type": self.world_type,
+            "status": self.status,
+            "version": self.version,
+            "description": self.description,
+            "classification": self.classification,
+            "dependencies": self.dependencies,
+            "created": self.created.isoformat(),
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "WorldInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            world_name=data.get("world_name", ""),
+            world_type=data.get("world_type", ""),
+            status=data.get("status", ""),
+            version=data.get("version", "1.0"),
+            description=data.get("description", ""),
+            classification=data.get("classification", {}),
+            dependencies=data.get("dependencies", []),
+            created=datetime.fromisoformat(data["created"]) if data.get("created") else datetime.now(),
+            source=DataSource(data.get("source", DataSource.V3_KNOWLEDGE.value)),
+            category=DataCategory(data.get("category", DataCategory.KNOWLEDGE.value))
+        )
+
+
+@dataclass
+class PatternInfo:
+    """Informacje o wykrytym wzorcu w V3"""
+    pattern_name: str
+    pattern_type: str
+    detection_timestamp: datetime = field(default_factory=datetime.now)
+    examples: List[Dict[str, Any]] = field(default_factory=list)
+    statistics: Dict[str, Any] = field(default_factory=dict)
+    confidence: Optional[float] = None
+    frequency: Optional[float] = None
+    source: DataSource = DataSource.V3_KNOWLEDGE
+    category: DataCategory = DataCategory.KNOWLEDGE
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "pattern_name": self.pattern_name,
+            "pattern_type": self.pattern_type,
+            "detection_timestamp": self.detection_timestamp.isoformat(),
+            "examples": self.examples,
+            "statistics": self.statistics,
+            "confidence": self.confidence,
+            "frequency": self.frequency,
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "PatternInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            pattern_name=data.get("pattern_name", ""),
+            pattern_type=data.get("pattern_type", ""),
+            detection_timestamp=datetime.fromisoformat(data["detection_timestamp"]) if data.get("detection_timestamp") else datetime.now(),
+            examples=data.get("examples", []),
+            statistics=data.get("statistics", {}),
+            confidence=data.get("confidence"),
+            frequency=data.get("frequency"),
+            source=DataSource(data.get("source", DataSource.V3_KNOWLEDGE.value)),
+            category=DataCategory(data.get("category", DataCategory.KNOWLEDGE.value))
+        )
+
+
+@dataclass
+class RelationshipInfo:
+    """Informacje o relacji między elementami systemu w V3"""
+    relationship_id: str
+    source_element: str
+    target_element: str
+    relationship_type: str
+    strength: Optional[float] = None
+    description: str = ""
+    created: datetime = field(default_factory=datetime.now)
+    properties: Dict[str, Any] = field(default_factory=dict)
+    source: DataSource = DataSource.V3_KNOWLEDGE
+    category: DataCategory = DataCategory.KNOWLEDGE
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "relationship_id": self.relationship_id,
+            "source_element": self.source_element,
+            "target_element": self.target_element,
+            "relationship_type": self.relationship_type,
+            "strength": self.strength,
+            "description": self.description,
+            "created": self.created.isoformat(),
+            "properties": self.properties,
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "RelationshipInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            relationship_id=data.get("relationship_id", ""),
+            source_element=data.get("source_element", ""),
+            target_element=data.get("target_element", ""),
+            relationship_type=data.get("relationship_type", ""),
+            strength=data.get("strength"),
+            description=data.get("description", ""),
+            created=datetime.fromisoformat(data["created"]) if data.get("created") else datetime.now(),
+            properties=data.get("properties", {}),
+            source=DataSource(data.get("source", DataSource.V3_KNOWLEDGE.value)),
+            category=DataCategory(data.get("category", DataCategory.KNOWLEDGE.value))
+        )
+
+
+@dataclass
+class V3Metadata:
+    """Metadane systemu V3"""
+    v3_version: str
+    knowledge_engine_version: str
+    worlds_count: int
+    patterns_count: int
+    relationships_count: int
+    last_update: datetime
+    collection_timestamp: datetime = field(default_factory=datetime.now)
+    source: DataSource = DataSource.V3_KNOWLEDGE
+    category: DataCategory = DataCategory.SYSTEM
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "v3_version": self.v3_version,
+            "knowledge_engine_version": self.knowledge_engine_version,
+            "worlds_count": self.worlds_count,
+            "patterns_count": self.patterns_count,
+            "relationships_count": self.relationships_count,
+            "last_update": self.last_update.isoformat(),
+            "collection_timestamp": self.collection_timestamp.isoformat(),
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "V3Metadata":
+        """Konwersja ze słownika"""
+        return cls(
+            v3_version=data.get("v3_version", "1.0"),
+            knowledge_engine_version=data.get("knowledge_engine_version", "1.0"),
+            worlds_count=data.get("worlds_count", 0),
+            patterns_count=data.get("patterns_count", 0),
+            relationships_count=data.get("relationships_count", 0),
+            last_update=datetime.fromisoformat(data["last_update"]) if data.get("last_update") else datetime.now(),
+            collection_timestamp=datetime.fromisoformat(data["collection_timestamp"]) if data.get("collection_timestamp") else datetime.now(),
+            source=DataSource(data.get("source", DataSource.V3_KNOWLEDGE.value)),
+            category=DataCategory(data.get("category", DataCategory.SYSTEM.value))
+        )
+
+
+@dataclass
+class V3DataPackage:
+    """Kompletny pakiet danych zebranych z V3"""
+    timestamp: datetime = field(default_factory=datetime.now)
+    worlds: List[WorldInfo] = field(default_factory=list)
+    patterns: List[PatternInfo] = field(default_factory=list)
+    relationships: List[RelationshipInfo] = field(default_factory=list)
+    metadata: Optional[V3Metadata] = None
+    status: DataStatus = DataStatus.RAW
+    source: DataSource = DataSource.V3_KNOWLEDGE
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja całego pakietu do słownika"""
+        return {
+            "timestamp": self.timestamp.isoformat(),
+            "worlds": [w.to_dict() for w in self.worlds],
+            "patterns": [p.to_dict() for p in self.patterns],
+            "relationships": [r.to_dict() for r in self.relationships],
+            "metadata": self.metadata.to_dict() if self.metadata else None,
+            "status": self.status.value,
+            "source": self.source.value
+        }
+    
+    def to_json(self, indent: int = 2) -> str:
+        """Konwersja do JSON"""
+        return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "V3DataPackage":
+        """Konwersja ze słownika"""
+        package = cls(
+            timestamp=datetime.fromisoformat(data["timestamp"]) if data.get("timestamp") else datetime.now(),
+            status=DataStatus(data.get("status", DataStatus.RAW.value)),
+            source=DataSource(data.get("source", DataSource.V3_KNOWLEDGE.value))
+        )
+        
+        if data.get("worlds"):
+            package.worlds = [WorldInfo.from_dict(w) for w in data["worlds"]]
+        
+        if data.get("patterns"):
+            package.patterns = [PatternInfo.from_dict(p) for p in data["patterns"]]
+        
+        if data.get("relationships"):
+            package.relationships = [RelationshipInfo.from_dict(r) for r in data["relationships"]]
+        
+        if data.get("metadata"):
+            package.metadata = V3Metadata.from_dict(data["metadata"])
+        
+        return package
+
+
+# =============================================================================
 # FUNKCJE UTILITY
 # =============================================================================
 
@@ -320,6 +553,35 @@ def get_v2_package_summary(package: V2DataPackage) -> Dict[str, Any]:
         "total_predictions": len(package.predictions),
         "total_validation_results": len(package.validation_results),
         "total_world_interpretations": len(package.world_interpretations),
+        "status": package.status.value,
+        "timestamp": package.timestamp.isoformat()
+    }
+
+
+# =============================================================================
+# FUNKCJE UTILITY DLA V3
+# =============================================================================
+
+def validate_v3_package(package: V3DataPackage) -> bool:
+    """Walidacja pakietu danych V3"""
+    if not package.worlds:
+        return False
+    
+    # Sprawdź czy wszystkie światy mają poprawne dane
+    for world in package.worlds:
+        if not world.world_name or not world.world_type:
+            return False
+    
+    package.status = DataStatus.VALIDATED
+    return True
+
+
+def get_v3_package_summary(package: V3DataPackage) -> Dict[str, Any]:
+    """Podsumowanie pakietu V3"""
+    return {
+        "total_worlds": len(package.worlds),
+        "total_patterns": len(package.patterns),
+        "total_relationships": len(package.relationships),
         "status": package.status.value,
         "timestamp": package.timestamp.isoformat()
     }

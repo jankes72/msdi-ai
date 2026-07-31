@@ -13,10 +13,10 @@ Data: 2026-07-31
 
 # Importy będą dodawane w kolejnych sprintach
 # Sprint 11.1: V2 Collector
-# from .v2_collector import V2DataCollector, V2DataPackage, ModelInfo
+from .v2_collector import V2DataCollector, V2DataPackage, ModelInfo
 
 # Sprint 11.2: V3 Collector
-# from .v3_collector import V3DataCollector
+from .v3_collector import V3KnowledgeCollector, V3DataPackage
 
 # Sprint 11.3: V4 Collector
 # from .v4_collector import V4DataCollector
@@ -29,4 +29,9 @@ Data: 2026-07-31
 # Sprint 11.5: Integration
 # from .input_manager import InputManager
 
-__all__ = []
+__all__ = [
+    # Sprint 11.1
+    'V2DataCollector', 'V2DataPackage', 'ModelInfo',
+    # Sprint 11.2
+    'V3KnowledgeCollector', 'V3DataPackage'
+]
