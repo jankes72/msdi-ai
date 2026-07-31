@@ -17,6 +17,10 @@ Version: 1.1
 Date: 2026-07-31
 """
 
+# Inicjalizacja centralnego logowania
+from .core.logging_config import setup_logging, get_logger
+setup_logging(level=None, json_format=False)  # Domyślna konfiguracja
+
 from .core import SSISystem, SSIModule, SSIComponent
 from .config import SSIConfig
 from .config.settings import get_settings
