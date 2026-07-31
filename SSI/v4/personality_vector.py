@@ -71,6 +71,7 @@ import random
 import threading
 import logging
 from collections import defaultdict
+import sys
 
 from .agent_core import AgentType, AgentStatus
 
@@ -956,24 +957,37 @@ def tworz_personality_vector(
 # ============================================================================
 
 if __name__ == "__main__":
-    print("Testing SSI V4 Personality Vector System...")
-    print("=" * 60)
+    import logging
+    from SSI.core.logging_config import (
+        setup_logging, get_logger, set_correlation_id, generate_correlation_id
+    )
+    
+    # Skonfiguruj logging
+    setup_logging(level=logging.INFO, json_format=False)
+    logger = get_logger(__name__)
+    
+    # Ustaw correlation_id
+    correlation_id = generate_correlation_id()
+    set_correlation_id(correlation_id)
+    
+    logger.info("Testing SSI V4 Personality Vector System...", extra={"correlation_id": correlation_id})
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})
     
     # Test 1: Tworzenie wektora osobowości
-    print("\n[Test 1] Tworzenie PersonalityVector...")
+    logger.info("[Test 1] Tworzenie PersonalityVector...", extra={"correlation_id": correlation_id})
     vector = tworz_personality_vector(agent_type=AgentType.ANALYST)
-    print(f"  Wektor utworzony: {vector.version}")
-    print(f"  Cechy: {vector.to_dict()}")
+    logger.info(f"  Wektor utworzony: {vector.version}", extra={"correlation_id": correlation_id})
+    logger.info(f"  Cechy: {vector.to_dict()}", extra={"correlation_id": correlation_id})
     
     # Test 2: Profil osobowości
-    print("\n[Test 2] Profil osobowości...")
+    logger.info("[Test 2] Profil osobowości...", extra={"correlation_id": correlation_id})
     profile = vector.get_personality_profile()
-    print(f"  Typ osobowości: {profile['personality_type']}")
-    print(f"  Wynik osobowości: {profile['personality_score']:.2f}")
-    print(f"  Dominujące cechy: {profile['dominant_traits']}")
+    logger.info(f"  Typ osobowości: {profile['personality_type']}", extra={"correlation_id": correlation_id})
+    logger.info(f"  Wynik osobowości: {profile['personality_score']:.2f}", extra={"correlation_id": correlation_id})
+    logger.info(f"  Dominujące cechy: {profile['dominant_traits']}", extra={"correlation_id": correlation_id})
     
     # Test 3: Ewolucja
-    print("\n[Test 3] Ewolucja wektora...")
+    logger.info("[Test 3] Ewolucja wektora...", extra={"correlation_id": correlation_id})
     experience = {
         "success_rate": 0.8,
         "error_rate": 0.1,
@@ -982,24 +996,29 @@ if __name__ == "__main__":
         "frustration": 0.1
     }
     evolved_vector = vector.evolve(experience)
-    print(f"  Nowa wersja: {evolved_vector.version}")
-    print(f"  Zmiany: {{(trait, evolved_vector[trait] - vector[trait]) for trait in vector.traits if evolved_vector[trait] != vector[trait]}}")
+    logger.info(f"  Nowa wersja: {evolved_vector.version}", extra={"correlation_id": correlation_id})
+    changes = {(trait, evolved_vector[trait] - vector[trait]) for trait in vector.traits 
+               if evolved_vector[trait] != vector[trait]}
+    logger.info(f"  Zmiany: {changes}", extra={"correlation_id": correlation_id})
     
     # Test 4: Mutacja
-    print("\n[Test 4] Mutacja wektora...")
+    logger.info("[Test 4] Mutacja wektora...", extra={"correlation_id": correlation_id})
     mutated_vector = vector.mutate(mutation_rate=0.3)
-    print(f"  Nowa wersja: {mutated_vector.version}")
-    print(f"  Zmiany: {{(trait, mutated_vector[trait] - vector[trait]) for trait in vector.traits if mutated_vector[trait] != vector[trait]}}")
+    logger.info(f"  Nowa wersja: {mutated_vector.version}", extra={"correlation_id": correlation_id})
+    changes = {(trait, mutated_vector[trait] - vector[trait]) for trait in vector.traits 
+               if mutated_vector[trait] != vector[trait]}
+    logger.info(f"  Zmiany: {changes}", extra={"correlation_id": correlation_id})
     
     # Test 5: Krzyżowanie
-    print("\n[Test 5] Krzyżowanie wektorów...")
+    logger.info("[Test 5] Krzyżowanie wektorów...", extra={"correlation_id": correlation_id})
     vector2 = tworz_personality_vector(agent_type=AgentType.VALUE_STRATEGIST)
     child_vector = vector.crossover(vector2)
-    print(f"  Dziecko wersja: {child_vector.version}")
-    print(f"  Typ osobowości dziecka: {child_vector._determine_personality_type()}")
+    logger.info(f"  Dziecko wersja: {child_vector.version}", extra={"correlation_id": correlation_id})
+    logger.info(f"  Typ osobowości dziecka: {child_vector._determine_personality_type()}",
+                extra={"correlation_id": correlation_id})
     
     # Test 6: Silnik osobowości
-    print("\n[Test 6] PersonalityEngine...")
+    logger.info("[Test 6] PersonalityEngine...", extra={"correlation_id": correlation_id})
     engine = PersonalityEngine()
     
     # Rejestruj kilka wektorów
@@ -1008,26 +1027,39 @@ if __name__ == "__main__":
         engine.register_vector(vec)
     
     stats = engine.get_statistics()
-    print(f"  Zarejestrowane wektory: {stats['total_vectors']}")
-    print(f"  Dystrybucja typów: {stats['type_distribution']}")
+    logger.info(f"  Zarejestrowane wektory: {stats['total_vectors']}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"  Dystrybucja typów: {stats['type_distribution']}",
+                extra={"correlation_id": correlation_id})
     
     # Raport
-    print("\n[Raport Personality Engine]")
-    print(engine.get_report())
+    logger.info("[Raport Personality Engine]", extra={"correlation_id": correlation_id})
+    logger.info(engine.get_report(), extra={"correlation_id": correlation_id})
     
     # Test 7: Sugestia typu agenta
-    print("\n[Test 7] Sugestia typu agenta...")
+    logger.info("[Test 7] Sugestia typu agenta...", extra={"correlation_id": correlation_id})
     for agent_type in [AgentType.ANALYST, AgentType.PATTERN_HUNTER, AgentType.CONSERVATOR]:
         vec = tworz_personality_vector(agent_type=agent_type)
         suggested = vec.get_agent_type_suggestion()
-        print(f"  {agent_type.value} -> {suggested.value}")
+        logger.info(f"  {agent_type.value} -> {suggested.value}",
+                    extra={"correlation_id": correlation_id})
     
     # Test 8: Tworzenie wektorów z domyślnymi wartościami
-    print("\n[Test 8] Domyślne wartości osobowości...")
+    logger.info("[Test 8] Domyślne wartości osobowości...", extra={"correlation_id": correlation_id})
     for agent_type in [AgentType.MENTAL_EXPERT, AgentType.AGGRESSOR, AgentType.BALANCER]:
         vec = tworz_personality_vector(agent_type=agent_type)
-        print(f"  {agent_type.value}: {vec.to_dict()}")
+        logger.info(f"  {agent_type.value}: {vec.to_dict()}",
+                    extra={"correlation_id": correlation_id})
     
-    print("\n" + "=" * 60)
-    print("All Personality Vector tests passed!")
-    print("=" * 60)
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})
+    
+    # Sprawdź, czy wektor został poprawnie utworzony
+    test_failed = vector is None or not hasattr(vector, 'traits')
+    
+    if test_failed:
+        logger.error("Some Personality Vector tests FAILED!",
+                      extra={"correlation_id": correlation_id})
+        sys.exit(1)
+    
+    logger.info("All Personality Vector tests passed!", extra={"correlation_id": correlation_id})
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})

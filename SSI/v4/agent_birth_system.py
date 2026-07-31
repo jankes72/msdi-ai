@@ -56,6 +56,7 @@ from enum import Enum, auto
 import uuid
 import threading
 import logging
+import sys
 
 from .agent_core import Agent, AgentConfig, AgentType, AgentStatus, PersonalityVector
 
@@ -726,53 +727,87 @@ def reset_agent_birth_system() -> None:
 # ============================================================================
 
 if __name__ == "__main__":
-    print("Testing SSI V4 Agent Birth System...")
-    print("=" * 60)
+    from SSI.core.logging_config import (
+        setup_logging, get_logger, set_correlation_id, generate_correlation_id
+    )
+    
+    # Skonfiguruj logging
+    setup_logging(level=logging.INFO, json_format=False)
+    logger = get_logger(__name__)
+    
+    # Ustaw correlation_id
+    correlation_id = generate_correlation_id()
+    set_correlation_id(correlation_id)
+    
+    logger.info("Testing SSI V4 Agent Birth System...", extra={"correlation_id": correlation_id})
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})
     
     # Test 1: Tworzenie systemu narodzin
-    print("\n[Test 1] Tworzenie AgentBirthSystem...")
+    logger.info("[Test 1] Tworzenie AgentBirthSystem...", extra={"correlation_id": correlation_id})
     birth_system = tworz_agent_birth_system()
-    print(f"  System utworzony: {birth_system.config.default_room_id}")
+    logger.info(f"  System utworzony: {birth_system.config.default_room_id}",
+                extra={"correlation_id": correlation_id})
     
     # Test 2: Tworzenie pierwszej populacji
-    print("\n[Test 2] Tworzenie pierwszej populacji...")
+    logger.info("[Test 2] Tworzenie pierwszej populacji...", extra={"correlation_id": correlation_id})
     results = birth_system.create_initial_population()
-    print(f"  Liczba agentów: {len(results)}")
+    logger.info(f"  Liczba agentów: {len(results)}", extra={"correlation_id": correlation_id})
     for result in results:
         if result.success:
-            print(f"    ✓ {result.agent.agent_id} ({result.agent.agent_type.value})")
+            logger.info(f"    ✓ {result.agent.agent_id} ({result.agent.agent_type.value})",
+                        extra={"correlation_id": correlation_id})
         else:
-            print(f"    ✗ Błąd: {result.message}")
+            logger.warning(f"    ✗ Błąd: {result.message}",
+                           extra={"correlation_id": correlation_id})
     
     # Test 3: Statystyki
-    print("\n[Test 3] Statystyki systemu narodzin...")
+    logger.info("[Test 3] Statystyki systemu narodzin...", extra={"correlation_id": correlation_id})
     stats = birth_system.get_statistics()
-    print(f"  Całkowite narodziny: {stats['total_births']}")
-    print(f"  Sukcesy: {stats['successful_births']}")
-    print(f"  Wskaźnik sukcesu: {stats['success_rate']:.2%}")
+    logger.info(f"  Całkowite narodziny: {stats['total_births']}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"  Sukcesy: {stats['successful_births']}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"  Wskaźnik sukcesu: {stats['success_rate']:.2%}",
+                extra={"correlation_id": correlation_id})
     
     # Raport
-    print("\n[Raport Narodzin]")
-    print(birth_system.get_population_report())
+    logger.info("[Raport Narodzin]", extra={"correlation_id": correlation_id})
+    logger.info(birth_system.get_population_report(),
+                extra={"correlation_id": correlation_id})
     
     # Test 4: Tworzenie losowego agenta
-    print("\n[Test 4] Tworzenie losowego agenta...")
+    logger.info("[Test 4] Tworzenie losowego agenta...", extra={"correlation_id": correlation_id})
     random_result = birth_system.create_random_agent()
     if random_result.success:
-        print(f"  Utworzono: {random_result.agent.agent_id} ({random_result.agent.agent_type.value})")
-        print(f"  Osobowość: {random_result.agent.personality.to_dict()}")
+        logger.info(f"  Utworzono: {random_result.agent.agent_id} ({random_result.agent.agent_type.value})",
+                    extra={"correlation_id": correlation_id})
+        logger.info(f"  Osobowość: {random_result.agent.personality.to_dict()}",
+                    extra={"correlation_id": correlation_id})
     
     # Test 5: Ewolucja (po utworzeniu kilku agentów)
-    print("\n[Test 5] Tworzenie agenta z ewolucji...")
+    logger.info("[Test 5] Tworzenie agenta z ewolucji...", extra={"correlation_id": correlation_id})
     if len(results) >= 2:
         parents = [r.agent for r in results if r.success]
         if len(parents) >= 1:
             evolution_result = birth_system.create_agent_from_evolution(parents)
             if evolution_result.success:
-                print(f"  Ewoluował: {evolution_result.agent.agent_id}")
-                print(f"  Typ: {evolution_result.agent.agent_type.value}")
-                print(f"  Osobowość: {evolution_result.agent.personality.to_dict()}")
+                logger.info(f"  Ewoluował: {evolution_result.agent.agent_id}",
+                            extra={"correlation_id": correlation_id})
+                logger.info(f"  Typ: {evolution_result.agent.agent_type.value}",
+                            extra={"correlation_id": correlation_id})
+                logger.info(f"  Osobowość: {evolution_result.agent.personality.to_dict()}",
+                            extra={"correlation_id": correlation_id})
     
-    print("\n" + "=" * 60)
-    print("All Agent Birth System tests passed!")
-    print("=" * 60)
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})
+    
+    # Sprawdź, czy były błędy w testach
+    test_failed = any(not r.success for r in results) or not random_result.success
+    
+    if test_failed:
+        logger.error("Some Agent Birth System tests FAILED!",
+                      extra={"correlation_id": correlation_id})
+        sys.exit(1)
+    
+    logger.info("All Agent Birth System tests passed!",
+                extra={"correlation_id": correlation_id})
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})

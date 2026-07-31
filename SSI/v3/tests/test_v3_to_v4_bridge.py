@@ -484,5 +484,3 @@ class TestV3ToV4BridgeStatusTransitions:
         assert "CONNECTED" in status_str
 
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "--tb=short"])

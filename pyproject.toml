@@ -88,30 +88,27 @@ console_scripts = [
 
 [tool.setuptools]
 # Konfiguracja setuptools
-packages = ["SSI", "SSI.v2", "SSI.v3", "SSI.v4", "pamiec_modeli_v2"]
-package-dir = {"" = "."}
+package_dir = {"" = "."}
 zip-safe = false
-include-package-data = true
+include_package_data = true
 
 # Pliki do włączenia w pakiecie
-package-data = {
-    "SSI" = ["py.typed"],
-}
+[tool.setuptools.package-data]
+SSI = ["py.typed"]
 
 # Exclude patterns
-exclude-package-data = {
-    "" = [
-        "*.csv",
-        "*.json",
-        "*.joblib",
-        "*.pkl",
-        "*.h5",
-        "*.sqlite",
-        "*.log",
-        "__pycache__/*",
-        "*.pyc",
-    ]
-}
+[tool.setuptools.exclude-package-data]
+"" = [
+    "*.csv",
+    "*.json",
+    "*.joblib",
+    "*.pkl",
+    "*.h5",
+    "*.sqlite",
+    "*.log",
+    "__pycache__/*",
+    "*.pyc",
+]
 
 [tool.setuptools.packages.find]
 # Automatyczne znalezienie pakietów
@@ -128,11 +125,11 @@ target-version = ["py311"]
 include = "\\.pyi?$"
 exclude = """
 /(
-    \.git
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
+    \\.git
+    | \\.hg
+    | \\.mypy_cache
+    | \\.tox
+    | \\.venv
     | _build
     | buck-out
     | build
@@ -176,7 +173,7 @@ ignore_missing_imports = true
 
 # Wyłączone pliki (zbyt duże, złożone)
 exclude = [
-    "generatorDataBaseTrendAnalisAll\.py$",
+    "generatorDataBaseTrendAnalisAll\\.py$",
 ]
 
 # =============================================================================

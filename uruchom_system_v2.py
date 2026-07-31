@@ -659,35 +659,61 @@ def komenda_test(args):
     """Uruchamia testy systemu"""
     print(f"\n[{pobierz_aktualny_czas()}] Uruchamiam testy systemu...")
     
+    all_tests_passed = True
+    
     try:
         # Import modułu testowego
         from pamiec_modeli_v2 import integration
         
         # Uruchom testy
         print("\nTesty integracji...")
-        integration.main()
+        try:
+            integration.main()
+        except Exception as e:
+            print(f"  Błąd: {e}")
+            all_tests_passed = False
         
         print("\nTesty kalibratora...")
         from pamiec_modeli_v2.level2 import kalibrator
-        kalibrator.main()
+        try:
+            kalibrator.main()
+        except Exception as e:
+            print(f"  Błąd: {e}")
+            all_tests_passed = False
         
         print("\nTesty agregatora...")
         from pamiec_modeli_v2.level1 import aggregator
-        aggregator.main()
+        try:
+            aggregator.main()
+        except Exception as e:
+            print(f"  Błąd: {e}")
+            all_tests_passed = False
         
         print("\nTesty repozytorium...")
         from pamiec_modeli_v2.pamiec import repozytorium
-        repozytorium.main()
+        try:
+            repozytorium.main()
+        except Exception as e:
+            print(f"  Błąd: {e}")
+            all_tests_passed = False
         
         print("\nTesty schemas...")
         from pamiec_modeli_v2 import schemas
-        schemas.main()
+        try:
+            schemas.main()
+        except Exception as e:
+            print(f"  Błąd: {e}")
+            all_tests_passed = False
         
     except Exception as e:
         print(f"Błąd testów: {e}")
         traceback.print_exc()
+        all_tests_passed = False
     
     print(f"\n[{pobierz_aktualny_czas()}] Zakończono.")
+    
+    if not all_tests_passed:
+        sys.exit(1)
 
 
 # =============================================================================

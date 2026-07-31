@@ -445,7 +445,7 @@ class TestV3IntegrationGlobalFunctions:
         assert new_integration is not None
 
 
-class TestV3Integration путемOperations:
+class TestV3IntegrationOperations:
     """Testy operacji na pamięci i światach przez V3Integration"""
     
     def test_add_world_operation(self):
@@ -534,5 +534,3 @@ class TestV3IntegrationComponentHealth:
             assert status in [ComponentStatus.OK, ComponentStatus.WARNING, ComponentStatus.ERROR]
 
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "--tb=short"])

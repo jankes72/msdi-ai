@@ -58,6 +58,7 @@ from enum import Enum, auto
 import uuid
 import threading
 import logging
+import sys
 
 from .agent_core import Agent, AgentConfig, AgentType, AgentStatus
 
@@ -534,18 +535,33 @@ def reset_room_core() -> None:
 # ============================================================================
 
 if __name__ == "__main__":
-    print("Testing SSI V4 Room Core...")
-    print("=" * 60)
+    from SSI.core.logging_config import (
+        setup_logging, get_logger, set_correlation_id, generate_correlation_id
+    )
+    
+    # Skonfiguruj logging
+    setup_logging(level=logging.INFO, json_format=False)
+    logger = get_logger(__name__)
+    
+    # Ustaw correlation_id
+    correlation_id = generate_correlation_id()
+    set_correlation_id(correlation_id)
+    
+    logger.info("Testing SSI V4 Room Core...", extra={"correlation_id": correlation_id})
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})
     
     # Test 1: Tworzenie pokoju
-    print("\n[Test 1] Tworzenie RoomCore...")
+    logger.info("[Test 1] Tworzenie RoomCore...", extra={"correlation_id": correlation_id})
     room = tworz_room_core()
-    print(f"  Pokój utworzony: {room.config.room_id}")
-    print(f"  Typ: {room.config.room_type.name}")
-    print(f"  Status: {room.status.name}")
+    logger.info(f"  Pokój utworzony: {room.config.room_id}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"  Typ: {room.config.room_type.name}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"  Status: {room.status.name}",
+                extra={"correlation_id": correlation_id})
     
     # Test 2: Tworzenie agentów i dodawanie do pokoju
-    print("\n[Test 2] Dodawanie agentów do pokoju...")
+    logger.info("[Test 2] Dodawanie agentów do pokoju...", extra={"correlation_id": correlation_id})
     from .agent_core import tworz_agent, AgentType
     
     agents = []
@@ -554,49 +570,72 @@ if __name__ == "__main__":
         agent.initialize()
         success = room.add_agent(agent)
         agents.append(agent)
-        print(f"  {'✓' if success else '✗'} {agent.agent_id} ({agent_type.value}) dodany do pokoju")
+        logger.info(f"  {'✓' if success else '✗'} {agent.agent_id} ({agent_type.value}) dodany do pokoju",
+                    extra={"correlation_id": correlation_id})
     
     # Test 3: Statystyki pokoju
-    print("\n[Test 3] Statystyki pokoju...")
+    logger.info("[Test 3] Statystyki pokoju...", extra={"correlation_id": correlation_id})
     stats = room.get_statistics()
-    print(f"  Bieżąca liczba agentów: {stats['current_agents']}")
-    print(f"  Całkowita liczba agentów: {stats['total_agents_ever']}")
+    logger.info(f"  Bieżąca liczba agentów: {stats['current_agents']}",
+                extra={"correlation_id": correlation_id})
+    logger.info(f"  Całkowita liczba agentów: {stats['total_agents_ever']}",
+                extra={"correlation_id": correlation_id})
     
     # Raport
-    print("\n[Raport Pokoju]")
-    print(room.get_room_report())
+    logger.info("[Raport Pokoju]", extra={"correlation_id": correlation_id})
+    logger.info(room.get_room_report(), extra={"correlation_id": correlation_id})
     
     # Test 4: Wyszukiwanie agentów
-    print("\n[Test 4] Wyszukiwanie agentów...")
+    logger.info("[Test 4] Wyszukiwanie agentów...", extra={"correlation_id": correlation_id})
     analysts = room.get_agents_by_type(AgentType.ANALYST)
-    print(f"  Znaleziono {len(analysts)} Analityków")
+    logger.info(f"  Znaleziono {len(analysts)} Analityków",
+                extra={"correlation_id": correlation_id})
     
     # Test 5: Rozesłanie wiadomości
-    print("\n[Test 5] Rozesłanie wiadomości...")
+    logger.info("[Test 5] Rozesłanie wiadomości...", extra={"correlation_id": correlation_id})
     if agents:
         count = room.broadcast_message(
             agents[0].agent_id,
             {"type": "greeting", "content": "Cześć wszystkim!", "sender": agents[0].agent_id}
         )
-        print(f"  Wiadomość odebrana przez {count} agentów")
+        logger.info(f"  Wiadomość odebrana przez {count} agentów",
+                    extra={"correlation_id": correlation_id})
         
         # Sprawdź, czy inni agenci odebrali wiadomość
         if len(agents) > 1:
             messages = agents[1].memory.private_notebook.get("messages", [])
-            print(f"  Agent {agents[1].agent_id} ma {len(messages)} wiadomości")
+            logger.info(f"  Agent {agents[1].agent_id} ma {len(messages)} wiadomości",
+                        extra={"correlation_id": correlation_id})
     
     # Test 6: Singleton
-    print("\n[Test 6] Singleton RoomCore...")
+    logger.info("[Test 6] Singleton RoomCore...", extra={"correlation_id": correlation_id})
     room2 = get_room_core()
-    print(f"  Czy ten sam pokój? {room2.config.room_id == 'ROOM_CORE'}")
+    logger.info(f"  Czy ten sam pokój? {room2.config.room_id == 'ROOM_CORE'}",
+                extra={"correlation_id": correlation_id})
     
     # Test 7: Usuwanie agentów
-    print("\n[Test 7] Usuwanie agentów...")
+    logger.info("[Test 7] Usuwanie agentów...", extra={"correlation_id": correlation_id})
     if agents:
         success = room.remove_agent(agents[0].agent_id)
-        print(f"  {'✓' if success else '✗'} Usunięto agenta {agents[0].agent_id}")
-        print(f"  Nowa liczba agentów: {len(room.agents)}")
+        logger.info(f"  {'✓' if success else '✗'} Usunięto agenta {agents[0].agent_id}",
+                    extra={"correlation_id": correlation_id})
+        logger.info(f"  Nowa liczba agentów: {len(room.agents)}",
+                    extra={"correlation_id": correlation_id})
     
-    print("\n" + "=" * 60)
-    print("All Room Core tests passed!")
-    print("=" * 60)
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})
+    
+    # Sprawdź, czy były błędy w testach
+    test_failed = any(
+        not success for success in [
+            room is not None,
+            all(room.add_agent(tworz_agent(AgentType.ANALYST, agent_id=f"agent_test_{i+1}")) for i in range(3))
+        ]
+    )
+    
+    if test_failed:
+        logger.error("Some Room Core tests FAILED!",
+                      extra={"correlation_id": correlation_id})
+        sys.exit(1)
+    
+    logger.info("All Room Core tests passed!", extra={"correlation_id": correlation_id})
+    logger.info("=" * 60, extra={"correlation_id": correlation_id})

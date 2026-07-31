@@ -55,7 +55,11 @@ import uuid
 import json
 import threading
 import logging
+import time
 from collections import defaultdict
+
+# Import polityki synchronizacji
+from .agent_sync_policy import AgentRLock, SyncConfig, AgentSyncPolicy
 
 logger = logging.getLogger(__name__)
 
@@ -637,8 +641,8 @@ class Agent:
         self.updated_at = datetime.now()
         self.last_decision_time: Optional[datetime] = None
         
-        # Lock dla thread-safety
-        self._lock = threading.Lock()
+        # Lock dla thread-safety (reentrantny, aby unikać deadlocków)
+        self._lock = AgentRLock(f"AgentLock-{self.agent_id}")
         
         # Integracja z V3 World Memory System
         self._v3_integration: Optional[V3Integration] = None
@@ -1015,22 +1019,29 @@ class Agent:
             
         Returns:
             Słownik z decyzją i metadany
-        """
-        with self._lock:
-            self.set_status(AgentStatus.THINKING)
             
-            try:
-                # 1. Analiza kontekstu
-                analysis_result = self._analyze_context(context)
+        Note:
+            Sekcja krytyczna jest ograniczona do minimum (zapis do pamięci agenta).
+            Odczyty V3 wykonují się poza lockiem, aby unikać blokowania.
+        """
+        try:
+            # 1. Analiza kontekstu (WYŁĄCZONA Z SEKCJI KRYTYCZNEJ - tylko odczyt V3)
+            # V3 Memory jest tylko do odczytu, nie wymaga synchronizacji
+            analysis_result = self._analyze_context(context)
+            
+            # 2. Wybór akcji (też poza lockiem - nie modyfikuje stanu agenta)
+            decision = self._choose_action(analysis_result, context)
+            
+            # 3. Obliczenia (tylko odczyt stanu agenta)
+            confidence = self._calculate_confidence(decision, analysis_result)
+            expected_value = self._calculate_expected_value(decision, analysis_result)
+            personality_factors = self._get_personality_factors()
+            
+            # 4. Sekcja krytyczna: rejestracja decyzji i aktualizacja stanu
+            with self._lock:
+                self.set_status(AgentStatus.THINKING)
                 
-                # 2. Wybór akcji
-                decision = self._choose_action(analysis_result, context)
-                
-                # 3. Obliczenie pewności i wartości oczekiwanej
-                confidence = self._calculate_confidence(decision, analysis_result)
-                expected_value = self._calculate_expected_value(decision, analysis_result)
-                
-                # 4. Rejestracja decyzji
+                # Rejestracja decyzji (modyfikacja pamięci agenta)
                 decision_record = DecisionRecord(
                     decision_id=f"dec_{uuid.uuid4().hex[:12]}",
                     timestamp=datetime.now().isoformat(),
@@ -1043,7 +1054,7 @@ class Agent:
                 self.memory.add_decision(decision_record)
                 self.last_decision_time = datetime.now()
                 
-                # 5. Aktualizacja metryk
+                # Aktualizacja metryk (modyfikacja stanu agenta)
                 self.metrics["total_decisions"] += 1
                 self.metrics["average_confidence"] = (
                     self.metrics["average_confidence"] * (self.metrics["total_decisions"] - 1) + confidence
@@ -1051,7 +1062,7 @@ class Agent:
                 
                 self.set_status(AgentStatus.ACTIVE)
                 
-                # Zwróć pełną decyzję
+                # Zwróć pełną decyzję (kopie danych, aby unikać problemów z referencjami)
                 return {
                     "agent_id": self.agent_id,
                     "agent_type": self.agent_type.value,
@@ -1062,18 +1073,24 @@ class Agent:
                     "reasoning": decision.get("reasoning", ""),
                     "decision_id": decision_record.decision_id,
                     "timestamp": decision_record.timestamp,
-                    "personality_factors": self._get_personality_factors()
+                    "personality_factors": personality_factors
                 }
                 
-            except Exception as e:
-                logger.error(f"Błąd podejmowania decyzji dla agenta {self.agent_id}: {e}")
-                self.set_status(AgentStatus.ERROR)
-                return {
-                    "agent_id": self.agent_id,
-                    "error": str(e),
-                    "status": "error",
-                    "timestamp": datetime.now().isoformat()
-                }
+        except Exception as e:
+            # W przypadku błędu, spróbuj ustawić status błędu (z ochroną)
+            try:
+                with self._lock:
+                    self.set_status(AgentStatus.ERROR)
+            except Exception:
+                pass  # Ignoruj błąd przy ustawianiu statusu
+            
+            logger.error(f"Błąd podejmowania decyzji dla agenta {self.agent_id}: {e}")
+            return {
+                "agent_id": self.agent_id,
+                "error": str(e),
+                "status": "error",
+                "timestamp": datetime.now().isoformat()
+            }
     
     def _analyze_context(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Analizuje kontekst decyzji z wsparciem V3 World Memory"""
@@ -1235,7 +1252,7 @@ class Agent:
             "experimentation_level": self.personality.experimentation_level
         }
     
-    def evaluate_result(self, result: Dict[str, Any]) -> Dict[str, Any]:
+    def evaluate_result(self, result: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """
         Oceńia wynik decyzji i aktualizuje stan agenta.
         
@@ -1243,10 +1260,24 @@ class Agent:
         
         Args:
             result: Wynik decyzji (trafna/nietrafna, wartość, itd.)
+            **kwargs: Dodatkowe parametry (timeout: margines czasu w sekundach)
             
         Returns:
             Słownik z oceną i aktualizacjami
+            
+        Raises:
+            RuntimeError: Jeśli operacja przekroczy limit czasu.
         """
+        start_time = time.time()
+        timeout = kwargs.get("timeout", SyncConfig.MAX_EVALUATE_TIME)
+        
+        # Sprawdź timeout przed rozpoczęciem
+        if time.time() - start_time > timeout:
+            raise RuntimeError(
+                f"Agent {self.agent_id}: Timeout przed rozpoczęciem evaluate_result "
+                f"(limit: {timeout}s)"
+            )
+        
         with self._lock:
             self.set_status(AgentStatus.LEARNING)
             
@@ -1304,7 +1335,7 @@ class Agent:
                     "status": "error"
                 }
     
-    def learn_from_experience(self, experience: Dict[str, Any]) -> Dict[str, Any]:
+    def learn_from_experience(self, experience: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """
         Uczy się z doświadczenia i aktualizuje swoją wiedzę.
         
@@ -1312,10 +1343,24 @@ class Agent:
         
         Args:
             experience: Doświadczenie do nauczenia się (strategie, wzorce, wyniki)
+            **kwargs: Dodatkowe parametry (timeout: margines czasu w sekundach)
             
         Returns:
             Słownik z aktualizacjami i nowymi wnioskami
+            
+        Raises:
+            RuntimeError: Jeśli operacja przekroczy limit czasu.
         """
+        start_time = time.time()
+        timeout = kwargs.get("timeout", SyncConfig.MAX_LEARN_TIME)
+        
+        # Sprawdź timeout przed rozpoczęciem
+        if time.time() - start_time > timeout:
+            raise RuntimeError(
+                f"Agent {self.agent_id}: Timeout przed rozpoczęciem learn_from_experience "
+                f"(limit: {timeout}s)"
+            )
+        
         with self._lock:
             self.set_status(AgentStatus.LEARNING)
             
@@ -1483,7 +1528,7 @@ class AgentManager:
     def __init__(self):
         """Inicjalizacja managera"""
         self.agents: Dict[str, Agent] = {}
-        self._lock = threading.Lock()
+        self._lock = AgentRLock("AgentManagerLock")
         self.created_at = datetime.now()
         logger.info("Zainicjowano AgentManager")
     
@@ -1768,7 +1813,7 @@ def get_agent_manager() -> AgentManager:
     global _manager, _manager_lock
     if '_manager' not in globals():
         _manager = None
-        _manager_lock = threading.Lock()
+        _manager_lock = AgentRLock("GlobalAgentManagerLock")
     
     with _manager_lock:
         if _manager is None:
