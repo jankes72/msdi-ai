@@ -585,3 +585,419 @@ def get_v3_package_summary(package: V3DataPackage) -> Dict[str, Any]:
         "status": package.status.value,
         "timestamp": package.timestamp.isoformat()
     }
+
+
+# =============================================================================
+# MODELE DANYCH DLA V4
+# =============================================================================
+
+@dataclass
+class AgentInfo:
+    """Informacje o jednym agencie V4"""
+    agent_id: str
+    agent_name: str
+    agent_type: str
+    status: str
+    version: str
+    activity_level: Optional[float] = None
+    responsibility: str = ""
+    room_id: str = ""
+    created: datetime = field(default_factory=datetime.now)
+    source: DataSource = DataSource.V4_AGENTS
+    category: DataCategory = DataCategory.AGENT
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "agent_id": self.agent_id,
+            "agent_name": self.agent_name,
+            "agent_type": self.agent_type,
+            "status": self.status,
+            "version": self.version,
+            "activity_level": self.activity_level,
+            "responsibility": self.responsibility,
+            "room_id": self.room_id,
+            "created": self.created.isoformat(),
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "AgentInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            agent_id=data.get("agent_id", ""),
+            agent_name=data.get("agent_name", ""),
+            agent_type=data.get("agent_type", ""),
+            status=data.get("status", ""),
+            version=data.get("version", "1.0"),
+            activity_level=data.get("activity_level"),
+            responsibility=data.get("responsibility", ""),
+            room_id=data.get("room_id", ""),
+            created=datetime.fromisoformat(data["created"]) if data.get("created") else datetime.now(),
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value)),
+            category=DataCategory(data.get("category", DataCategory.AGENT.value))
+        )
+
+
+@dataclass
+class PersonalityInfo:
+    """Informacje o osobowości agenta V4"""
+    agent_id: str
+    personality_profile: Dict[str, float] = field(default_factory=dict)
+    traits: Dict[str, Any] = field(default_factory=dict)
+    priorities: List[str] = field(default_factory=list)
+    values: Dict[str, float] = field(default_factory=dict)
+    current_parameters: Dict[str, float] = field(default_factory=dict)
+    timestamp: datetime = field(default_factory=datetime.now)
+    source: DataSource = DataSource.V4_AGENTS
+    category: DataCategory = DataCategory.AGENT
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "agent_id": self.agent_id,
+            "personality_profile": self.personality_profile,
+            "traits": self.traits,
+            "priorities": self.priorities,
+            "values": self.values,
+            "current_parameters": self.current_parameters,
+            "timestamp": self.timestamp.isoformat(),
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "PersonalityInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            agent_id=data.get("agent_id", ""),
+            personality_profile=data.get("personality_profile", {}),
+            traits=data.get("traits", {}),
+            priorities=data.get("priorities", []),
+            values=data.get("values", {}),
+            current_parameters=data.get("current_parameters", {}),
+            timestamp=datetime.fromisoformat(data["timestamp"]) if data.get("timestamp") else datetime.now(),
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value)),
+            category=DataCategory(data.get("category", DataCategory.AGENT.value))
+        )
+
+
+@dataclass
+class StrategyInfo:
+    """Informacje o strategii wygenerowanej przez agentów V4"""
+    strategy_id: str
+    agent_id: str
+    strategy_name: str
+    strategy_description: str = ""
+    evaluation: Optional[float] = None
+    effectiveness: Optional[float] = None
+    decision_history: List[Dict[str, Any]] = field(default_factory=list)
+    created: datetime = field(default_factory=datetime.now)
+    last_used: Optional[datetime] = None
+    source: DataSource = DataSource.V4_AGENTS
+    category: DataCategory = DataCategory.AGENT
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "strategy_id": self.strategy_id,
+            "agent_id": self.agent_id,
+            "strategy_name": self.strategy_name,
+            "strategy_description": self.strategy_description,
+            "evaluation": self.evaluation,
+            "effectiveness": self.effectiveness,
+            "decision_history": self.decision_history,
+            "created": self.created.isoformat(),
+            "last_used": self.last_used.isoformat() if self.last_used else None,
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "StrategyInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            strategy_id=data.get("strategy_id", ""),
+            agent_id=data.get("agent_id", ""),
+            strategy_name=data.get("strategy_name", ""),
+            strategy_description=data.get("strategy_description", ""),
+            evaluation=data.get("evaluation"),
+            effectiveness=data.get("effectiveness"),
+            decision_history=data.get("decision_history", []),
+            created=datetime.fromisoformat(data["created"]) if data.get("created") else datetime.now(),
+            last_used=datetime.fromisoformat(data["last_used"]) if data.get("last_used") else None,
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value)),
+            category=DataCategory(data.get("category", DataCategory.AGENT.value))
+        )
+
+
+@dataclass
+class DecisionInfo:
+    """Informacje o jednej decyzji podjętej przez agentów V4"""
+    decision_id: str
+    agent_id: str
+    decision_data: Dict[str, Any]
+    reasoning: str = ""
+    result: Optional[str] = None
+    feedback: Optional[str] = None
+    confidence: Optional[float] = None
+    timestamp: datetime = field(default_factory=datetime.now)
+    source: DataSource = DataSource.V4_AGENTS
+    category: DataCategory = DataCategory.AGENT
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "decision_id": self.decision_id,
+            "agent_id": self.agent_id,
+            "decision_data": self.decision_data,
+            "reasoning": self.reasoning,
+            "result": self.result,
+            "feedback": self.feedback,
+            "confidence": self.confidence,
+            "timestamp": self.timestamp.isoformat(),
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "DecisionInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            decision_id=data.get("decision_id", ""),
+            agent_id=data.get("agent_id", ""),
+            decision_data=data.get("decision_data", {}),
+            reasoning=data.get("reasoning", ""),
+            result=data.get("result"),
+            feedback=data.get("feedback"),
+            confidence=data.get("confidence"),
+            timestamp=datetime.fromisoformat(data["timestamp"]) if data.get("timestamp") else datetime.now(),
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value)),
+            category=DataCategory(data.get("category", DataCategory.AGENT.value))
+        )
+
+
+@dataclass
+class AgentRelationshipInfo:
+    """Informacje o relacji między agentami V4"""
+    relationship_id: str
+    source_agent_id: str
+    target_agent_id: str
+    relationship_type: str  # cooperation, dependency, communication, hierarchy
+    strength: Optional[float] = None
+    description: str = ""
+    cooperation_level: Optional[float] = None
+    communication_frequency: Optional[float] = None
+    hierarchy_level: Optional[int] = None
+    created: datetime = field(default_factory=datetime.now)
+    properties: Dict[str, Any] = field(default_factory=dict)
+    source: DataSource = DataSource.V4_AGENTS
+    category: DataCategory = DataCategory.COLLECTIVE
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "relationship_id": self.relationship_id,
+            "source_agent_id": self.source_agent_id,
+            "target_agent_id": self.target_agent_id,
+            "relationship_type": self.relationship_type,
+            "strength": self.strength,
+            "description": self.description,
+            "cooperation_level": self.cooperation_level,
+            "communication_frequency": self.communication_frequency,
+            "hierarchy_level": self.hierarchy_level,
+            "created": self.created.isoformat(),
+            "properties": self.properties,
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "AgentRelationshipInfo":
+        """Konwersja ze słownika"""
+        return cls(
+            relationship_id=data.get("relationship_id", ""),
+            source_agent_id=data.get("source_agent_id", ""),
+            target_agent_id=data.get("target_agent_id", ""),
+            relationship_type=data.get("relationship_type", ""),
+            strength=data.get("strength"),
+            description=data.get("description", ""),
+            cooperation_level=data.get("cooperation_level"),
+            communication_frequency=data.get("communication_frequency"),
+            hierarchy_level=data.get("hierarchy_level"),
+            created=datetime.fromisoformat(data["created"]) if data.get("created") else datetime.now(),
+            properties=data.get("properties", {}),
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value)),
+            category=DataCategory(data.get("category", DataCategory.COLLECTIVE.value))
+        )
+
+
+@dataclass
+class V4Metadata:
+    """Metadane systemu V4"""
+    v4_version: str
+    agent_system_version: str
+    total_agents: int
+    active_agents: int
+    strategies_count: int
+    decisions_count: int
+    relationships_count: int
+    last_update: datetime
+    collection_timestamp: datetime = field(default_factory=datetime.now)
+    source: DataSource = DataSource.V4_AGENTS
+    category: DataCategory = DataCategory.SYSTEM
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja do słownika"""
+        return {
+            "v4_version": self.v4_version,
+            "agent_system_version": self.agent_system_version,
+            "total_agents": self.total_agents,
+            "active_agents": self.active_agents,
+            "strategies_count": self.strategies_count,
+            "decisions_count": self.decisions_count,
+            "relationships_count": self.relationships_count,
+            "last_update": self.last_update.isoformat(),
+            "collection_timestamp": self.collection_timestamp.isoformat(),
+            "source": self.source.value,
+            "category": self.category.value
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "V4Metadata":
+        """Konwersja ze słownika"""
+        return cls(
+            v4_version=data.get("v4_version", "1.0"),
+            agent_system_version=data.get("agent_system_version", "1.0"),
+            total_agents=data.get("total_agents", 0),
+            active_agents=data.get("active_agents", 0),
+            strategies_count=data.get("strategies_count", 0),
+            decisions_count=data.get("decisions_count", 0),
+            relationships_count=data.get("relationships_count", 0),
+            last_update=datetime.fromisoformat(data["last_update"]) if data.get("last_update") else datetime.now(),
+            collection_timestamp=datetime.fromisoformat(data["collection_timestamp"]) if data.get("collection_timestamp") else datetime.now(),
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value)),
+            category=DataCategory(data.get("category", DataCategory.SYSTEM.value))
+        )
+
+
+@dataclass
+class V4DataPackage:
+    """Kompletny pakiet danych zebranych z V4"""
+    timestamp: datetime = field(default_factory=datetime.now)
+    agents: List[AgentInfo] = field(default_factory=list)
+    personalities: List[PersonalityInfo] = field(default_factory=list)
+    strategies: List[StrategyInfo] = field(default_factory=list)
+    decisions: List[DecisionInfo] = field(default_factory=list)
+    relationships: List[AgentRelationshipInfo] = field(default_factory=list)
+    metadata: Optional[V4Metadata] = None
+    status: DataStatus = DataStatus.RAW
+    source: DataSource = DataSource.V4_AGENTS
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Konwersja całego pakietu do słownika"""
+        return {
+            "timestamp": self.timestamp.isoformat(),
+            "agents": [a.to_dict() for a in self.agents],
+            "personalities": [p.to_dict() for p in self.personalities],
+            "strategies": [s.to_dict() for s in self.strategies],
+            "decisions": [d.to_dict() for d in self.decisions],
+            "relationships": [r.to_dict() for r in self.relationships],
+            "metadata": self.metadata.to_dict() if self.metadata else None,
+            "status": self.status.value,
+            "source": self.source.value
+        }
+    
+    def to_json(self, indent: int = 2) -> str:
+        """Konwersja do JSON"""
+        return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "V4DataPackage":
+        """Konwersja ze słownika"""
+        package = cls(
+            timestamp=datetime.fromisoformat(data["timestamp"]) if data.get("timestamp") else datetime.now(),
+            status=DataStatus(data.get("status", DataStatus.RAW.value)),
+            source=DataSource(data.get("source", DataSource.V4_AGENTS.value))
+        )
+        
+        if data.get("agents"):
+            package.agents = [AgentInfo.from_dict(a) for a in data["agents"]]
+        
+        if data.get("personalities"):
+            package.personalities = [PersonalityInfo.from_dict(p) for p in data["personalities"]]
+        
+        if data.get("strategies"):
+            package.strategies = [StrategyInfo.from_dict(s) for s in data["strategies"]]
+        
+        if data.get("decisions"):
+            package.decisions = [DecisionInfo.from_dict(d) for d in data["decisions"]]
+        
+        if data.get("relationships"):
+            package.relationships = [AgentRelationshipInfo.from_dict(r) for r in data["relationships"]]
+        
+        if data.get("metadata"):
+            package.metadata = V4Metadata.from_dict(data["metadata"])
+        
+        return package
+
+
+# =============================================================================
+# FUNKCJE UTILITY DLA V3
+# =============================================================================
+
+def validate_v3_package(package: V3DataPackage) -> bool:
+    """Walidacja pakietu danych V3"""
+    if not package.worlds:
+        return False
+    
+    # Sprawdź czy wszystkie światy mają poprawne dane
+    for world in package.worlds:
+        if not world.world_name or not world.world_type:
+            return False
+    
+    package.status = DataStatus.VALIDATED
+    return True
+
+
+def get_v3_package_summary(package: V3DataPackage) -> Dict[str, Any]:
+    """Podsumowanie pakietu V3"""
+    return {
+        "total_worlds": len(package.worlds),
+        "total_patterns": len(package.patterns),
+        "total_relationships": len(package.relationships),
+        "status": package.status.value,
+        "timestamp": package.timestamp.isoformat()
+    }
+
+
+# =============================================================================
+# FUNKCJE UTILITY DLA V4
+# =============================================================================
+
+def validate_v4_package(package: V4DataPackage) -> bool:
+    """Walidacja pakietu danych V4"""
+    if not package.agents:
+        return False
+    
+    # Sprawdź czy wszystkie agenci mają poprawne dane
+    for agent in package.agents:
+        if not agent.agent_id or not agent.agent_name:
+            return False
+    
+    package.status = DataStatus.VALIDATED
+    return True
+
+
+def get_v4_package_summary(package: V4DataPackage) -> Dict[str, Any]:
+    """Podsumowanie pakietu V4"""
+    return {
+        "total_agents": len(package.agents),
+        "total_personalities": len(package.personalities),
+        "total_strategies": len(package.strategies),
+        "total_decisions": len(package.decisions),
+        "total_relationships": len(package.relationships),
+        "status": package.status.value,
+        "timestamp": package.timestamp.isoformat()
+    }
