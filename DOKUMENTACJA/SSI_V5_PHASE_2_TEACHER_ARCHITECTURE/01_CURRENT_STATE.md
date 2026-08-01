@@ -592,7 +592,113 @@ class AgentTeacherInterface:
 
 ---
 
+## 9. 60/40% TRENING & OBSERWACJA - MODEL BEHAVIOR MEMORY
+
+### 9.1 Zasada Podziału Czasu Modeli Teacher
+
+**Każy Teacher Model posiada:**
+- **60% CZASU:** Trening (Training Phase)
+- **40% CZASU:** Obserwacja (Observation Phase)
+
+**60% TRENING:**
+- Standardowy proces szkolenia modelu
+- Użycie nowych danych treningowych
+- Optymalizacja parametrów modelu
+- walidacja na zbiorze testowym
+
+**40% OBSERWACJA:**
+- ✅ **Dynamiczny zbiór danych** - nie zawsze ten sam zbior
+- ✅ **Zmienia się dynamicznie** - zależy od warunków rynkowych
+- ✅ **Służy do badania zachowania modelu** - MODEL BEHAVIOR MEMORY
+- ❌ **NIE JEST** pamięcią uczącą modelu
+
+### 9.2 MODEL BEHAVIOR MEMORY
+
+**Struktura Pliku:**
+```
+modele_dataBase_futbol_trend/
+    └── siec_xx/
+        └── obserwacja/
+            └── charakterystyka_modelu.json
+```
+
+**Zawartość charakterystyka_modelu.json:**
+- **model_metadata:** ID modelu, typ, data trenowania, wersja
+- **behavior_characteristics:** Wzorce odpowiedzi, grupy zachowań, przejścia między stanami
+- **feature_statistics:** Statystyki cech, korelacje
+- **performance_metrics:** Skuteczność ogólna, średnia pewność, poziomy pewności
+- **dynamic_observation:** Zbiory obserwacji, historia retreningu, warunki środowiskowe
+
+**Przykładowe dane:**
+```json
+{
+  "behavior_characteristics": {
+    "response_patterns": {
+      "fast_response": {"count": 1250, "percentage": 62.5, "avg_confidence": 0.87},
+      "medium_response": {"count": 500, "percentage": 25.0, "avg_confidence": 0.78}
+    },
+    "behavior_groups": {
+      "high_confidence_quick_decision": {
+        "effectiveness": 0.92,
+        "avg_confidence": 0.91
+      }
+    }
+  },
+  "performance_metrics": {
+    "overall_effectiveness": 0.87,
+    "average_confidence": 0.82
+  }
+}
+```
+
+### 9.3 Mechanizm Dynamicznej Aktualizacji Obserwacji
+
+**Proces:**
+1. **WYBÓR ZBIORU DANYCH** (Dynamiczny 40%)
+   - Zależy od warunków rynkowych
+   - Zależy od wydajności modelu
+   - Różne zbiory dla różnych scenariuszy
+
+2. **TRENOWANIE MODELU** (60% czasu)
+   - Standardowy proces szkolenia
+   - Użycie nowych danych treningowych
+
+3. **OBSERWACJA ZACHOWANIA** (40% czasu)
+   - Monitorowanie zachowania modelu
+   - Testowanie w różnych warunkach
+   - Zbieranie statystyk zachowań
+
+4. **GENEROWANIE OBSERVATION PROFILE**
+   - Agregacja wyników obserwacji
+   - Identyfikacja grup zachowań
+   - Określenie poziomów pewności
+
+### 9.4 Integracja z Time Control Module
+
+**Współpraca:**
+- Teacher Models są uruchamiane w ramach V5 Execution Lifecycle
+- Obserwacja zachowań odbywa się podczas 5-godzinnej sesji V5
+- Wyniki są zapisywanew crying checkpoint Files
+- Modele Behavior Memory są częścią Memory Update Phase
+
+**V5 Context Awareness:**
+- Teacher Engine wie, która jest godzina
+- Wie, który proces V1 zakończył działanie
+- Wie, jakie dane są dostępne
+- Wie, jaki etap cyklu dziennego nastąpił
+
+### 9.5 Kluczowe Zasady
+
+✅ **Dynamiczna obserwacja nie jest statyczna** - 40% to всегда diferente zbiory
+✅ **Model Behavior Memory to nie trening** - to badanie zachowania
+✅ **Obserwacja służy dekodowaniu modelu** - wspomaga Agent System
+✅ **Cały proces jest zintegrowany z V1/V5 Lifecycle** - nie działa cały czas
+
+---
+
 **📌 NOTATKA:**
-Ten dokument opisuje **aktualny, stabilny stan systemu Sprint 11.5**.
+Ten dokument opisuje **aktualny, stabilny stan systemu Sprint 11.5 + NOWE ELEMENTY Fazy 2**.
 Wszystkie informacje są oparte na istniejącym kodzie i dokumentacji.
-Nie wprowadzać żadnych zmian do opisanych tu modułów.
+- **NIE ZMIENIAĆ** istniejących modułów
+- **DODAŁEM** informację o 60/40% balance i MODEL BEHAVIOR MEMORY
+- Integracja z System Time Control Module i V1/V5 Execution Lifecycle

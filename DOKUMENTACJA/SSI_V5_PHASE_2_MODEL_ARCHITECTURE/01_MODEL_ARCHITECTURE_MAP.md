@@ -21,6 +21,7 @@
 9. [Model Selection Strategy](#9-model-selection-strategy)
 10. [Hardware Scaling](#10-hardware-scaling)
 11. [Implementation Roadmap](#11-implementation-roadmap)
+12. [Model Memory Ecosystem](#12-model-memory-ecosystem) ← NOWE
 
 ---
 
@@ -1628,6 +1629,74 @@ PHASE 5: Production Cluster (Sprint 18+)
 
 ---
 
+## 12. MODEL MEMORY ECOSYSTEM
+
+### 12.1 Overview
+
+**🎯 NEW CATEGORY:** Model Memory Ecosystem defines a **5-level memory hierarchy** for each Teacher Model, extending beyond traditional training memory.
+
+For complete documentation, see: [02_MODEL_MEMORY_ECOSYSTEM.md](./02_MODEL_MEMORY_ECOSYSTEM.md)
+
+### 12.2 Memory Levels
+
+#### LEVEL 1: Training Memory
+- **What it stores:** Data and knowledge for model training (60%)
+- **Purpose:** Learning what the model knows
+- **Location:** `training_data/`, `validation_data/`
+
+#### LEVEL 2: Observation Memory (NEW)
+- **What it stores:** Dynamic behavior characteristics (40%)
+- **Purpose:** Understanding how the model behaves
+- **Location:** `obserwacja/` with `charakterystyka_modelu.json`
+
+#### LEVEL 3: Behavior Memory
+- **What it stores:** Generated knowledge and patterns
+- **Purpose:** Capturing what the model produces
+- **Location:** `kolektor_wiedzy/`, `pamiec_obserwacji/`, `ranking_cech/`
+
+#### LEVEL 4: Agent Analysis Memory (NEW)
+- **What it stores:** Knowledge about how to use models
+- **Purpose:** Agent understanding of model utilization
+- **Location:** Agent System components
+
+#### LEVEL 5: Decision Layer
+- **What it stores:** Final validated decisions
+- **Purpose:** Final decision packaging and validation
+
+### 12.3 Key Innovation
+
+**Traditional ML:** Single memory level (training data)  
+**SSI V5:** 5-level memory ecosystem with behavioral observation
+
+### 12.4 Traditional vs SSI V5 Comparison
+
+| Aspect | Traditional ML | SSI V5 Model Memory Ecosystem |
+|--------|----------------|--------------------------------|
+| Model Understanding | Black Box | Transparent Box |
+| Memory Levels | 1 | 5 |
+| Learning Source | Training only | Training + Observation + Feedback |
+| Adaptability | Limited | High (behavior-aware) |
+
+### 12.5 Integration with Existing Models
+
+**All 30+ models now include:**
+```
+Teacher Model Structure:
+├── [L1] Training Memory
+├── [L2] Observation Memory ← NEW
+├── [L3] Behavior Memory
+└── [L4] Agent Analysis Memory ← NEW
+```
+
+### 12.6 Architecture Compatibility
+
+✅ **FULLY COMPLIANT** with existing model architecture  
+✅ **EXTENDS** current Teacher Model structure  
+✅ **MAINTAINS** backward compatibility  
+✅ **ENABLES** advanced behavioral analysis
+
+---
+
 ## SUMMARY
 
 This document provides a **comprehensive architectural specification** for the SSI V5 Phase 2 Model Architecture. It defines:
@@ -1643,14 +1712,177 @@ This document provides a **comprehensive architectural specification** for the S
 9. **Selection** - Criteria for choosing appropriate model types
 10. **Hardware** - Scaling path from local development to production cluster
 11. **Roadmap** - Implementation phases (12-17)
+12. **Model Memory Ecosystem** - 5-level memory hierarchy ← NEW
 
-**Total Sections:** 11
-**Total Subsections:** 50+
-**Total Models Defined:** 30+ (15 Teacher + 6 Agent + 4 Decision + 3 Feedback + 6 Memory + 3 Meta)
+**Total Sections:** 12  
+**Total Subsections:** 50+  
+**Total Models Defined:** 30+ (15 Teacher + 6 Agent + 4 Decision + 3 Feedback + 6 Memory + 3 Meta)  
+**Memory Levels:** 5 (Training + Observation + Behavior + Agent Analysis + Decision)
 
 **Status:** ✅ Documentation Complete - Ready for Implementation Planning
 
 ---
 
-*Document generated as part of SSI V5 Phase 2 Model Architecture Design*
-*Do not implement code based on this document without completing interface specifications*
+---
+
+## 13. MODEL BEHAVIOR MEMORY & 60/40% TRENING/OBSERWACJA
+
+### 13.1 NOWY ELEMENT ARCHITEKTURY - MODEL BEHAVIOR MEMORY
+
+**Każdy Teacher Model (15 modeli) posiada:**
+
+```
+modele_dataBase_futbol_trend/
+    └── siec_xx/
+        ├── model_files/        (60% - TRENING)
+        └── obserwacja/         (40% - OBSERWACJA)
+            └── charakterystyka_modelu.json  ← MODEL BEHAVIOR MEMORY
+```
+
+**60/40% ZASADA:**
+- **60% CZASU:** Standardowy trening modelu
+- **40% CZASU:** Dynamiczna obserwacja zachowań
+
+### 13.2 Charakterystyka Modelu = Model Behavior Memory
+
+**charakterystyka_modelu.json** NIE JEST:
+- X Pamięcią uczącą modelu
+- X Modelem predykcyjnym
+- X Statycznym raportem
+- X Źródłem danych historycznych
+
+**charakterystyka_modelu.json JEST:**
+- Dynamiczną wiedzą o zachowaniu modelu
+- Wynikiem eksperymentu obserwacyjnego
+- Charakterystyką zachowania w różnych warunkach
+- Statystykami feature'ów i grup zachowań
+- Podstawą do podejmowania decyzji przez Agent System
+- Źródłem informacji o skuteczności i poziomach pewności
+
+### 13.3 Struktura charakterystyka_modelu.json
+
+```json
+{
+  "model_metadata": {
+    "model_id": "siec_01_zmiana_kursow",
+    "model_type": "neural_network",
+    "training_date": "2026-08-01",
+    "observation_period": "2026-07-01_to_2026-07-31",
+    "data_source": "modele_dataBase_futbol_trend",
+    "version": "1.2.0"
+  },
+  "behavior_characteristics": {
+    "response_patterns": {
+      "fast_response": {"count": 1250, "percentage": 62.5, "avg_confidence": 0.87},
+      "medium_response": {"count": 500, "percentage": 25.0, "avg_confidence": 0.78},
+      "slow_response": {"count": 250, "percentage": 12.5, "avg_confidence": 0.65}
+    },
+    "behavior_groups": {
+      "group_1": {
+        "name": "high_confidence_quick_decision",
+        "patterns": ["pattern_a", "pattern_b"],
+        "transition_states": ["state_1", "state_2"],
+        "effectiveness": 0.92,
+        "avg_confidence": 0.91
+      }
+    },
+    "state_transitions": {
+      "state_0_to_state_1": {"frequency": 0.45, "trigger": "high_volatility"}
+    }
+  },
+  "feature_statistics": {
+    "top_features": [
+      {"feature": "course_change_rate", "importance": 0.95, "usage_frequency": 0.88},
+      {"feature": "historical_accuracy", "importance": 0.92, "usage_frequency": 0.85}
+    ]
+  },
+  "performance_metrics": {
+    "overall_effectiveness": 0.87,
+    "average_confidence": 0.82,
+    "confidence_levels": {
+      "very_high": {"threshold": 0.95, "count": 800, "accuracy": 0.92}
+    }
+  },
+  "dynamic_observation": {
+    "observation_sets": [
+      {"set_id": "obs_2026_07_01", "data_range": "2026-07-01_to_2026-07-15",
+       "sample_size": 5000, "conditions": "high_volatility"}
+    ],
+    "retraining_history": [{"retraining_date": "2026-07-15", "old_effectiveness": 0.82, "new_effectiveness": 0.87}],
+    "environment_conditions": {"volatility_levels": ["low", "medium", "high"]}
+  }
+}
+```
+
+### 13.4 Mechanizm Dynamicznej Obserwacji
+
+**40% OBSERWACJI - Dynamiczny proces:**
+
+1. **WYBÓR ZBIORU DANYCH** (Dynamiczny)
+   - Nie zawsze ten sam zbior
+   - Zależy od warunków rynkowych
+   - Zależy od wydajności modelu
+
+2. **OBSERWACJA ZACHOWANIA**
+   - Monitorowanie zachowania modelu
+   - Testowanie w różnych warunkach
+   - Zbieranie statystyk zachowań
+
+3. **GENEROWANIE MODEL BEHAVIOR MEMORY**
+   - Agregacja wyników obserwacji
+   - Identyfikacja grup zachowań
+   - Określenie poziomów pewności
+
+### 13.5 Integracja z V1/V5 Execution Lifecycle
+
+**Współpraca:**
+- Teacher Models są uruchamiane w ramach V5 (5-godzinne okno)
+- Obserwacja zachowań odbywa się podczas aktywnej sesji V5
+- Modele Behavior Memory są generowane podczas V5 Execution
+- Wyniki są częścią Checkpoint i Memory Update Phase
+
+**V5 Time Awareness:**
+- Modele wiedzą, jaki jest aktualny etap cyklu
+- Wiedzą, jakie dane są dostępne (z V1)
+- Współpracują z Time Control Module
+
+### 13.6 Kluczowe Innowacje
+
+✅ **5-poziomowa hierarchia pamięci** - Training + Observation + Behavior + Agent Analysis + Decision
+✅ **60/40% balance** - Optymalny podział czasu trenowania i obserwacji
+✅ **Dynamic Observation** - Zmieniające się zbiory danych obserwacyjnych
+✅ **Model Behavior Memory** - Głębokie zrozumienie zachowania modeli
+✅ **V1/V5 Integration** - Pełna synchronizacja z cyklem życia systemu
+
+---
+
+## SUMMARY
+
+This document provides a **comprehensive architectural specification** for the SSI V5 Phase 2 Model Architecture. It defines:
+
+1. **Philosophy** - Why specialized, distributed models are used
+2. **Architecture** - Complete model layer structure with 6 categories
+3. **Mapping** - Detailed specification of all 15 Teacher Models
+4. **Agents** - Complete design of 6 Agent AI Models
+5. **Decisions** - Decision Layer architecture and Decision Package format
+6. **Feedback** - Feedback Loop models for continuous improvement
+7. **Memory** - 6 Memory Models with access patterns
+8. **Communication** - Standardized inter-model communication protocols
+9. **Selection** - Criteria for choosing appropriate model types
+10. **Hardware** - Scaling path from local development to production cluster
+11. **Roadmap** - Implementation phases (12-17)
+12. **Model Memory Ecosystem** - 5-level memory hierarchy NEW
+13. **Model Behavior Memory** - 60/40% Training/Observation + Dynamic Behavior Analysis NEW
+
+**Total Sections:** 13  
+**Total Subsections:** 50+  
+**Total Models Defined:** 30+ (15 Teacher + 6 Agent + 4 Decision + 3 Feedback + 6 Memory + 3 Meta)  
+**Memory Levels:** 5 (Training + Observation + Behavior + Agent Analysis + Decision)
+
+**Status:** Documentation Complete - Ready for Implementation Planning + MODEL BEHAVIOR MEMORY INTEGRATION
+
+---
+
+*Document generated as part of SSI V5 Phase 2 Model Architecture Design*  
+*Do not implement code based on this document without completing interface specifications*  
+*NOWE: Model Memory Ecosystem + Model Behavior Memory (60/40% Training/Observation) dodane*
