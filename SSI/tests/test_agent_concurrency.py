@@ -19,7 +19,7 @@ Wymagania:
 - Błąd jednego agenta nie może blokować pozostałej populacji
 - Synchronizacja nie może pozwalać agentom bezpośrednio modyfikować pamięci V3
 """
-import pytest
+import pytest #type: ignore
 
 import threading
 import time
@@ -103,7 +103,7 @@ class TestDecisionTimeout:
         result = self.agent.make_decision(self.context)
         elapsed = time.time() - start_time
         
-        assert 
+        assert (
             elapsed < 2.0,
             f"make_decision( wykonało się w {elapsed:.3f}s (powinno być < 2.0s)"
         )
@@ -116,7 +116,7 @@ class TestDecisionTimeout:
         result = self.agent.make_decision(self.context, timeout=1.0)
         elapsed = time.time() - start_time
         
-        assert 
+        assert (
             elapsed < 1.5,  # Nieco więcej niż timeout ze względu na overhead
             f"make_decision( z timeout=1.0 wykonało się w {elapsed:.3f}s"
         )
@@ -160,7 +160,7 @@ class TestDeadlockPrevention:
         eval_result = self.agent.evaluate_result(result)
         elapsed = time.time() - start_time
         
-        assert 
+        assert (
             elapsed < 1.0,
             f"evaluate_result( wykonało się w {elapsed:.3f}s (powinno być < 1.0s)"
         )
@@ -179,7 +179,7 @@ class TestDeadlockPrevention:
         learn_result = self.agent.learn_from_experience(experience)
         elapsed = time.time() - start_time
         
-        assert 
+        assert (
             elapsed < 1.0,
             f"learn_from_experience( wykonało się w {elapsed:.3f}s (powinno być < 1.0s)"
         )
@@ -284,17 +284,17 @@ class TestParallelAgents:
                     results.append(task_result)
         
         # Sprawdź, że wszystkie agenty ukończyły zadanie
-        assert 
+        assert (
             len(results) == 10,
-            f"Tylko {len(results} agentów ukończyło zadanie, {len(errors)} zostało w błędzie"
+            f"Tylko {len(results)} agentów ukończyło zadanie, {len(errors)} zostało w błędzie"
         )
         
         # Sprawdź, że każdy agent ukończył w czasie < 2s
         for task_result in results:
-            assert 
+            assert (
                 task_result["time"] < 2.0,
                 f"Agent {task_result['agent_id']} wykonał się w {task_result['time']:.3f}s"
-            
+            )
             assert "action" in task_result["result"]
     
     def test_10_agents_parallel_mixed_operations(self):
@@ -345,9 +345,9 @@ class TestParallelAgents:
                     results.append(result)
         
         # Sprawdź, że wszystkie zadania ukończyły się pomyślnie
-        assert 
+        assert (
             len(results) == 10,
-            f"Tylko {len(results} zadań ukończyło się pomyślnie, {len(errors)} z błędami"
+            f"Tylko {len(results)} zadań ukończyło się pomyślnie, {len(errors)} z błędami"
         )
     
     def test_agent_error_does_not_block_others(self):
@@ -528,8 +528,8 @@ class TestV3MemorySafety:
         
         # Sprawdź, że V3 jest niedostępne dla tego agenta
         assert not agent.is_v3_available()
-        assert agent.get_world_memory( is None)
-        assert agent.get_pattern_memory( is None)
+        assert agent.get_world_memory() is None
+        assert agent.get_pattern_memory() is None
 
 
 # ==========================================================================

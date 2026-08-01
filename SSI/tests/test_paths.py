@@ -4,7 +4,7 @@ SSI Paths Tests - Verification of path configuration correctness
 Version: 1.0
 Date: 2026-07-31
 """
-import pytest
+import pytest #type: ignore
 
 import os
 import sys
@@ -86,16 +86,20 @@ class TestSSIPaths:
         for relative_path in test_paths:
             absolute_path = paths.get_absolute_path(relative_path)
             path_str = str(absolute_path)
-            assert "SSI/SSI" not in path_str, 
-                           f"Absolute path {path_str} contains SSI/SSI"
-            assert "SSI\\SSI" not in path_str,
-                           f"Absolute path {path_str} contains SSI\\SSI"
+            assert (
+                "SSI/SSI" not in path_str, 
+                f"Absolute path {path_str} contains SSI/SSI"
+            )
+            assert (
+                 "SSI\\SSI" not in path_str,
+                f"Absolute path {path_str} contains SSI\\SSI"
+            )
     
     def test_root_path_resolves_correctly(self):
         """Test that root_path is correctly set."""
         paths = SSIPaths()
         # root_path should be SSI directory
-        assert paths.root_path.exists( or paths.root_path.name == "SSI")
+        assert paths.root_path.exists() or paths.root_path.name == "SSI"
     
     def test_paths_are_relative(self):
         """Test that module paths are relative (do not start with SSI/)."""
@@ -130,7 +134,7 @@ class TestPathValidator:
             result = validate_paths()
             assert result
         except ConfigValidationError:
-            assert False, "validate_paths( reported errors for correct paths")
+            assert (False, "validate_paths( reported errors for correct paths")
     
     def test_validator_path_no_ssi_ssi(self):
         """Test validate_path_no_ssi_ssi method."""
@@ -183,8 +187,10 @@ class TestImportPortability:
                     new_files = files_after - files_before
                     
                     # Import should not create new files in temp directory
-                    assert len(new_files) == 0, 
-                                   f"Import created files: {new_files}"
+                    assert (
+                        len(new_files) == 0, 
+                        f"Import created files: {new_files}"
+                    )
                 except FileNotFoundError:
                     # This is expected - paths are relative
                     # but should not create files
@@ -193,9 +199,11 @@ class TestImportPortability:
                     # Other errors are acceptable, important that no files are created
                     files_after = set(os.listdir(temp_dir))
                     new_files = files_after - files_before
-                    assert len(new_files) == 0,
-                                   f"Import created files before error: {new_files}"
-                    
+                    assert (
+                        len(new_files) == 0,
+                        f"Import created files before error: {new_files}"
+                    )
+
         finally:
             os.chdir(original_cwd)
             sys.path = original_path
