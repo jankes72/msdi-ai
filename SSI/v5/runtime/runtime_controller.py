@@ -41,6 +41,31 @@ from .scheduler import (
     create_scheduler, CycleConfig
 )
 
+# FAZA 1 Modules - LLM Queue Manager
+from .llm_queue import (
+    LLMQueueManager, LLMQueueSettings, LLMQueueConfig,
+    HardwareConstraints, ModelLimits, MemoryCleanupStrategy,
+    QueueMode, ModelContext, ModelRequest, ModelResult,
+    ModelType, ModelStatus, ModelPriority,
+    create_llm_queue_manager, create_default_queue_config
+)
+
+# FAZA 1 Modules - Model Memory Ecosystem
+from ..memory import (
+    ModelMemoryStore, ModelMemoryType,
+    TrainingMemory, ObservationMemory, BehaviorMemory,
+    AgentAnalysisMemory, DecisionMemory,
+    TrainingPhase, ObservationScope, BehaviorType, AnalysisType,
+    create_model_memory_store, get_model_memory_store
+)
+
+# FAZA 1 Modules - Teacher Engine
+from ..teacher import (
+    TeacherEngine, TeacherConfig, TeacherMode,
+    TeachingStrategy, TeacherStatus, ObservationStatus,
+    create_teacher_engine, get_teacher_engine
+)
+
 
 class SSIRuntimeController:
     """Główny kontroler runtime systemu SSI V5.
@@ -66,6 +91,17 @@ class SSIRuntimeController:
         self.config_manager: Optional[RuntimeConfigManager] = None
         self.state_manager: Optional[StateManager] = None
         self.scheduler: Optional[Scheduler] = None
+        
+        # FAZA 1 Components - LLM Queue Manager
+        self.llm_queue_manager: Optional[LLMQueueManager] = None
+        self.llm_queue_settings: Optional[LLMQueueSettings] = None
+        self.llm_queue_config: Optional[LLMQueueConfig] = None
+        
+        # FAZA 1 Components - Model Memory Ecosystem
+        self.model_memory_store: Optional[ModelMemoryStore] = None
+        
+        # FAZA 1 Components - Teacher Engine
+        self.teacher_engine: Optional[TeacherEngine] = None
         
         # Agenci - zachowaj Kolejnosc 01-06
         self.agents: Dict[str, Any] = {}
@@ -102,6 +138,15 @@ class SSIRuntimeController:
             runtime_state = self.state_manager.get_runtime_state()
             runtime_state.test_mode = self.config.test_mode
             
+            # FAZA 1: Inicjalizacja LLM Queue Manager
+            self._initialize_llm_queue_manager()
+            
+            # FAZA 1: Inicjalizacja Model Memory Ecosystem
+            self._initialize_model_memory_store()
+            
+            # FAZA 1: Inicjalizacja Teacher Engine
+            self._initialize_teacher_engine()
+            
             # Inicjalizacja schedulera
             self.scheduler = create_scheduler(self.config, self.state_manager)
             self.scheduler.initialize()
@@ -112,12 +157,15 @@ class SSIRuntimeController:
             # Inicjalizacja collectorow
             self._initialize_collectors()
             
+            # Po polaczeniu wszystkich komponentow - integracja FAZA 1
+            self._integrate_faza1_components()
+            
             # Ustawienie flag
             self._initialized = True
             runtime_state.status = RuntimeStatus.READY.value
             runtime_state.next_agent_id = self._agent_execution_order[0]  # Pierwszy agent
             
-            self.logger.info("SSI V5 Runtime Controller initialized successfully!")
+            self.logger.info("SSI V5 Runtime Controller with FAZA 1 modules initialized successfully!")
             return True
             
         except Exception as e:
@@ -204,7 +252,104 @@ class SSIRuntimeController:
         except Exception as e:
             self.logger.error(f"Error initializing collectors: {e}")
             raise
+    
+    # ==================== FAZA 1: LLM QUEUE MANAGER ====================
+    
+    def _initialize_llm_queue_manager(self) -> None:
+        """Inicjalizacja LLM Queue Manager - FAZA 1."""
+        try:
+            # Tworzenie ustawien kolejki
+            self.llm_queue_settings = create_default_queue_config()
             
+            # Tworzenie konfiguracji kolejki
+            self.llm_queue_config = LLMQueueConfig.from_settings(self.llm_queue_settings)
+            
+            # Tworzenie managera kolejki (nie uruchamiany automatycznie)
+            self.llm_queue_manager = create_llm_queue_manager(
+                settings=self.llm_queue_settings,
+                auto_start=False  # Uruchomimy recznie w start_cycle
+            )
+            
+            self.logger.info("LLM Queue Manager initialized (FAZA 1)")
+        except Exception as e:
+            self.logger.error(f"Error initializing LLM Queue Manager: {e}")
+            raise
+    
+    # ==================== FAZA 1: MODEL MEMORY ECOSYSTEM ====================
+    
+    def _initialize_model_memory_store(self) -> None:
+        """Inicjalizacja Model Memory Store - FAZA 1."""
+        try:
+            # Sciezka do pamieci modeli
+            memory_base_path = os.path.join(self._memory_path, "model_memory")
+            
+            # Tworzenie storagu pamieci modeli
+            self.model_memory_store = create_model_memory_store(
+                base_path=memory_base_path
+            )
+            
+            self.logger.info(f"Model Memory Store initialized at {memory_base_path} (FAZA 1)")
+        except Exception as e:
+            self.logger.error(f"Error initializing Model Memory Store: {e}")
+            raise
+    
+    # ==================== FAZA 1: TEACHER ENGINE ====================
+    
+    def _initialize_teacher_engine(self) -> None:
+        """Inicjalizacja Teacher Engine - FAZA 1."""
+        try:
+            # Tworzenie konfiguracji Teacher Engine
+            teacher_config = TeacherConfig()
+            
+            # Tworzenie silnika nauczyciela (nie uruchamiany automatycznie)
+            self.teacher_engine = create_teacher_engine(
+                config=teacher_config,
+                auto_start=False  # Uruchomimy recznie w start_cycle
+            )
+            
+            # Rejestracja agentow w Teacher Engine (jesli agenci sa juz zarejestrowani)
+            if self.agent_manager and self.agents:
+                self.teacher_engine.register_agents(self.agents)
+            
+            self.logger.info("Teacher Engine initialized (FAZA 1)")
+        except Exception as e:
+            self.logger.error(f"Error initializing Teacher Engine: {e}")
+            raise
+    
+    # ==================== FAZA 1: INTEGRACJA KOMPONENTOW ====================
+    
+    def _integrate_faza1_components(self) -> None:
+        """Integracja komponentow FAZA 1: LLM Queue -> Model Memory -> Teacher Engine."""
+        try:
+            # Polacz Teacher Engine z Model Memory Store
+            if self.teacher_engine and self.model_memory_store:
+                self.teacher_engine.set_model_memory_store(self.model_memory_store)
+                self.logger.info("Teacher Engine connected to Model Memory Store")
+            
+            # Polacz Teacher Engine z LLM Queue Manager (opcjonalnie)
+            if self.teacher_engine and self.llm_queue_manager:
+                # Teacher Engine moze korzystac z kolejki LLM do Wysylania zadan
+                self.logger.info("Teacher Engine and LLM Queue Manager ready for integration")
+            
+            # Zarejestruj componente w runtime state
+            if self.state_manager:
+                runtime_state = self.state_manager.get_runtime_state()
+                # Dodaj informacje o FAZA 1 do metadata
+                runtime_state.metadata["faza1_enabled"] = True
+                runtime_state.metadata["faza1_components"] = {
+                    "llm_queue": "initialized" if self.llm_queue_manager else "disabled",
+                    "model_memory": "initialized" if self.model_memory_store else "disabled", 
+                    "teacher_engine": "initialized" if self.teacher_engine else "disabled"
+                }
+            
+            self.logger.info("FAZA 1 components integrated successfully")
+            
+        except Exception as e:
+            self.logger.error(f"Error integrating FAZA 1 components: {e}")
+            # To nie jest krytyczny blad - system moze dzialac dalej
+            if self.state_manager:
+                self.state_manager.set_warning(f"FAZA 1 integration warning: {e}")
+    
     def start_cycle(self) -> bool:
         """Rozpoczecie nowego cyklu pracy systemu."""
         if not self._initialized:
@@ -219,6 +364,16 @@ class SSIRuntimeController:
             self.logger.info("Starting SSI V5 cycle...")
             self._running = True
             self._shutdown_requested = False
+            
+            # FAZA 1: Start LLM Queue Manager
+            if self.llm_queue_manager:
+                self.llm_queue_manager.start()
+                self.logger.info("LLM Queue Manager started (FAZA 1)")
+            
+            # FAZA 1: Start Teacher Engine
+            if self.teacher_engine:
+                self.teacher_engine.start()
+                self.logger.info("Teacher Engine started (FAZA 1)")
             
             # Start schedulera
             self.scheduler.start()
@@ -677,6 +832,21 @@ class SSIRuntimeController:
             self._shutdown_requested = True
             self._running = False
             
+            # FAZA 1: Stop Teacher Engine
+            if self.teacher_engine:
+                self.teacher_engine.stop()
+                self.logger.info("Teacher Engine stopped (FAZA 1)")
+                
+            # FAZA 1: Stop LLM Queue Manager
+            if self.llm_queue_manager:
+                self.llm_queue_manager.stop()
+                self.logger.info("LLM Queue Manager stopped (FAZA 1)")
+                
+            # Zapis stanu Model Memory
+            if self.model_memory_store:
+                self.model_memory_store.save_all()
+                self.logger.info("Model Memory saved (FAZA 1)")
+                
             # Zatrzymanie schedulera
             if self.scheduler:
                 self.scheduler.shutdown()
@@ -725,8 +895,51 @@ class SSIRuntimeController:
                 "v3": "active" if self.v3_collector else "inactive",
                 "v4": "active" if self.v4_collector else "inactive",
                 "external": "active" if self.external_collector else "inactive"
+            },
+            # FAZA 1 Components status
+            "faza1_components": {
+                "llm_queue": "active" if (self.llm_queue_manager and self.llm_queue_manager._running) else "inactive",
+                "model_memory": "active" if self.model_memory_store else "inactive", 
+                "teacher_engine": "active" if (self.teacher_engine and self.teacher_engine._running) else "inactive"
             }
         }
+        
+        # FAZA 1: Dodaj status LLM Queue Manager
+        if self.llm_queue_manager:
+            try:
+                queue_status = self.llm_queue_manager.get_status()
+                status["llm_queue"] = {
+                    "running": queue_status.get("running", False),
+                    "queue_size": queue_status.get("queue_size", 0),
+                    "is_executing": queue_status.get("is_executing", False),
+                    "current_model": queue_status.get("current_model", None)
+                }
+            except:
+                pass
+        
+        # FAZA 1: Dodaj status Teacher Engine
+        if self.teacher_engine:
+            try:
+                teacher_status = self.teacher_engine.get_statistics()
+                status["teacher_engine"] = {
+                    "status": teacher_status.get("status", "UNKNOWN"),
+                    "running": teacher_status.get("running", False),
+                    "agents_monitored": teacher_status.get("agents_monitored", 0)
+                }
+            except:
+                pass
+                
+        # FAZA 1: Dodaj status Model Memory
+        if self.model_memory_store:
+            try:
+                memory_stats = self.model_memory_store.get_statistics()
+                status["model_memory"] = {
+                    "entry_count": memory_stats.get("entry_count", 0),
+                    "initialized": memory_stats.get("initialized", False),
+                    "by_type": memory_stats.get("by_type", {})
+                }
+            except:
+                pass
         
         # Dodanie stanu z state manager
         if self.state_manager:
