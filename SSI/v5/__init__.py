@@ -13,14 +13,29 @@ Odpowiedzialnosc:
 - Laboratories Integration (integracja laboratoriow) - Sprint 18
 - Collective System (kolektyw agentow) - Sprint 19
 
+FAZA 2 (Aktualna):
+- Core Layer: Information Flow Controller, Message Validation, Context Integrity
+- Strategy Laboratory: Agent Strategy Management
+- Decision Layer: System Decision Making
+- Developer Interface: Developer Communication Channel
+
 Zaleznosci:
 - SSI.v2 (V2 Model Laboratory)
 - SSI.v3 (V3 World Memory System)
 - SSI.v4 (V4 Agent Evolution)
 
-Wersja: 1.0
-Data: 2026-07-31
+Wersja: 2.0.0
+Data: 2026-08-01
 """
+
+# Core Layer (Phase 2)
+from SSI.v5.core import (
+    information_flow_controller,
+    validation,
+    context_integrity,
+    decision_layer,
+    developer_interface
+)
 
 # Input Layer (Sprint 11)
 from SSI.v5.input_layer import (
@@ -28,17 +43,71 @@ from SSI.v5.input_layer import (
     v2_collector
 )
 
-# W przyszlosci:
-# from SSI.v5.memory import knowledge_memory
-# from SSI.v5.llm import llm_core
-# from SSI.v5.classification import classifier
-# from SSI.v5.panels import developer_panel, user_panel
+# Existing modules
+from SSI.v5.agents import (
+    agent_manager,
+    agent_runtime,
+    agent_memory_store,
+    agent_memory_manager
+)
+
+from SSI.v5.teacher import (
+    teacher_engine,
+    teacher_config
+)
+
+from SSI.v5.runtime import (
+    runtime_controller,
+    state_manager,
+    runtime_config,
+    scheduler
+)
+
+from SSI.v5.runtime.llm_queue import (
+    llm_queue_manager,
+    model_context,
+    queue_config
+)
+
+from SSI.v5.memory import (
+    memory_types,
+    model_memory_store
+)
 
 __all__ = [
+    # Core Layer (Phase 2)
+    'information_flow_controller',
+    'validation',
+    'context_integrity',
+    'decision_layer',
+    'developer_interface',
+    
     # Input Layer
     'data_models',
-    'v2_collector'
+    'v2_collector',
+    
+    # Existing modules
+    'agent_manager',
+    'agent_runtime',
+    'agent_memory_store',
+    'agent_memory_manager',
+    
+    'teacher_engine',
+    'teacher_config',
+    
+    'runtime_controller',
+    'state_manager',
+    'runtime_config',
+    'scheduler',
+    
+    'llm_queue_manager',
+    'model_context',
+    'queue_config',
+    
+    'memory_types',
+    'model_memory_store'
 ]
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 __author__ = "MSDI AI / SSI System"
+__phase__ = "2"
