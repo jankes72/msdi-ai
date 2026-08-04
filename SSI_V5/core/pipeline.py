@@ -36,6 +36,23 @@ from agents import AgentRuntimeManager, CollectiveManager
 from agents.trust_manager import TrustManager, DecisionOutcome
 from agents.personality_manager import PersonalityManager
 
+# ETAP 5.3.1: Cycle Controller - Warstwa świadomości cyklu
+from runtime.cycle_controller import (
+    CyclePhase, CycleState, ExecutionContext, CycleController,
+    PhaseDetector, WorldState, create_cycle_controller, PHASE_CONTEXTS
+)
+
+# ETAP 5.3.4: Simulation Clock - Zegar symulacyjny
+# Import opozniony aby uniknac circular import (runtime -> pipeline -> runtime)
+# TYPE_CHECKING import dla type hintow
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from runtime.simulation_clock import SimulationClock
+
+# ETAP 5.3.3: Strategy Persistence Memory
+from memory.strategy_memory import StrategyMemoryManager, StrategyMemoryRecord
+from memory import get_match_result_memory
+
 
 class CycleStatus(Enum):
     """Statusy cyklu w Pipeline"""
@@ -253,7 +270,10 @@ class SSIPipeline:
 
     def __init__(self, mode: PipelineMode = PipelineMode.SINGLE,
                  world_name: str = "SSI_V5_WORLD",
-                 use_agent_runtime_manager: bool = True):
+                 use_agent_runtime_manager: bool = True,
+                 clock = None,
+                 ifc: Optional[Any] = None,
+                 memory_ecosystem: Optional[Any] = None):
         """
         Inicjalizacja Pipeline.
         
@@ -261,10 +281,20 @@ class SSIPipeline:
             mode: Tryb pracy Pipeline
             world_name: Nazwa swiata
             use_agent_runtime_manager: Czy uzywac AgentRuntimeManager zamiast interfejsu
+            clock: Opcjonalny zegar symulacyjny (SimulationClock).
+                   Wykorzystywany w trybie symulacyjnym (ETAP 5.3.4).
+                   Jesli None, uzywa rzeczywistego czasu.
+            ifc: Opcjonalna referencja do IFCRegistry (ETAP 1.2.7.3)
+            memory_ecosystem: Opcjonalna referencja do MemoryEcosystem (ETAP 1.2.7.3)
         """
         self.mode = mode
         self.world_name = world_name
         self.use_agent_runtime_manager = use_agent_runtime_manager
+        self._clock = clock  # Zegar symulacyjny (ETAP 5.3.4)
+        
+        # ETAP 1.2.7.3: Integracja z pamięcią
+        self.ifc = ifc
+        self.memory_ecosystem = memory_ecosystem
         
         # Komponenty systemowe
         self.world_engine: Optional[WorldEngine] = None
@@ -280,6 +310,14 @@ class SSIPipeline:
         self._current_cycle_id: Optional[str] = None
         self._cycle_counter = 0
         self._current_status: CycleStatus = CycleStatus.IDLE
+        
+        # ETAP 1.2.7.3: Zmienne do pamietania wynikow etapow dla integracji pamieci
+        self._last_world_result: Optional[Dict[str, Any]] = None
+        self._last_modeling_result: Optional[Dict[str, Any]] = None
+        self._last_teacher_result: Optional[Dict[str, Any]] = None
+        self._last_agent_result: Optional[Dict[str, Any]] = None
+        self._last_collective_result: Optional[Dict[str, Any]] = None
+        self._last_observation_result: Optional[Dict[str, Any]] = None
         
         # Historia i logi
         self._cycle_history: List[CycleMetadata] = []
@@ -300,6 +338,12 @@ class SSIPipeline:
         
         # Personality Manager - zarządza osobowościami agentów
         self.personality_manager: Optional[PersonalityManager] = None
+        
+        # ETAP 5.3.1: Cycle Controller - Warstwa świadomości cyklu
+        self.cycle_controller: Optional[CycleController] = None
+        
+        # ETAP 5.3.3: Strategy Persistence Memory
+        self.strategy_memory_manager: Optional[StrategyMemoryManager] = None
         
         # Statystyki
         self.statistics: Dict[str, Any] = {
@@ -389,7 +433,17 @@ class SSIPipeline:
             else:
                 initialization_result['components']['personality_manager'] = 'skipped'
             
-            # 9. Połączenie komponentów
+            # 9. Inicjalizacja Cycle Controller (ETAP 5.3.1)
+            self._log_event("CYCLE_CONTROLLER_INITIALIZATION")
+            self._initialize_cycle_controller()
+            initialization_result['components']['cycle_controller'] = 'initialized'
+            
+            # 10. Inicjalizacja Strategy Persistence Memory (ETAP 5.3.3)
+            self._log_event("STRATEGY_MEMORY_INITIALIZATION")
+            self._initialize_strategy_memory()
+            initialization_result['components']['strategy_memory'] = 'initialized'
+            
+            # 11. Połączenie komponentów
             if self.agent_runtime_manager and self.collective_manager:
                 self._log_event("COMPONENT_CONNECTION")
                 self._connect_components()
@@ -534,6 +588,48 @@ class SSIPipeline:
                 'error': str(e)
             }, level="ERROR")
     
+    def _initialize_cycle_controller(self) -> None:
+        """
+        Inicjalizacja Cycle Controller (ETAP 5.3.1).
+        Tworzy kontroler cyklu z domyślną ścieżką stanu i opcjonalnym zegarem symulacyjnym.
+        """
+        try:
+            # Tworzenie CycleController z domyślną ścieżką stanu i zegarem symulacyjnym
+            state_path = os.path.join("runtime", "state", "cycle_state.json")
+            self.cycle_controller = create_cycle_controller(
+                state_path=state_path, 
+                clock=self._clock
+            )
+            self._log_event("CYCLE_CONTROLLER_INITIALIZED", {
+                'state_path': state_path
+            })
+        except Exception as e:
+            self.cycle_controller = None
+            self._log_event("CYCLE_CONTROLLER_INITIALIZATION_ERROR", {
+                'error': str(e)
+            }, level="ERROR")
+    
+    def _initialize_strategy_memory(self) -> None:
+        """
+        Inicjalizacja Strategy Persistence Memory (ETAP 5.3.3).
+        Tworzy menadżer pamięci strategii.
+        """
+        try:
+            # Tworzenie StrategyMemoryManager
+            memory_dir = os.path.join("memory", "strategy_memory")
+            self.strategy_memory_manager = StrategyMemoryManager(
+                memory_dir=memory_dir,
+                strategy_id=None  # Będzie ustawiany dynamicznie
+            )
+            self._log_event("STRATEGY_MEMORY_INITIALIZED", {
+                'memory_dir': memory_dir
+            })
+        except Exception as e:
+            self.strategy_memory_manager = None
+            self._log_event("STRATEGY_MEMORY_INITIALIZATION_ERROR", {
+                'error': str(e)
+            }, level="ERROR")
+    
     def _connect_components(self) -> None:
         """Połączenie komponentów: AgentRuntimeManager <-> CollectiveManager <-> TrustManager <-> PersonalityManager <-> MemoryManager"""
         try:
@@ -562,6 +658,55 @@ class SSIPipeline:
             self._log_event("COMPONENT_CONNECTION_ERROR", {
                 'error': str(e)
             }, level="ERROR")
+    
+    def _create_world_state(self) -> WorldState:
+        """
+        Tworzenie stanu świata na podstawie aktualnego stanu systemu (ETAP 5.3.1).
+        
+        Returns:
+            WorldState z aktualnymi danymi
+        """
+        # Pobieranie stanu z world_engine jeśli dostępny
+        world_is_ready = False
+        world_status = "UNKNOWN"
+        database_status = "UNKNOWN"
+        odds_available = False
+        
+        if self.world_engine:
+            try:
+                world_status = getattr(self.world_engine, 'status', 'UNKNOWN')
+                world_is_ready = world_status == "READY"
+            except Exception:
+                pass
+        
+        # Sprawdzanie stanu bazy danych
+        if self.memory_manager:
+            try:
+                database_status = getattr(self.memory_manager, 'status', 'UNKNOWN')
+                if database_status in ["initialized", "ready", "available"]:
+                    database_status = "READY"
+            except Exception:
+                pass
+        
+        # Sprawdzanie dostępności kursów (Market Observer)
+        try:
+            # Import dynamiczny, aby uniknąć zależności cyklicznych
+            from SSI_V5_FOOTBALL_BETTING_MARKET_OBSERVER import FootballBettingMarketObserver
+            odds_available = True  # Zakładamy dostępność, dopóki nie sprawdzimy inaczej
+        except Exception:
+            odds_available = False
+        
+        # Tworzenie stanu świata
+        return WorldState(
+            new_results_available=False,  # Będzie ustawiany z zewnątrz
+            results_processed=True,  # Domyślnie przetworzone
+            world_status=world_status,
+            world_is_ready=world_is_ready,
+            database_status=database_status,
+            odds_available=odds_available,
+            current_time=datetime.now(),
+            prediction_cycle_completed=False  # Będzie ustawiany w trakcie cyklu
+        )
 
     def run_cycle(self, generator_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Wykonywanie pojedynczego cyklu"""
@@ -591,10 +736,27 @@ class SSIPipeline:
             world_name=self.world_name
         )
         
+        # ETAP 5.3.1: Detekcja fazy i pobranie kontekstu
+        detected_phase = CyclePhase.WAITING
+        execution_context = None
+        
+        if self.cycle_controller:
+            # Tworzenie stanu świata na podstawie aktualnego stanu systemu
+            world_state = self._create_world_state()
+            detected_phase = self.cycle_controller.detect_current_phase(world_state)
+            execution_context = self.cycle_controller.get_execution_context()
+            
+            self._log_event("PHASE_DETECTED", {
+                'phase': detected_phase.value,
+                'context_goal': execution_context.goal if execution_context else None
+            })
+        
         # Logowanie startu cyklu
         self._log_event("CYCLE_START", {
             'cycle_id': cycle_id,
-            'counter': self._cycle_counter
+            'counter': self._cycle_counter,
+            'detected_phase': detected_phase.value,
+            'execution_context': execution_context.to_dict() if execution_context else None
         })
         
         # Masa kanapkowa - start pomiaru czasu
@@ -618,6 +780,8 @@ class SSIPipeline:
             cycle_metadata.add_step("world_generation")
             
             world_result = self._run_world_generation(generator_data)
+            self._last_world_result = world_result  # Zapamietaj dla memory integration (ETAP 1.2.7.3)
+            
             cycle_result['steps']['world_generation'] = {
                 'status': world_result['status'],
                 'duration': world_result.get('duration', 0.0),
@@ -640,6 +804,8 @@ class SSIPipeline:
             cycle_metadata.add_step("modeling")
             
             modeling_result = self._run_modeling(world_result.get('output', {}))
+            self._last_modeling_result = modeling_result  # Zapamietaj dla memory integration (ETAP 1.2.7.3)
+            
             cycle_result['steps']['modeling'] = {
                 'status': modeling_result['status'],
                 'duration': modeling_result.get('duration', 0.0),
@@ -661,6 +827,8 @@ class SSIPipeline:
             cycle_metadata.add_step("teacher_analysis")
             
             teacher_result = self._run_teacher_analysis(modeling_result.get('output', {}))
+            self._last_teacher_result = teacher_result  # Zapamietaj dla memory integration (ETAP 1.2.7.3)
+            
             cycle_result['steps']['teacher_analysis'] = {
                 'status': teacher_result['status'],
                 'duration': teacher_result.get('duration', 0.0),
@@ -682,6 +850,8 @@ class SSIPipeline:
             cycle_metadata.add_step("agent_execution")
             
             agent_result = self._run_agent_execution(teacher_result.get('analysis', {}))
+            self._last_agent_result = agent_result  # Zapamietaj dla memory integration (ETAP 1.2.7.3)
+            
             cycle_result['steps']['agent_execution'] = {
                 'status': agent_result['status'],
                 'duration': agent_result.get('duration', 0.0),
@@ -697,6 +867,12 @@ class SSIPipeline:
                 }, level="ERROR")
                 cycle_result['status'] = 'partial'
             
+            # ETAP 5.3.3: Zapis wyników do Strategy Persistence Memory
+            if agent_result.get('status') == 'success' and self.strategy_memory_manager:
+                self._record_agent_results_to_strategy_memory(
+                    agent_result, cycle_id, execution_context
+                )
+            
             # ========================================
             # 5. COLLECTIVE CONSENSUS
             # ========================================
@@ -704,6 +880,8 @@ class SSIPipeline:
             cycle_metadata.add_step("collective_consensus")
             
             collective_result = self._run_collective_consensus(agent_result.get('decisions', {}))
+            self._last_collective_result = collective_result  # Zapamietaj dla memory integration (ETAP 1.2.7.3)
+            
             cycle_result['steps']['collective_consensus'] = {
                 'status': collective_result['status'],
                 'duration': collective_result.get('duration', 0.0),
@@ -760,6 +938,8 @@ class SSIPipeline:
                 **collective_result.get('output', {})
             }
             observation_result = self._run_observation(observation_input)
+            self._last_observation_result = observation_result  # Zapamietaj dla memory integration (ETAP 1.2.7.3)
+            
             cycle_result['steps']['observation'] = {
                 'status': observation_result['status'],
                 'duration': observation_result.get('duration', 0.0),
@@ -794,6 +974,14 @@ class SSIPipeline:
                     'error': memory_result.get('error', 'Unknown error')
                 }, level="ERROR")
                 cycle_result['status'] = 'partial'
+            elif memory_result['status'] == 'partial':
+                # partial od MemoryIntegrator nie powinien powodowac partial dla calego cyklu
+                # Logujemy jako warning, ale nie zmieniamy statusu cyklu
+                self._log_event("STEP_WARNING", {
+                    'step': 'memory_update',
+                    'message': 'Memory integration completed with warnings',
+                    'warnings': memory_result.get('memory_updates', {}).get('warnings', [])
+                }, level="WARNING")
             
             # ========================================
             # ZAKONCZENIE CYKLU
@@ -1008,7 +1196,7 @@ class SSIPipeline:
             }
 
     def _run_agent_execution(self, teacher_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Wykonywanie agentow"""
+        """Wykonywanie agentow (ETAP 5.3.2: z ExecutionContext)"""
         start_time = time.time()
         
         try:
@@ -1019,14 +1207,31 @@ class SSIPipeline:
                     'error': 'Agent interface not initialized'
                 }
             
-            # Przygotowanie danych cyklu dla agentow
+            # ETAP 5.3.2: Pobranie ExecutionContext z CycleController
+            execution_context = None
+            if self.cycle_controller:
+                execution_context = self.cycle_controller.get_execution_context()
+            
+            # Przygotowanie danych cyklu dla agentow (rozszerzone o ExecutionContext)
             cycle_data = {
                 'cycle_id': self._current_cycle_id,
                 'world_name': self.world_name,
                 'input_data': teacher_data,
                 'timestamp': datetime.now().isoformat(),
-                'pipeline_mode': self.mode.value
+                'pipeline_mode': self.mode.value,
+                # ETAP 5.3.2: Execution Context
+                'execution_context': execution_context.to_dict() if execution_context else None
             }
+            
+            # Logowanie kontekstu wykonania
+            self._log_event("AGENT_EXECUTION_CONTEXT", {
+                'cycle_id': self._current_cycle_id,
+                'phase': execution_context.phase.value if execution_context else 'unknown',
+                'goal': execution_context.goal if execution_context else None,
+                'available_memory': execution_context.available_memory if execution_context else [],
+                'allowed_actions': execution_context.allowed_actions if execution_context else [],
+                'forbidden_actions': execution_context.forbidden_actions if execution_context else []
+            })
             
             # Wykonanie cyklu przez agentow
             result = self.agent_interface.execute_cycle(cycle_data)
@@ -1461,40 +1666,197 @@ class SSIPipeline:
                 'error': str(e)
             }
 
+    def _get_memory_integrator(self) -> Optional[Any]:
+        """
+        Pobranie MemoryIntegrator przez IFC.
+        
+        Zgodnie z kontrakcie architektoniczny ETAP 1.2.7.3:
+        Pipeline NIE powinien posiadać bezpośrednio memory_integrator.
+        MemoryIntegrator jest pobierany przez IFC.
+        
+        Returns:
+            MemoryIntegrator lub None jeśli niedostępny
+        """
+        if self.ifc is None:
+            return None
+        
+        try:
+            return self.ifc.get("memory_integrator")
+        except Exception:
+            return None
+    
+    def _prepare_cycle_data_for_memory(self, observation_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Przygotowanie strukturowanych danych cyklu dla MemoryIntegrator.
+        
+        ETAP 1.2.7.3: Konwersja danych z pipeline do formatu zrozumiałego przez MemoryIntegrator
+        
+        MemoryIntegrator.process_cycle_result() oczekuje:
+        - cycle_id
+        - timestamp
+        - world_data (opcjonalnie)
+        - modeling_data (opcjonalnie)
+        - teacher_data (opcjonalnie)
+        - agent_data (opcjonalnie)
+        - collective_data (opcjonalnie)
+        - experiment_data (opcjonalnie)
+        - model_data (opcjonalnie)
+        
+        Args:
+            observation_data: Dane z obserwacji zawiera decisje agentow i konsensus
+            
+        Returns:
+            Słownik ze strukturowanymi danymi dla MemoryIntegrator
+        """
+        # Budowa struktury danych dla MemoryIntegrator
+        cycle_data = {
+            'cycle_id': self._current_cycle_id or f'cycle_{self._cycle_counter}',
+            'timestamp': datetime.now().isoformat(),
+            'world_name': self.world_name,
+            'pipeline_mode': self.mode.value,
+            'status': 'complete',
+            
+            # Dane z poszczegolnych etapow cyklu (ETAP 1.2.7.3)
+            'world_data': self._last_world_result or {},
+            'modeling_data': self._last_modeling_result or {},
+            'teacher_data': self._last_teacher_result or {},
+            'agent_data': self._last_agent_result or {},
+            'collective_data': self._last_collective_result or {},
+            'observation_data': observation_data,
+            
+            # Dodatkowe metadane
+            'metadata': {
+                'source': 'pipeline_memory_integration',
+                'integration_timestamp': datetime.now().isoformat(),
+                'pipeline_id': str(id(self)),
+                'memory_integration_version': '1.2.7.3'
+            }
+        }
+        
+        # Dodaj informacje o fazie jesli dostepna
+        if self.cycle_controller:
+            try:
+                execution_context = self.cycle_controller.get_execution_context()
+                if execution_context:
+                    cycle_data['phase'] = execution_context.phase.value
+                    cycle_data['context_goal'] = execution_context.goal
+            except Exception:
+                pass
+        
+        return cycle_data
+    
     def _run_memory_update(self, observation_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Aktualizacja pamieci"""
+        """
+        Aktualizacja pamieci systemowej przez MemoryIntegrator.
+        
+        ETAP 1.2.7.3: Integracja z Adaptive Knowledge Ecosystem
+        
+        Przeplyw:
+            observation_data -> MemoryIntegrator -> MemoryEcosystem -> MemoryStores
+        
+        Args:
+            observation_data: Dane z obserwacji (wyniki agentow, konsensus, etc.)
+            
+        Returns:
+            Słownik z wynikiem aktualizacji pamieci
+        """
         start_time = time.time()
         
         try:
-            # Symulacja aktualizacji pamieci
-            if self.memory_layer and self.memory_layer.get('status') == 'available':
-                memory_updates = {
-                    'short_term': 'Updated with observation data',
-                    'long_term': 'Saved patterns and context',
-                    'agentsMemory': 'Agent observations stored',
-                    'update_timestamp': datetime.now().isoformat()
-                }
-                
-                return {
-                    'status': 'success',
-                    'duration': time.time() - start_time,
-                    'memory_updates': memory_updates,
-                    'output': {
-                        **observation_data,
-                        'memory_status': 'updated'
+            # ETAP 1.2.7.3: Pobierz MemoryIntegrator przez IFC
+            memory_integrator = self._get_memory_integrator()
+            
+            if memory_integrator is None:
+                # Fallback: Symulacja aktualizacji pamieci (kompatybilnosc wsteczna)
+                # Akceptujemy wszystkie statusy memory_layer (available, degraded, itp.)
+                if self.memory_layer and self.memory_layer.get('status'):
+                    memory_updates = {
+                        'short_term': 'Updated with observation data',
+                        'long_term': 'Saved patterns and context',
+                        'agentsMemory': 'Agent observations stored',
+                        'update_timestamp': datetime.now().isoformat(),
+                        'mode': 'fallback',
+                        'memory_layer_status': self.memory_layer.get('status', 'unknown')
                     }
-                }
+                    
+                    self._log_event("MEMORY_UPDATE_FALLBACK", {
+                        'mode': 'mock',
+                        'reason': 'MemoryIntegrator not available through IFC',
+                        'memory_layer_status': self.memory_layer.get('status', 'unknown')
+                    }, level="WARNING")
+                    
+                    return {
+                        'status': 'success',
+                        'duration': time.time() - start_time,
+                        'memory_updates': memory_updates,
+                        'output': {
+                            **observation_data,
+                            'memory_status': 'updated'
+                        },
+                        'integration_mode': 'fallback'
+                    }
+                else:
+                    return {
+                        'status': 'error',
+                        'duration': time.time() - start_time,
+                        'error': 'Memory layer not available and MemoryIntegrator not found',
+                        'integration_mode': 'none'
+                    }
+            
+            # ETAP 1.2.7.3: Przygotowanie danych cyklu dla MemoryIntegrator
+            # MemoryIntegrator.process_cycle_result() oczekuje strukturowanych danych
+            cycle_result_data = self._prepare_cycle_data_for_memory(observation_data)
+            
+            # Przetwarzanie przez MemoryIntegrator
+            integration_result = memory_integrator.process_cycle_result(cycle_result_data)
+            
+            # Logowanie integracji
+            if integration_result.success:
+                self._log_event("MEMORY_INTEGRATION_SUCCESS", {
+                    'memory_ids': integration_result.memory_ids,
+                    'record_count': integration_result.record_count,
+                    'duration': integration_result.timestamp
+                })
             else:
-                return {
-                    'status': 'error',
-                    'duration': time.time() - start_time,
-                    'error': 'Memory layer not available'
-                }
+                self._log_event("MEMORY_INTEGRATION_PARTIAL", {
+                    'errors': integration_result.errors,
+                    'warnings': integration_result.warnings,
+                    'memory_ids': integration_result.memory_ids
+                }, level="WARNING")
+            
+            # Zwrot wynikow
+            memory_updates = {
+                'integration_result': integration_result.to_dict(),
+                'memory_ids': integration_result.memory_ids,
+                'record_count': integration_result.record_count,
+                'status': 'success' if integration_result.success else 'partial',
+                'update_timestamp': datetime.now().isoformat(),
+                'integration_mode': 'memory_integrator'
+            }
+            
+            return {
+                'status': 'success' if integration_result.success else 'partial',
+                'duration': time.time() - start_time,
+                'memory_updates': memory_updates,
+                'output': {
+                    **observation_data,
+                    'memory_status': 'persisted',
+                    'memory_ids': integration_result.memory_ids
+                },
+                'integration_mode': 'memory_integrator'
+            }
+            
         except Exception as e:
+            self._log_event("MEMORY_UPDATE_ERROR", {
+                'error': str(e),
+                'type': type(e).__name__
+            }, level="ERROR")
+            
             return {
                 'status': 'error',
                 'duration': time.time() - start_time,
-                'error': str(e)
+                'error': str(e),
+                'integration_mode': 'error'
             }
 
     def run_cycles(self, number: int = 1, delay: float = 0.0) -> Dict[str, Any]:
@@ -1734,6 +2096,87 @@ class SSIPipeline:
         
         with self._lock:
             self._event_log.append(event)
+    
+    # ETAP 5.3.3: STRATEGY PERSISTENCE MEMORY
+    def _record_agent_results_to_strategy_memory(
+        self, agent_result: Dict[str, Any], cycle_id: str, 
+        execution_context: Optional[ExecutionContext]) -> None:
+        """
+        Zapis wyników agentów do Strategy Persistence Memory.
+        
+        Args:
+            agent_result: Wyniki z wykonania agentów
+            cycle_id: ID bieżącego cyklu
+            execution_context: Aktualny kontekst wykonania
+        """
+        if not self.strategy_memory_manager:
+            return
+        
+        try:
+            # Pobranie informacji o fazie
+            phase = execution_context.phase.value if execution_context else 'unknown'
+            
+            # Pobranie decyzji i wyników od agentów
+            decisions = agent_result.get('decisions', {})
+            agent_results = agent_result.get('agent_results', [])
+            
+            # Dla każdego agenta zapisz wyniki jako strategię
+            for agent_id, agent_decisions in decisions.items():
+                if isinstance(agent_decisions, list) and len(agent_decisions) > 0:
+                    # Użyj agent_id jako strategy_id (każdy agent ma swoją strategię)
+                    strategy_id = f"agent_{agent_id}_strategy"
+                    
+                    # Pobranie metryk z decyzji
+                    total_predictions = len(agent_decisions)
+                    successful_predictions = sum(
+                        1 for decision in agent_decisions 
+                        if isinstance(decision, dict) and decision.get('confidence', 0) > 0.5
+                    )
+                    
+                    # Obliczenie accuracy
+                    accuracy = (successful_predictions / total_predictions) if total_predictions > 0 else 0.0
+                    
+                    # Przygotowanie danych wydajności
+                    performance_data = {
+                        'cycle_id': cycle_id,
+                        'accuracy': accuracy,
+                        'profit_factor': 1.0,  # Będzie obliczany później
+                        'success': accuracy > 0.5,
+                        'predictions_count': total_predictions,
+                        'correct_predictions': successful_predictions,
+                        'execution_time': agent_result.get('execution_time', 0.0),
+                        'metrics': {
+                            'confidence_avg': sum(
+                                d.get('confidence', 0) for d in agent_decisions if isinstance(d, dict)
+                            ) / len(agent_decisions) if agent_decisions else 0.0
+                        },
+                        'feedback': None
+                    }
+                    
+                    # Zapis do Strategy Memory
+                    self.strategy_memory_manager.update_performance(strategy_id, performance_data)
+                    
+                    # Ustaw ranking (przykładowo na podstawie accuracy)
+                    ranking_position = int((1.0 - accuracy) * 100)  # Niższa pozycja = lepsza
+                    self.strategy_memory_manager.update_ranking(strategy_id, ranking_position)
+                    
+                    # Oznaczenie do ponownej ewaluacji jeśli confidence niski
+                    if accuracy < 0.6:
+                        self.strategy_memory_manager.schedule_evaluation(strategy_id, required=True)
+                    
+                    self._log_event("STRATEGY_PERFORMANCE_RECORDED", {
+                        'strategy_id': strategy_id,
+                        'cycle_id': cycle_id,
+                        'phase': phase,
+                        'accuracy': accuracy,
+                        'ranking_position': ranking_position
+                    })
+            
+        except Exception as e:
+            self._log_event("STRATEGY_PERSISTENCE_ERROR", {
+                'error': str(e),
+                'cycle_id': cycle_id
+            }, level="ERROR")
 
 
 # Funkcje fabryczne i pomocnicze
