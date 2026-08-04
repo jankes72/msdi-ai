@@ -470,6 +470,56 @@ class StrategyLab:
 
             # Zapisz histone na dysk
             return self._save_history()
+    
+    def save_to_strategy_memory(self, experiment: StrategyExperiment = None, experiment_id: str = None) -> Any:
+        """
+        Zapisz eksperyment do Strategy Memory (ETAP 5.2.6.2).
+        
+        Ta metoda powiazana jest z Strategy Memory Foundation.
+        
+        ZASADA: Tylko zapisuje doświadczenie. Nie wpływa na aktywne strategie.
+        
+        :param experiment: Eksperyment StrategyExperiment do zapisu
+        :param experiment_id: ID eksperymentu (jeśli nie podano experiment)
+        :return: StrategyMemoryRecord lub None
+        """
+        # Sprawdź czy mamy StrategyMemoryManager
+        if not hasattr(self, '_strategy_memory_manager') or self._strategy_memory_manager is None:
+            # Try to get from instance attribute
+            if hasattr(self, 'save_to_strategy_memory') and hasattr(self.save_to_strategy_memory, '__self__'):
+                # This is the bound method, get the manager from closure
+                pass
+            else:
+                print("[LAB] Warning: StrategyMemoryManager not connected. Use connect_to_strategy_memory() first.")
+                return None
+        
+        # Pobierz eksperyment
+        exp_to_save = experiment
+        if exp_to_save is None and experiment_id:
+            exp_to_save = self.get_experiment(experiment_id)
+        elif exp_to_save is None:
+            print("[LAB] Warning: No experiment provided to save to strategy memory")
+            return None
+        
+        if exp_to_save is None:
+            print(f"[LAB] Warning: Experiment {experiment_id} not found")
+            return None
+        
+        # Zapis przez StrategyMemoryManager
+        return self._strategy_memory_manager.save_experiment(exp_to_save)
+    
+    def connect_to_strategy_memory(self, strategy_memory_manager: Any) -> None:
+        """
+        Jest to metoda pomocnicza do laczenia z StrategyMemoryManager.
+        
+        :param strategy_memory_manager: Instancja StrategyMemoryManager
+        """
+        self._strategy_memory_manager = strategy_memory_manager
+        
+        # Ensure the method is bound
+        if hasattr(strategy_memory_manager, 'save_experiment'):
+            # Add a convenience method
+            self.save_to_strategy_memory = strategy_memory_manager.save_experiment
 
     def get_experiment(self, experiment_id: str) -> Optional[StrategyExperiment]:
         """Pobierz eksperyment po ID"""
