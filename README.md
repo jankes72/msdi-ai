@@ -1,5 +1,6 @@
 # MSDI AI - SSI V5 Phase 2
-
+MSDI AI — Market Strategy & Decision Intelligence AI
+SSI V5 Phase 2 — Self-Evolving Intelligence System
 ## General Purpose Decision Intelligence Ecosystem
 
 **Self-Learning Strategic Intelligence System for Universal Data-Driven Decision Making**

@@ -41,7 +41,16 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Obserwacja:
-    """Pojedyncza obserwacja z pamiec_obserwacji.json."""
+    """Pojedyncza obserwacja z pamiec_obserwacji.json.
+    
+    Nowy format V5 zawiera dodatkowe pola dla Decision Layer:
+    - gole_dom_pred: Przewidywana liczba goli drużyny domowej
+    - gole_wyj_pred: Przewidywana liczba goli drużyny wyjazdowej  
+    - zmiana_predykcji: Zmiana predykcji (stara/nowa)
+    - zmiana_pewnosci: Zmiana pewności (stara/nowa)
+    
+    Kompatybilny wstecz ze starym formatem.
+    """
     data: str
     model: str
     id_meczu: str
@@ -52,6 +61,9 @@ class Obserwacja:
     trafienie: bool
     pierwsza_obserwacja: bool = False
     zmiana_pewnosci: Optional[Dict[str, float]] = None
+    gole_dom_pred: int = 0
+    gole_wyj_pred: int = 0
+    zmiana_predykcji: Optional[Dict[str, str]] = None
     
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

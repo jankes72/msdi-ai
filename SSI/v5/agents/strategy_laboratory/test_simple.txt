@@ -1,0 +1,114 @@
+Prosty test do uruchomienia recznie:
+
+cd D:\sts\aplikacjaTyperBetAi\SSI\v5\agents\strategy_laboratory
+python -c """
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+print('Testowanie Strategy Laboratory...')
+
+# Test 1: Importy
+try:
+    from strategy_models import Strategy, StrategyType, create_strategy
+    print('[OK] Strategy models zaladowane')
+except Exception as e:
+    print(f'[ERROR] Strategy models: {e}')
+    sys.exit(1)
+
+# Test 2: Tworzenie strategii
+try:
+    strategy = create_strategy(
+        agent_owner='test_agent',
+        name='Test Strategy',
+        strategy_type=StrategyType.DECISION
+    )
+    print(f'[OK] Strategia utworzona: {strategy.name}')
+except Exception as e:
+    print(f'[ERROR] Tworzenie strategii: {e}')
+    sys.exit(1)
+
+# Test 3: Strategy Manager
+try:
+    from strategy_manager import StrategyManager, StrategyManagerConfig
+    manager = StrategyManager(StrategyManagerConfig(enable_validation=False))
+    strategy2 = manager.create_strategy(
+        agent_owner='test_agent_2',
+        name='Manager Test Strategy'
+    )
+    print(f'[OK] Strategy Manager dziala: {strategy2.name}')
+except Exception as e:
+    print(f'[ERROR] Strategy Manager: {e}')
+    sys.exit(1)
+
+# Test 4: Experiment Manager
+try:
+    from experiment_models import ExperimentType
+    from experiment_manager import ExperimentManager, ExperimentManagerConfig
+    exp_manager = ExperimentManager(ExperimentManagerConfig(enable_validation=False))
+    experiment = exp_manager.create_experiment(
+        agent_owner='test_agent_3',
+        name='Test Experiment',
+        strategy_id=strategy.strategy_id
+    )
+    print(f'[OK] Experiment Manager dziala: {experiment.name}')
+except Exception as e:
+    print(f'[ERROR] Experiment Manager: {e}')
+    sys.exit(1)
+
+# Test 5: Ranking Engine
+try:
+    from strategy_ranking_engine import StrategyRankingEngine
+    engine = StrategyRankingEngine()
+    score = engine.calculate_strategy_score(strategy)
+    print(f'[OK] Ranking Engine dziala: score={score:.3f}')
+except Exception as e:
+    print(f'[ERROR] Ranking Engine: {e}')
+    sys.exit(1)
+
+# Test 6: Memory Integrator
+try:
+    from memory_integrator import StrategyMemoryIntegrator
+    from strategy_models import StrategyResult
+    integrator = StrategyMemoryIntegrator()
+    result = StrategyResult(
+        strategy_id=strategy.strategy_id,
+        success=True,
+        score=0.8,
+        confidence=0.9
+    )
+    entries = integrator.update_from_strategy_result(strategy, result)
+    print(f'[OK] Memory Integrator dziala: {len(entries)} entries')
+except Exception as e:
+    print(f'[ERROR] Memory Integrator: {e}')
+    sys.exit(1)
+
+# Test 7: Agent Laboratory
+try:
+    from strategy_memory import AgentStrategyLaboratory
+    lab = AgentStrategyLaboratory(agent_id='test_lab_agent')
+    strategy_id = lab.add_strategy(strategy)
+    print(f'[OK] Agent Laboratory dziala: {lab.total_strategies} strategies')
+except Exception as e:
+    print(f'[ERROR] Agent Laboratory: {e}')
+    sys.exit(1)
+
+# Test 8: IFC Integrator
+try:
+    from ifc_integrator import StrategyIFCIntegrator, IFCIntegratorConfig
+    config = IFCIntegratorConfig(use_ifc=False)
+    integrator = StrategyIFCIntegrator(config)
+    message = integrator.create_strategy_message(
+        agent_id='test_agent',
+        strategy_data={'name': 'Test'}
+    )
+    print(f'[OK] IFC Integrator dziala: {message.message_id}')
+except Exception as e:
+    print(f'[ERROR] IFC Integrator: {e}')
+    sys.exit(1)
+
+print()
+print('='*50)
+print('SUKCES: Wszystkie moduly Strategy Laboratory dzialaja!')
+print('='*50)
+""

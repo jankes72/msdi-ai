@@ -1,5 +1,6 @@
 # MSDI AI - SSI V5 Phase 2
-
+MSDI AI — Market Strategy & Decision Intelligence AI
+SSI V5 Phase 2 — Self-Evolving Intelligence System
 ## Samouczacy System Inteligencji Analitycznej
 
 **Framework Inteligencji Analitycznej do Podejmowania Decyzji oparty na Dana**
