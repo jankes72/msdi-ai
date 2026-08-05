@@ -41,6 +41,12 @@ from .scheduler import (
     create_scheduler, CycleConfig
 )
 
+# ETAP 5.3: Cycle Controller - Warstwa swiadomosci cyklu
+from .cycle_controller import (
+    CyclePhase, CycleState, ExecutionContext, CycleController,
+    PhaseDetector, create_cycle_controller
+)
+
 # FAZA 1 Modules - LLM Queue Manager
 from .llm_queue import (
     LLMQueueManager, LLMQueueSettings, LLMQueueConfig,
@@ -114,6 +120,9 @@ class SSIRuntimeController:
         self.v4_collector: Optional[Any] = None
         self.external_collector: Optional[Any] = None
         
+        # ETAP 5.3: Cycle Controller - Warstwa swiadomosci cyklu
+        self.cycle_controller: Optional[CycleController] = None
+        
         # Logging
         self.logger = logging.getLogger(self.__class__.__name__)
         
@@ -146,6 +155,9 @@ class SSIRuntimeController:
             
             # FAZA 1: Inicjalizacja Teacher Engine
             self._initialize_teacher_engine()
+            
+            # ETAP 5.3: Inicjalizacja Cycle Controller
+            self._initialize_cycle_controller()
             
             # Inicjalizacja schedulera
             self.scheduler = create_scheduler(self.config, self.state_manager)
@@ -316,6 +328,25 @@ class SSIRuntimeController:
             self.logger.error(f"Error initializing Teacher Engine: {e}")
             raise
     
+    # ==================== ETAP 5.3: CYCLE CONTROLLER ====================
+    
+    def _initialize_cycle_controller(self) -> None:
+        """Inicjalizacja Cycle Controller - warstwa swiadomosci cyklu."""
+        try:
+            # Utworzenie kontrolera cyklu
+            cycle_state_path = os.path.join(self._runtime_path, "cycle_state.json")
+            self.cycle_controller = create_cycle_controller(
+                state_path=cycle_state_path,
+                logger=self.logger
+            )
+            
+            self.logger.info("Cycle Controller initialized (ETAP 5.3) - Cycle Awareness Layer")
+            
+        except Exception as e:
+            self.logger.error(f"Error initializing Cycle Controller: {e}")
+            # To nie jest krytyczny blad - system moze dzialac dalej
+            self.logger.warning("Cycle Controller will not be available, but system can continue")
+    
     # ==================== FAZA 1: INTEGRACJA KOMPONENTOW ====================
     
     def _integrate_faza1_components(self) -> None:
@@ -364,6 +395,18 @@ class SSIRuntimeController:
             self.logger.info("Starting SSI V5 cycle...")
             self._running = True
             self._shutdown_requested = False
+            
+            # ETAP 5.3: Detekcja fazy cyklu na podstawie stanu swiata
+            if self.cycle_controller:
+                world_state = self._get_world_state_for_cycle_detection()
+                current_phase = self.cycle_controller.detect_current_phase(world_state)
+                execution_context = self.cycle_controller.get_execution_context()
+                self.logger.info(
+                    f"Cycle Controller: Phase={current_phase.value}, "
+                    f"Goal={execution_context.goal}"
+                )
+            else:
+                self.logger.warning("Cycle Controller not available - running without phase awareness")
             
             # FAZA 1: Start LLM Queue Manager
             if self.llm_queue_manager:
@@ -846,6 +889,11 @@ class SSIRuntimeController:
             if self.model_memory_store:
                 self.model_memory_store.save_all()
                 self.logger.info("Model Memory saved (FAZA 1)")
+            
+            # ETAP 5.3: Zapis stanu cyklu
+            if self.cycle_controller:
+                self.cycle_controller.save_cycle_state()
+                self.logger.info("Cycle state saved (ETAP 5.3)")
                 
             # Zatrzymanie schedulera
             if self.scheduler:
@@ -941,6 +989,21 @@ class SSIRuntimeController:
             except:
                 pass
         
+        # ETAP 5.3: Dodaj status Cycle Controller
+        if self.cycle_controller:
+            try:
+                cycle_state = self.cycle_controller.get_cycle_state()
+                if cycle_state:
+                    status["cycle_controller"] = {
+                        "current_phase": cycle_state.current_phase.value if cycle_state.current_phase else "unknown",
+                        "cycle_id": cycle_state.cycle_id,
+                        "completed_phases": cycle_state.completed_phases,
+                        "started_at": cycle_state.started_at,
+                        "last_update": cycle_state.last_update
+                    }
+            except:
+                pass
+        
         # Dodanie stanu z state manager
         if self.state_manager:
             runtime_state = self.state_manager.get_runtime_state()
@@ -984,7 +1047,50 @@ class SSIRuntimeController:
             print(f"  Total Iterations: {rs.get('total_iterations', 0)}")
             print(f"  Start Time: {rs['start_time']}")
             print(f"  Last Save: {rs['last_save']}")
+        
+        if 'cycle_controller' in status:
+            cc = status['cycle_controller']
+            print()
+            print("Cycle Controller (ETAP 5.3):")
+            print(f"  Current Phase: {cc['current_phase']}")
+            print(f"  Cycle ID: {cc['cycle_id']}")
+            print(f"  Completed Phases: {cc['completed_phases']}")
         print("=" * 50)
+    
+    def _get_world_state_for_cycle_detection(self) -> Dict[str, Any]:
+        """
+        Pobranie stanu swiata do detekcji fazy cyklu.
+        
+        Zwraca slownik ze stanem swiata, bazy danych, wynikow i kursow.
+        Uzywane przez Cycle Controller do okre patient fazy.
+        
+        Returns:
+            Dict: Stan swiata dla detekcji fazy
+        """
+        world_state = {
+            'is_ready': False, 'status': 'UNKNOWN', 'timestamp': None,
+            'database_status': 'UNKNOWN', 'database_version': None, 'database_timestamp': None,
+            'new_results_available': False, 'results_processed': False,
+            'odds_available': False, 'odds_timestamp': None,
+            'prediction_cycle_completed': False
+        }
+        
+        if self.v2_collector:
+            try:
+                v2_data = self.v2_collector.get_latest_data()
+                if v2_data:
+                    world_state.update({
+                        'is_ready': v2_data.get('is_ready', False),
+                        'status': v2_data.get('status', 'UNKNOWN'),
+                        'timestamp': v2_data.get('timestamp')
+                    })
+            except: pass
+        
+        if self.state_manager:
+            runtime_state = self.state_manager.get_runtime_state()
+            world_state['prediction_cycle_completed'] = runtime_state.metadata.get('prediction_cycle_completed', False)
+        
+        return world_state
 
 
 def create_runtime_controller(config: Optional[RuntimeConfig] = None) -> SSIRuntimeController:

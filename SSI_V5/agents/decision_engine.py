@@ -201,50 +201,75 @@ class DecisionEngine:
                 'timestamp': datetime.now().isoformat()
             }
     
-    def receive_contract(self, contract: Any) -> None:
+    def receive_contract(self, contract: Any, memory_context: Optional[Any] = None) -> None:
         """
-        Odbiór kontraktu od Pipeline/Teacher Layer.
+        Odbiór kontraktu od Pipeline/Teacher Layer (ETAP 0 KROK 3).
         
         Args:
             contract: Kontrakt danych (AgentContract)
+            memory_context: Rozszerzony kontekst pamięci (EnhancedDecisionContext)
         """
         if hasattr(contract, 'to_dict'):
             self._contract_data = contract.to_dict()
         else:
             self._contract_data = copy.deepcopy(contract)
         
-        # Utworzenie kontekstu z kontraktu
-        self.current_context = DecisionContext(
-            world_data=self._contract_data.get('world_data', {}),
-            model_info=self._contract_data.get('model_evaluation', {}),
-            weights=self._contract_data.get('current_weights', {}),
-            recommendations=self._contract_data.get('recommendations', []),
-            timestamp=datetime.now()
-        )
-        
-        # Zapisanie w pamięci
-        if self.memory:
-            context_record = {
-                'type': 'decision_context',
-                'contract_id': self._contract_data.get('contract_id', ''),
-                'cycle_id': self._contract_data.get('cycle_id', ''),
-                'world_data_keys': list(self.current_context.world_data.keys()),
-                'model_info_keys': list(self.current_context.model_info.keys()),
-                'weights_keys': list(self.current_context.weights.keys()),
-                'recommendations_count': len(self.current_context.recommendations),
-                'timestamp': datetime.now().isoformat()
-            }
-            self.memory.store_in_short_term(f"decision_context_{datetime.now().isoformat()}", context_record)
+        # UTWORZENIE ROZSZERZONEGO KONTEKSTU
+        if memory_context is not None:
+            # Użycie EnhancedDecisionContext jeśli dostępny
+            self.current_context = memory_context
+            
+            # Zapisanie informacji o użyciu rozszerzonego kontekstu
+            if self.memory:
+                memory_usage_record = {
+                    'type': 'memory_enhanced_decision_context',
+                    'contract_id': self._contract_data.get('contract_id', ''),
+                    'cycle_id': self._contract_data.get('cycle_id', ''),
+                    'memory_context_available': True,
+                    'has_historical_data': memory_context.has_historical_data() if hasattr(memory_context, 'has_historical_data') else False,
+                    'has_previous_decisions': memory_context.has_previous_decisions() if hasattr(memory_context, 'has_previous_decisions') else False,
+                    'has_similar_cases': memory_context.has_similar_cases() if hasattr(memory_context, 'has_similar_cases') else False,
+                    'timestamp': datetime.now().isoformat()
+                }
+                self.memory.store_in_short_term(f"memory_context_usage_{datetime.now().isoformat()}", memory_usage_record)
+        else:
+            # Fallback: standardowy DecisionContext (bez pamięci historycznej)
+            self.current_context = DecisionContext(
+                world_data=self._contract_data.get('world_data', {}),
+                model_info=self._contract_data.get('model_evaluation', {}),
+                weights=self._contract_data.get('current_weights', {}),
+                recommendations=self._contract_data.get('recommendations', []),
+                timestamp=datetime.now()
+            )
+            
+            # Zapisanie informacji o braku kontekstu pamięci
+            if self.memory:
+                context_record = {
+                    'type': 'decision_context',
+                    'contract_id': self._contract_data.get('contract_id', ''),
+                    'cycle_id': self._contract_data.get('cycle_id', ''),
+                    'world_data_keys': list(self.current_context.world_data.keys()),
+                    'model_info_keys': list(self.current_context.model_info.keys()),
+                    'weights_keys': list(self.current_context.weights.keys()),
+                    'recommendations_count': len(self.current_context.recommendations),
+                    'memory_context_available': False,
+                    'timestamp': datetime.now().isoformat()
+                }
+                self.memory.store_in_short_term(f"decision_context_{datetime.now().isoformat()}", context_record)
     
     def make_decision(self, **kwargs) -> Dict[str, Any]:
         """
-        Podejmowanie decyzji na podstawie dostępnego kontekstu.
+        Podejmowanie decyzji na podstawie dostępnego kontekstu (ETAP 0 KROK 3).
         
         Args:
             **kwargs: Dodatkowe parametry kontekstu
             
         Returns:
             Decyzja w formie słownika
+            
+        Uwaga: 
+        Jeśli current_context jest EnhancedDecisionContext, metoda wykorzystuje
+        dane historyczne do podjęcia lepszej decyzji.
         """
         # Aktualizacja kontekstu z dodatkowych parametrów
         if kwargs:
@@ -253,14 +278,127 @@ class DecisionEngine:
         if not self.current_context:
             self.current_context = DecisionContext(timestamp=datetime.now())
         
-        # Obliczenie pewności
-        confidence = self.current_context.calculate_confidence()
+        # Obliczenie pewności z uwzględnieniem kontekstu pamięci
+        confidence = self._calculate_confidence_with_memory()
         
-        # Wybór typu decyzji na podstawie kontekstu
-        decision_type = self._select_decision_type()
+        # Wybór typu decyzji na podstawie kontekstu (z uwzględnieniem historii)
+        decision_type = self._select_decision_type_with_memory()
         
-        # Generowanie decyzji
+        # Generowanie decyzji (z uwzględnieniem wzorców historycznych)
+        decision_data = self._generate_decision_with_memory(decision_type, confidence)
+        
+        return decision_data
+    
+    def _calculate_confidence_with_memory(self) -> float:
+        """
+        Obliczenie pewności z uwzględnieniem kontekstu pamięci (ETAP 0 KROK 3).
+        
+        Jeśli dostępne są historyczne dane, używa ich do dostosowania pewności.
+        """
+        # Bazowa pewność z DecisionContext
+        base_confidence = self.current_context.calculate_confidence()
+        
+        # Sprawdzenie czy mamy EnhancedDecisionContext z pamięcią
+        if hasattr(self.current_context, 'memory_context') and self.current_context.memory_context:
+            memory_context = self.current_context.memory_context
+            
+            # Zwiększenie pewności jeśli są dostępne podobne przypadki z sukcesem
+            success_cases = [
+                case for case in memory_context.similar_cases 
+                if case.get('outcome') in ['success', 'positive', 'win']
+            ]
+            
+            # Zwiększenie pewności na podstawie historycznych sukcesów
+            if len(success_cases) > 0:
+                success_rate = min(1.0, len(success_cases) * 0.1)
+                base_confidence = min(1.0, base_confidence + (success_rate * 0.2))
+            
+            # Zmniejszenie pewności jeśli są dostępne przypadki porażek
+            failure_cases = [
+                case for case in memory_context.similar_cases 
+                if case.get('outcome') in ['failure', 'negative', 'lose']
+            ]
+            
+            if len(failure_cases) > 0:
+                failure_rate = min(1.0, len(failure_cases) * 0.1)
+                base_confidence = max(0.0, base_confidence - (failure_rate * 0.2))
+        
+        return base_confidence
+    
+    def _select_decision_type_with_memory(self) -> 'DecisionType':
+        """
+        Wybór typu decyzji z uwzględnieniem pamięci historycznej (ETAP 0 KROK 3).
+        """
+        # Bazowa logika wyboru
+        base_decision = self._select_decision_type()
+        
+        # Sprawdzenie czy mamy EnhancedDecisionContext z pamięcią
+        if hasattr(self.current_context, 'memory_context') and self.current_context.memory_context:
+            memory_context = self.current_context.memory_context
+            
+            # Analiza poprzednich decyzji w podobnych sytuacjach
+            previous_successful = [
+                dec for dec in memory_context.previous_decisions
+                if dec.get('outcome') in ['success', 'positive', 'win']
+            ]
+            
+            # Jeśli były udane decyzje w przeszłości, preferuj ten sam typ
+            if previous_successful:
+                # Najczęstszy typ udanych decyzji
+                decision_types = [dec.get('decision_type') for dec in previous_successful]
+                if decision_types:
+                    most_common = max(set(decision_types), key=decision_types.count)
+                    try:
+                        return DecisionType(most_common)
+                    except ValueError:
+                        # Jeśli typ nie jest ważny, użyj bazowy
+                        pass
+        
+        return base_decision
+    
+    def _generate_decision_with_memory(self, decision_type: 'DecisionType', confidence: float) -> Dict[str, Any]:
+        """
+        Generowanie decyzji z uwzględnieniem wzorców historycznych (ETAP 0 KROK 3).
+        """
+        # Bazowa generacja decyzji
         decision_data = self._generate_decision(decision_type, confidence)
+        
+        # Sprawdzenie czy mamy EnhancedDecisionContext z pamięcią
+        if hasattr(self.current_context, 'memory_context') and self.current_context.memory_context:
+            memory_context = self.current_context.memory_context
+            
+            # Dodanie informacji o wzorcach historycznych do kontekstu decyzji
+            if 'context' not in decision_data:
+                decision_data['context'] = {}
+            
+            decision_data['context']['historical_patterns'] = {
+                'similar_cases_count': len(memory_context.similar_cases),
+                'previous_decisions_count': len(memory_context.previous_decisions),
+                'confidence_adjustment': round(confidence - 0.5, 3)  # Różnica od bazowej
+            }
+            
+            # Jeśli są dostępne parametry z poprzednich udanych decyzji, spróbuj je zastosować
+            if decision_type == DecisionType.MODEL_SELECTION and memory_context.previous_decisions:
+                successful_model_decisions = [
+                    dec for dec in memory_context.previous_decisions
+                    if dec.get('decision_type') == 'model_selection' and 
+                    dec.get('outcome') in ['success', 'positive', 'win']
+                ]
+                
+                if successful_model_decisions and 'parameters' in decision_data:
+                    # Uśrednienie parametrów z udanych decyzji
+                    model_names = [
+                        dec.get('parameters', {}).get('model_name') 
+                        for dec in successful_model_decisions 
+                        if dec.get('parameters', {}).get('model_name')
+                    ]
+                    
+                    if model_names:
+                        most_successful_model = max(set(model_names), key=model_names.count)
+                        decision_data['parameters']['model_name'] = most_successful_model
+                        decision_data['context']['learning_from_history'] = True
+        
+        return decision_data
         
         # Utworzenie obiektu decyzji
         decision = Decision(

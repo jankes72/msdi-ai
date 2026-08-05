@@ -105,7 +105,7 @@
 - **Pola opcjonalne:** pierwsza_obserwacja, zmiana_pewnosci
 - **Brak pól:** gole_dom_pred, gole_wyj_pred, zmiana_predykcji
 
-### Struktura Pliku (Z `generatorDataBaseTrendAnalisAll1.py`)
+### Struktura Pliku (Z `SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py`)
 ```json
 {
   "match_name_1": [
@@ -568,7 +568,7 @@ class Obserwacja:
     zmiana_pewnosci: Optional[Dict[str, float]] = None
 ```
 
-#### 2. `generatorDataBaseTrendAnalisAll1.py` ⚠️ **WYMAGA MIGRACJI**
+#### 2. `SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py` ⚠️ **WYMAGA MIGRACJI**
 
 **Lokalizacje:**
 - **Linia 11495-11537:** Tworzenie obserwacji (brak nowych pól)
@@ -609,7 +609,7 @@ class Obserwacja:
 | Moduł | Status | Działanie Wymagane | Priorytet |
 |--------|--------|-------------------|----------|
 | `warstwa5_generator/kolektor_doswiadczen.py` | ⚠️ NIEZGODNY | Aktualizacja struktury Obserwacja | **WYSOKI** |
-| `generatorDataBaseTrendAnalisAll1.py` | ⚠️ NIEZGODNY | Dodanie nowych pól | **WYSOKI** |
+| `SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py` | ⚠️ NIEZGODNY | Dodanie nowych pól | **WYSOKI** |
 | `SSI/v5/memory/` | ✅ ZGODNY | Brak zmian | NISKI |
 | `SSI/v5/teacher/` | ✅ ZGODNY | Brak zmian | NISKI |
 | `SSI/v5/agents/` | ✅ ZGODNY | Brak zmian | NISKI |
@@ -695,7 +695,7 @@ def migrate_observation(old_format: Dict[str, List[Dict]]) -> List[Dict]:
    - Dodać nowe pola do klasy `Obserwacja`
    - Zapewnić odporność parsera na stary format
 
-2. **Zaktualizować `generatorDataBaseTrendAnalisAll1.py`**
+2. **Zaktualizować `SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py`**
    - Dodać wsparcie dla nowych pól
    - Zapewnić kompatybilność wstecz
 
@@ -728,7 +728,7 @@ def migrate_observation(old_format: Dict[str, List[Dict]]) -> List[Dict]:
 **Zalecenie:** Wprowadzić nowy format z następującymi krokami:
 
 1. ✅ **Zakończyć audyt** (wykonane)
-2. 🔄 **Zaktualizować parsery** (`kolektor_doswiadczen.py`, `generatorDataBaseTrendAnalisAll1.py`)
+2. 🔄 **Zaktualizować parsery** (`kolektor_doswiadczen.py`, `SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py`)
 3. 🔄 **Stworzyć skrypt migracji** danych historycznych
 4. ✅ **Zatwierdzić raport** (oczekuje na akceptację)
 5. 🔄 **Przystąpić do ETAPU 2.4 DECISION LAYER**

@@ -13,6 +13,7 @@
 # - laboratory/: Experimental laboratories
 # - collective/: Collective intelligence
 # - engine/: Main system engine
+# - feedback/: Feedback Learning Loop (ETAP 5.2.8)
 # - tests/: Unit and integration tests
 # - docs/: Documentation
 

@@ -89,6 +89,14 @@ from .trust_manager import (
     TrustManager
 )
 
+# ETAP 0 KROK 2: Decision Memory Context
+from .decision_memory_context import (
+    DecisionMemoryContextError,
+    MemoryContext,
+    EnhancedDecisionContext,
+    DecisionMemoryContextBuilder
+)
+
 # Eksportowane elementy
 __all__ = [
     # Agent Runtime
@@ -151,7 +159,13 @@ __all__ = [
     'Reputation',
     'TrustUpdate',
     'AgentTrustState',
-    'TrustManager'
+    'TrustManager',
+    
+    # ETAP 0 KROK 2: Decision Memory Context
+    'DecisionMemoryContextError',
+    'MemoryContext',
+    'EnhancedDecisionContext',
+    'DecisionMemoryContextBuilder'
 ]
 
 # Sześć instancji agentów (Agent_01 do Agent_06) będzie tworzonych w AgentRuntimeManager

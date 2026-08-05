@@ -22,8 +22,12 @@ import uuid
 import copy
 import time
 import json
+import logging
 from queue import Queue
 from threading import Lock
+
+# Konfiguracja logowania
+logger = logging.getLogger(__name__)
 
 
 class AgentStatus(Enum):
@@ -230,6 +234,8 @@ class AgentContract:
     recommendations: List[Dict[str, Any]] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
     timestamp: datetime = field(default_factory=datetime.now)
+    # ETAP 5.3.2: Execution Context
+    execution_context: Optional[Dict[str, Any]] = None
     
     def to_dict(self) -> Dict[str, Any]:
         """Konwersja do słownika"""
@@ -243,7 +249,9 @@ class AgentContract:
             'world_memory': copy.deepcopy(self.world_memory),
             'recommendations': copy.deepcopy(self.recommendations),
             'metadata': copy.deepcopy(self.metadata),
-            'timestamp': self.timestamp.isoformat()
+            'timestamp': self.timestamp.isoformat(),
+            # ETAP 5.3.2: Execution Context
+            'execution_context': copy.deepcopy(self.execution_context) if self.execution_context else None
         }
     
     @classmethod
@@ -329,6 +337,15 @@ class AgentRuntime:
         self.trust_manager = None
         self.agent_trust_state = None
         
+        # ETAP 0 KROK 1 & 2: Memory Integration
+        # Referencja do MemoryIntegrationLayer (z AgentRuntimeManager)
+        self.memory_integration_layer = None
+        # Referencja do DecisionMemoryContextBuilder
+        self.memory_context_builder = None
+        
+        # Flagi integracji z pamięcią
+        self._memory_integration_enabled = False
+        
         # Komunikacja
         self._communication_lock = Lock()
         self._contracts_received: List[AgentContract] = []
@@ -392,6 +409,29 @@ class AgentRuntime:
             self.agent_trust_state = trust_manager.initialize_agent_trust(
                 self.agent_id, self.name
             )
+    
+    def set_memory_integration_reference(self, memory_integration_layer: Any = None) -> None:
+        """
+        Ustawienie referencji do MemoryIntegrationLayer (ETAP 0 KROK 3).
+        
+        Args:
+            memory_integration_layer: Instancja MemoryIntegrationLayer
+        """
+        self.memory_integration_layer = memory_integration_layer
+        
+        if memory_integration_layer:
+            # Utwórz DecisionMemoryContextBuilder
+            from .decision_memory_context import DecisionMemoryContextBuilder
+            self.memory_context_builder = DecisionMemoryContextBuilder(memory_integration_layer)
+            self._memory_integration_enabled = True
+            logger.info(f"Memory integration enabled for agent {self.agent_id}")
+        else:
+            self._memory_integration_enabled = False
+            logger.warning(f"Memory integration disabled for agent {self.agent_id}")
+    
+    def is_memory_integration_enabled(self) -> bool:
+        """Czy integracja z pamięcią jest włączona?"""
+        return self._memory_integration_enabled and self.memory_integration_layer is not None
     
     def initialize(self) -> Dict[str, Any]:
         """
@@ -488,7 +528,9 @@ class AgentRuntime:
                         recommendations=contract_data.get('recommendations', []),
                         metadata=contract_data.get('metadata', {}),
                         timestamp=datetime.fromisoformat(contract_data.get('timestamp')) 
-                            if contract_data.get('timestamp') else datetime.now()
+                            if contract_data.get('timestamp') else datetime.now(),
+                        # ETAP 5.3.2: Execution Context
+                        execution_context=contract_data.get('execution_context')
                     )
                 else:
                     contract = contract_data
@@ -523,8 +565,13 @@ class AgentRuntime:
                 }
     
     def _process_contract(self, contract: AgentContract) -> None:
-        """Przetworzenie odebranego kontraktu"""
+        """Przetworzenie odebranego kontraktu (ETAP 5.3.2: z ExecutionContext)"""
         try:
+            # ETAP 5.3.2: Zapisanie ExecutionContext w pamięci agenta
+            if contract.execution_context:
+                self.memory.store_in_short_term("execution_context", contract.execution_context)
+                self._apply_execution_context(contract.execution_context)
+            
             # Przekazanie do Observation Manager
             self.observation_manager.receive_world_data(
                 world_data=contract.world_data,
@@ -532,22 +579,31 @@ class AgentRuntime:
                 world_name=contract.world_name
             )
             
-            # Przekazanie do Strategy Manager
+            # Przekazanie do Strategy Manager (rozszerzone o ExecutionContext)
             self.strategy_manager.receive_context(
                 model_evaluation=contract.model_evaluation,
                 current_weights=contract.current_weights,
                 world_memory=contract.world_memory,
-                recommendations=contract.recommendations
+                recommendations=contract.recommendations,
+                execution_context=contract.execution_context,  # ETAP 5.3.2
+                world_data=contract.world_data  # ETAP 0: Kompatybilność world_data/world_state
             )
             
-            # Przekazanie do Decision Engine
-            self.decision_engine.receive_contract(contract)
+            # ETAP 0 KROK 3: Pobranie kontekstu pamieci PRZED podjeciem decyzji
+            memory_context = self._retrieve_memory_context_for_contract(contract)
+            enhanced_context = self._enhance_decision_context(contract, memory_context)
+            
+            # Przekazanie do Decision Engine (z rozszerzonym kontekstem)
+            self.decision_engine.receive_contract(contract, memory_context=enhanced_context)
             
             # Generowanie obserwacji
             self._generate_observations(contract)
             
             # Wykonanie decyzji
             decision = self._execute_decision(contract)
+            
+            # ETAP 0 KROK 3: Zapis decyzji do pamieci kolektywnej
+            self._record_decision_to_collective_memory(decision, contract)
             
             # Zapisanie rezultatów
             self._record_decision_and_observation(decision, contract)
@@ -579,6 +635,58 @@ class AgentRuntime:
         
         return observation
     
+    def _apply_execution_context(self, execution_context: Dict[str, Any]) -> None:
+        """
+        Zastosowanie ExecutionContext do agenta (ETAP 5.3.2).
+        
+        Args:
+            execution_context: Kontekst wykonania z CycleController
+        """
+        # Zapisanie informacji o fazie
+        phase = execution_context.get('phase', 'unknown')
+        goal = execution_context.get('goal', '')
+        allowed_actions = execution_context.get('allowed_actions', [])
+        forbidden_actions = execution_context.get('forbidden_actions', [])
+        available_memory = execution_context.get('available_memory', [])
+        priority = execution_context.get('priority', 'medium')
+        
+        # Zapisanie w pamięci agenta
+        self.memory.add_observation({
+            'type': 'execution_context',
+            'phase': phase,
+            'goal': goal,
+            'allowed_actions': allowed_actions,
+            'forbidden_actions': forbidden_actions,
+            'available_memory': available_memory,
+            'priority': priority,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Zaktualizowanie stanu agenta na podstawie fazy
+        if phase == 'prediction_window':
+            self.state.update_status(AgentStatus.PROCESSING)
+            self._log_event("PHASE_PREDICTION_WINDOW", {
+                'goal': goal,
+                'available_memory': available_memory
+            })
+        elif phase == 'result_analysis':
+            self.state.update_status(AgentStatus.PROCESSING)
+            self._log_event("PHASE_RESULT_ANALYSIS", {
+                'goal': goal,
+                'allowed_actions': allowed_actions
+            })
+        elif phase in ['strategy_evolution', 'optimization']:
+            self.state.update_status(AgentStatus.PROCESSING)
+            self._log_event("PHASE_EVOLUTION_OPTIMIZATION", {
+                'goal': goal,
+                'parameters': execution_context.get('parameters', {})
+            })
+        elif phase == 'waiting':
+            self.state.update_status(AgentStatus.WAITING)
+            self._log_event("PHASE_WAITING", {
+                'goal': goal
+            })
+    
     def _execute_decision(self, contract: AgentContract) -> Dict[str, Any]:
         """Wykonywanie decyzji na podstawie kontraktu"""
         # Wykorzystanie Decision Engine
@@ -590,6 +698,251 @@ class AgentRuntime:
         )
         
         return decision
+    
+    # ============================================================================
+    # ETAP 0 KROK 3: Memory Integration Methods
+    # ============================================================================
+    
+    def _retrieve_memory_context_for_contract(
+        self, 
+        contract: AgentContract
+    ) -> Any:
+        """
+        Pobranie kontekstu pamięci dla danego kontraktu (ETAP 0 KROK 3).
+        
+        Args:
+            contract: Kontrakt agenta
+            
+        Returns:
+            MemoryContext lub None jeśli integracja jest wyłączona
+        """
+        if not self.is_memory_integration_enabled():
+            logger.warning(f"Memory integration disabled for agent {self.agent_id}")
+            return None
+        
+        try:
+            # Prepared current situation from contract
+            current_situation = self._extract_situation_from_contract(contract)
+            
+            # Pobranie kontekstu pamięci
+            memory_context = self.memory_context_builder.build_memory_context(
+                agent_id=self.agent_id,
+                current_situation=current_situation,
+                top_k=5,
+                min_similarity=0.6
+            )
+            
+            logger.debug(f"Retrieved memory context for agent {self.agent_id}: {memory_context.memory_stats}")
+            return memory_context
+            
+        except Exception as e:
+            logger.error(f"Error retrieving memory context for agent {self.agent_id}: {str(e)}")
+            return None
+    
+    def _extract_situation_from_contract(self, contract: AgentContract) -> Dict[str, Any]:
+        """
+        Wyekstrahowanie bieżącej sytuacji z kontraktu dla celów wyszukiwania w pamięci.
+        
+        Args:
+            contract: Kontrakt agenta
+            
+        Returns:
+            Słownik opisujący bieżącą sytuację
+        """
+        situation = {
+            'world_name': contract.world_name,
+            'cycle_id': contract.cycle_id,
+            'timestamp': contract.timestamp.isoformat() if hasattr(contract.timestamp, 'isoformat') else str(contract.timestamp),
+            'world_data_keys': list(contract.world_data.keys()) if contract.world_data else [],
+            'model_evaluation_keys': list(contract.model_evaluation.keys()) if contract.model_evaluation else [],
+            'weights_keys': list(contract.current_weights.keys()) if contract.current_weights else [],
+            'recommendations_count': len(contract.recommendations) if contract.recommendations else 0,
+            'world_memory_keys': list(contract.world_memory.keys()) if contract.world_memory else [],
+        }
+        
+        # Dodanie ExecutionContext jeśli dostępny
+        if contract.execution_context:
+            situation['phase'] = contract.execution_context.get('phase', 'unknown')
+            situation['goal'] = contract.execution_context.get('goal', '')
+            situation['allowed_actions'] = contract.execution_context.get('allowed_actions', [])
+            situation['forbidden_actions'] = contract.execution_context.get('forbidden_actions', [])
+        
+        return situation
+    
+    def _enhance_decision_context(
+        self, 
+        contract: AgentContract, 
+        memory_context: Any = None
+    ) -> Any:
+        """
+        Rozszerzenie DecisionContext o kontekst pamięci (ETAP 0 KROK 3).
+        
+        Args:
+            contract: Kontrakt agenta
+            memory_context: MemoryContext (jeśli None, zostanie zbudowany)
+            
+        Returns:
+            EnhancedDecisionContext z rozszerzonym kontekstem
+        """
+        if not self.is_memory_integration_enabled():
+            logger.warning(f"Memory integration disabled, returning original context")
+            from .decision_engine import DecisionContext
+            return DecisionContext(
+                world_data=contract.world_data,
+                model_info=contract.model_evaluation,
+                weights=contract.current_weights,
+                recommendations=contract.recommendations
+            )
+        
+        try:
+            # Jeśli MemoryContext nie został podany, zbuduj go
+            if memory_context is None:
+                memory_context = self._retrieve_memory_context_for_contract(contract)
+            
+            # Utworzenie oryginalnego DecisionContext
+            from .decision_engine import DecisionContext
+            original_context = DecisionContext(
+                world_data=contract.world_data,
+                model_info=contract.model_evaluation,
+                weights=contract.current_weights,
+                recommendations=contract.recommendations,
+                risk_factors=contract.world_data.get('risk_factors', {}),
+                constraints=contract.world_data.get('constraints', {})
+            )
+            
+            # Rozszerzenie kontekstu
+            enhanced_context = self.memory_context_builder.enhance_decision_context(
+                original_context=original_context,
+                memory_context=memory_context
+            )
+            
+            logger.debug(f"Enhanced decision context for agent {self.agent_id}")
+            return enhanced_context
+            
+        except Exception as e:
+            logger.error(f"Error enhancing decision context for agent {self.agent_id}: {str(e)}")
+            from .decision_engine import DecisionContext
+            return DecisionContext(
+                world_data=contract.world_data,
+                model_info=contract.model_evaluation,
+                weights=contract.current_weights,
+                recommendations=contract.recommendations
+            )
+    
+    def _record_decision_to_collective_memory(
+        self, 
+        decision: Dict[str, Any], 
+        contract: AgentContract
+    ) -> Dict[str, Any]:
+        """
+        Zapis decyzji do pamięci kolektywnej (ETAP 0 KROK 3).
+        
+        Args:
+            decision: Decyzja do zapisu
+            contract: Powiązany kontrakt
+            
+        Returns:
+            Status operacji
+        """
+        if not self.is_memory_integration_enabled():
+            logger.warning(f"Memory integration disabled, skipping collective memory storage")
+            return {'status': 'skipped', 'reason': 'memory_integration_disabled'}
+        
+        try:
+            # Przygotowanie danych pozostałej do zapisu
+            decision_data = {
+                'decision_id': decision.get('decision_id', f"dec_{uuid.uuid4().hex[:12]}"),
+                'decision_type': decision.get('decision_type', 'unknown'),
+                'agent_id': self.agent_id,
+                'parameters': decision.get('parameters', {}),
+                'context': decision.get('context', {}),
+                'confidence': decision.get('confidence', 0.0),
+                'priority': decision.get('priority', 0),
+                'status': decision.get('status', 'executed'),
+                'timestamp': decision.get('created_at', datetime.now().isoformat())
+            }
+            
+            # Dodanie danych z kontraktu
+            contract_data = {
+                'contract_id': contract.contract_id,
+                'cycle_id': contract.cycle_id,
+                'world_name': contract.world_name,
+                'world_data_keys': list(contract.world_data.keys()) if contract.world_data else [],
+                'execution_context': contract.execution_context if contract.execution_context else {}
+            }
+            
+            # Zapis decyzji do pamięci kolektywnej
+            result = self.memory_integration_layer.store_decision(
+                agent_id=self.agent_id,
+                decision_data=decision_data,
+                contract=contract_data
+            )
+            
+            logger.debug(f"Stored decision to collective memory: {result.get('decision_id')}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error storing decision to collective memory: {str(e)}")
+            return {'status': 'error', 'error': str(e)}
+    
+    def _store_experience_to_collective_memory(
+        self,
+        experience_data: Dict[str, Any],
+        decision: Dict[str, Any],
+        contract: AgentContract
+    ) -> Dict[str, Any]:
+        """
+        Zapis doświadczenia do pamięci kolektywnej (ETAP 0 KROK 3).
+        
+        Args:
+            experience_data: Dane doświadczenia
+            decision: Powiązana decyzja
+            contract: Powiązany kontrakt
+            
+        Returns:
+            Status operacji
+        """
+        if not self.is_memory_integration_enabled():
+            logger.warning(f"Memory integration disabled, skipping collective memory storage")
+            return {'status': 'skipped', 'reason': 'memory_integration_disabled'}
+        
+        try:
+            # Przygotowanie doświadczenia do zapisu
+            experience = {
+                'experience_id': f"exp_{uuid.uuid4().hex[:12]}",
+                'type': 'decision_experience',
+                'agent_id': self.agent_id,
+                'action': decision.get('decision_type', 'unknown'),
+                'result': experience_data.get('result', {}),
+                'outcome': experience_data.get('outcome', 'unknown'),
+                'confidence': decision.get('confidence', 0.0),
+                'context': {
+                    'contract_id': contract.contract_id,
+                    'cycle_id': contract.cycle_id,
+                    'world_name': contract.world_name,
+                    'decision_id': decision.get('decision_id', 'unknown')
+                },
+                'metadata': {
+                    'timestamp': datetime.now().isoformat(),
+                    'decision_type': decision.get('decision_type', 'unknown'),
+                    'agent_id': self.agent_id
+                }
+            }
+            
+            # Zapis doświadczenia do pamięci kolektywnej
+            result = self.memory_integration_layer.store_experience(
+                agent_id=self.agent_id,
+                experience_data=experience,
+                experience_type='decision_experience',
+                context={'contract_id': contract.contract_id}
+            )
+            
+            logger.debug(f"Stored experience to collective memory: {result.get('experience_id')}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error storing experience to collective memory: {str(e)}")
+            return {'status': 'error', 'error': str(e)}
     
     def _record_decision_and_observation(self, decision: Dict[str, Any], contract: AgentContract) -> None:
         """Zapisanie decyzji i obserwacji"""
@@ -697,15 +1050,18 @@ class AgentRuntime:
     
     def execute_cycle(self, cycle_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Wykonywanie pojedynczego cyklu (dla integracji z Pipeline).
+        Wykonywanie pojedynczego cyklu (dla integracji z Pipeline - ETAP 5.3.2).
         
         Args:
-            cycle_data: Dane cyklu z Pipeline
+            cycle_data: Dane cyklu z Pipeline (zawiera execution_context)
             
         Returns:
             Wynik wykonania cyklu
         """
         cycle_id = cycle_data.get('cycle_id', f"cycle_{uuid.uuid4().hex[:8]}")
+        
+        # ETAP 5.3.2: Pobranie ExecutionContext z danych cyklu
+        execution_context = cycle_data.get('execution_context')
         
         try:
             # Tworzenie kontraktu z danych cyklu
@@ -718,7 +1074,9 @@ class AgentRuntime:
                     model_evaluation=cycle_data['contract_data'].get('models', {}),
                     current_weights=cycle_data['contract_data'].get('weights', {}),
                     world_memory=cycle_data['contract_data'].get('observations', {}),
-                    metadata={'source': 'pipeline', 'pipeline_reference': self.pipeline_reference}
+                    metadata={'source': 'pipeline', 'pipeline_reference': self.pipeline_reference},
+                    # ETAP 5.3.2: Przekazanie ExecutionContext
+                    execution_context=execution_context
                 )
             else:
                 contract = AgentContract(
@@ -726,7 +1084,9 @@ class AgentRuntime:
                     cycle_id=cycle_id,
                     world_name=cycle_data.get('world_name', self.state.name),
                     world_data=cycle_data.get('world_data', {}),
-                    metadata={'source': 'pipeline', 'pipeline_reference': self.pipeline_reference}
+                    metadata={'source': 'pipeline', 'pipeline_reference': self.pipeline_reference},
+                    # ETAP 5.3.2: Przekazanie ExecutionContext
+                    execution_context=execution_context
                 )
             
             # Odbiór i przetworzenie kontraktu
@@ -1050,6 +1410,9 @@ class AgentRuntimeManager:
         # Pamięć kolektywna - referencja do CollectiveManager (opcjonalna)
         self.collective_manager = None
         
+        # ETAP 0 KROK 1: Memory Integration Layer
+        self.memory_integration_layer = None
+        
         # Referencja do MemoryManager z Teacher Layer (opcjonalna)
         self.memory_manager = None
         
@@ -1119,6 +1482,9 @@ class AgentRuntimeManager:
                 'agents_failed': initialization_result['agents_failed']
             })
             
+            # ETAP 0 KROK 3: Setup memory integration for all agents
+            self._setup_memory_integration()
+            
             return initialization_result
             
         except Exception as e:
@@ -1128,6 +1494,56 @@ class AgentRuntimeManager:
                 'error': str(e)
             }, level="ERROR")
             return initialization_result
+    
+    def _setup_memory_integration(self) -> None:
+        """
+        Setup memory integration for all agents (ETAP 0 KROK 3).
+        
+        Tworzy MemoryIntegrationLayer i przypisuje go do wszystkich agentów.
+        """
+        if self.collective_manager is None:
+            logger.warning("collective_manager not set, memory integration will be disabled")
+            return
+        
+        try:
+            # Import tutaj, aby unikać zależności cyklicznych
+            from ..memory.memory_integration import MemoryIntegrationLayer
+            
+            # Tworzenie warstwy integracji pamięci
+            self.memory_integration_layer = MemoryIntegrationLayer(self.collective_manager)
+            
+            # Inicjalizacja warstwy
+            init_result = self.memory_integration_layer.initialize()
+            if init_result.get('status') == 'success':
+                logger.info("MemoryIntegrationLayer initialized for AgentRuntimeManager")
+                
+                # Przypisanie warstwy do wszystkich agentów
+                for agent_id, agent in self.agents.items():
+                    agent.set_memory_integration_reference(self.memory_integration_layer)
+                    logger.debug(f"Memory integration enabled for agent {agent_id}")
+            else:
+                logger.error(f"Failed to initialize MemoryIntegrationLayer: {init_result.get('error', 'Unknown')}")
+                
+        except Exception as e:
+            logger.error(f"Error setting up memory integration: {str(e)}")
+    
+    def set_collective_manager_reference(self, collective_manager: Any) -> None:
+        """
+        Ustawienie referencji do CollectiveManager (ETAP 0 KROK 3).
+        
+        Args:
+            collective_manager: Instancja CollectiveMemoryManager
+        """
+        self.collective_manager = collective_manager
+        logger.info("CollectiveMemoryManager reference set for AgentRuntimeManager")
+        
+        # Jeśli agenci są już zainicjalizowani, uaktualnij integrację pamięci
+        if self._initialized and self.agents:
+            self._setup_memory_integration()
+            # Ponowne przypisanie referencji do agentów
+            for agent_id, agent in self.agents.items():
+                if self.memory_integration_layer:
+                    agent.set_memory_integration_reference(self.memory_integration_layer)
     
     def execute_cycle(self, cycle_data: Dict[str, Any]) -> Dict[str, Any]:
         """

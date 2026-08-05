@@ -13,6 +13,8 @@ SSI/v5/runtime/
 ├── scheduler.py           # Scheduler zadan
 ├── state_manager.py       # Manager stanow
 ├── runtime_config.py      # Konfiguracja
+├── cycle_controller.py   # Kontroler cyklu (ETAP 5.3)
+├── simulation_clock.py   # Zegar symulacyjny (ETAP 5.3.4)
 └── __init__.py            # Inicjalizacja modułu
 """
 
@@ -60,6 +62,22 @@ from .runtime_config import (
     create_default_collector_config
 )
 
+# Cycle Controller (ETAP 5.3)
+from .cycle_controller import (
+    CyclePhase,
+    CycleState,
+    ExecutionContext,
+    CycleController,
+    PhaseDetector,
+    create_cycle_controller
+)
+
+# Simulation Clock (ETAP 5.3.4)
+from .simulation_clock import (
+    SimulationClock,
+    create_simulation_clock
+)
+
 __all__ = [
     # Runtime Controller
     'SSIRuntimeController',
@@ -95,7 +113,19 @@ __all__ = [
     'RuntimeConfigManager',
     'create_default_runtime_config',
     'create_default_memory_config',
-    'create_default_collector_config'
+    'create_default_collector_config',
+    
+    # Cycle Controller (ETAP 5.3)
+    'CyclePhase',
+    'CycleState',
+    'ExecutionContext',
+    'CycleController',
+    'PhaseDetector',
+    'create_cycle_controller',
+    
+    # Simulation Clock (ETAP 5.3.4)
+    'SimulationClock',
+    'create_simulation_clock'
 ]
 
 __version__ = "1.0.0"

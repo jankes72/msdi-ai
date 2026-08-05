@@ -99,6 +99,8 @@ class StrategyContext:
     risk_level: float = 0.5
     uncertainty: float = 0.0
     timestamp: datetime = field(default_factory=datetime.now)
+    # ETAP 5.3.2: Execution Context
+    execution_context: Optional[Dict[str, Any]] = None
     
     def calculate_risk_level(self) -> float:
         """Obliczenie poziomu ryzyka na podstawie kontekstu"""
@@ -277,23 +279,29 @@ class StrategyManager:
     def receive_context(self, model_evaluation: Optional[Dict[str, Any]] = None,
                        current_weights: Optional[Dict[str, Any]] = None,
                        world_memory: Optional[Dict[str, Any]] = None,
-                       recommendations: Optional[List[Dict[str, Any]]] = None) -> None:
+                       recommendations: Optional[List[Dict[str, Any]]] = None,
+                       execution_context: Optional[Dict[str, Any]] = None,
+                       world_data: Optional[Dict[str, Any]] = None) -> None:
         """
-        Odbiór kontekstu od Teacher Layer.
+        Odbiór kontekstu od Teacher Layer (ETAP 5.3.2: z ExecutionContext).
         
         Args:
             model_evaluation: Ocena modeli
             current_weights: Aktualne wagi
             world_memory: Pamięć świata
             recommendations: Rekomendacje
+            execution_context: Kontekst wykonania z CycleController
+            world_data: Dane świata (kompatybilność z world_state)
         """
         self.current_context = StrategyContext(
-            world_state={},
+            world_state=world_data or {},
             model_evaluation=model_evaluation or {},
             current_weights=current_weights or {},
             world_memory=world_memory or {},
             recommendations=recommendations or [],
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
+            # ETAP 5.3.2: Execution Context
+            execution_context=execution_context
         )
         
         # Obliczenie poziomu ryzyka

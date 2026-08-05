@@ -85,6 +85,14 @@ class StrategyMemoryRecord:
     REPUTATION_HISTORY: List[Dict[str, Any]] = field(default_factory=list)
     EVOLUTION_HISTORY: List[Dict[str, Any]] = field(default_factory=list)
     
+    # ===== ETAP 5.3.3: STRATEGY PERSISTENCE MEMORY =====
+    # Trwała pamięć strategii między cyklami
+    ranking_position: int = 0                      # Pozycja w rankingu strategii
+    confidence_score: float = 0.0                 # Poziom pewności (0.0-1.0)
+    tested_variants: List[str] = field(default_factory=list)  # Lista testowanych wariantów
+    next_evaluation: bool = True                  # Czy wymaga ponownej ewaluacji
+    status: str = "ACTIVE"                        # Status: ACTIVE, INACTIVE, ARCHIVED
+    
     # ===== METODY =====
     
     def add_experiment(self, experiment_data: Dict[str, Any]) -> None:
@@ -211,6 +219,81 @@ class StrategyMemoryRecord:
         )
         return best_exp
     
+    # ===== ETAP 5.3.3: STRATEGY PERSISTENCE MEMORY - Nowe metody =====
+    
+    def update_ranking(self, position: int) -> None:
+        """
+        Aktualizacja pozycji rankingowej strategii.
+        
+        Args:
+            position: Nowa pozycja w rankingu (0 = najlepsza)
+        """
+        self.ranking_position = position
+        self.last_updated = datetime.now()
+    
+    def add_tested_variant(self, variant_id: str) -> None:
+        """
+        Dodanie testowanego wariantu strategii.
+        
+        Args:
+            variant_id: Identyfikator wariantu
+        """
+        if variant_id not in self.tested_variants:
+            self.tested_variants.append(variant_id)
+            self.last_updated = datetime.now()
+    
+    def update_performance(self, cycle_data: Dict[str, Any]) -> None:
+        """
+        Aktualizacja historii wyników strategii.
+        
+        Args:
+            cycle_data: Dane z cyklu (accuracy, profit_factor, itp.)
+        """
+        performance_record = {
+            'cycle_id': cycle_data.get('cycle_id', 'unknown'),
+            'timestamp': datetime.now().isoformat(),
+            'accuracy': cycle_data.get('accuracy', 0.0),
+            'profit_factor': cycle_data.get('profit_factor', 1.0),
+            'success': cycle_data.get('success', False),
+            'predictions_count': cycle_data.get('predictions_count', 0),
+            'correct_predictions': cycle_data.get('correct_predictions', 0),
+            'execution_time': cycle_data.get('execution_time', 0.0),
+            'metrics': cycle_data.get('metrics', {}),
+            'feedback': cycle_data.get('feedback', None)
+        }
+        
+        self.RESULT_HISTORY.append(performance_record)
+        
+        # Aktualizacja confidence_score na podstawie wyników
+        if len(self.RESULT_HISTORY) > 0:
+            successful_runs = sum(1 for r in self.RESULT_HISTORY if r.get('success', False))
+            total_runs = len(self.RESULT_HISTORY)
+            self.confidence_score = (successful_runs / total_runs) if total_runs > 0 else 0.0
+        
+        self.last_updated = datetime.now()
+    
+    def schedule_evaluation(self, required: bool = True) -> None:
+        """
+        Ustaw flagę dla ponownej ewaluacji.
+        
+        Args:
+            required: Czy strategia wymaga ponownej ewaluacji
+        """
+        self.next_evaluation = required
+        self.last_updated = datetime.now()
+    
+    def set_status(self, status: str) -> None:
+        """
+        Ustaw status strategii.
+        
+        Args:
+            status: Nowy status (ACTIVE, INACTIVE, ARCHIVED)
+        """
+        valid_statuses = ['ACTIVE', 'INACTIVE', 'ARCHIVED']
+        if status in valid_statuses:
+            self.status = status
+            self.last_updated = datetime.now()
+    
     def to_dict(self) -> Dict[str, Any]:
         """Konwersja do słownika."""
         result = {
@@ -229,6 +312,12 @@ class StrategyMemoryRecord:
             'RESULT_HISTORY': copy.deepcopy(self.RESULT_HISTORY),
             'REPUTATION_HISTORY': copy.deepcopy(self.REPUTATION_HISTORY),
             'EVOLUTION_HISTORY': copy.deepcopy(self.EVOLUTION_HISTORY),
+            # ===== ETAP 5.3.3: STRATEGY PERSISTENCE MEMORY =====
+            'ranking_position': self.ranking_position,
+            'confidence_score': self.confidence_score,
+            'tested_variants': copy.deepcopy(self.tested_variants),
+            'next_evaluation': self.next_evaluation,
+            'status': self.status,
         }
         return result
     
@@ -260,6 +349,12 @@ class StrategyMemoryRecord:
             RESULT_HISTORY=data.get('RESULT_HISTORY', []),
             REPUTATION_HISTORY=data.get('REPUTATION_HISTORY', []),
             EVOLUTION_HISTORY=data.get('EVOLUTION_HISTORY', []),
+            # ===== ETAP 5.3.3: STRATEGY PERSISTENCE MEMORY =====
+            ranking_position=data.get('ranking_position', 0),
+            confidence_score=data.get('confidence_score', 0.0),
+            tested_variants=data.get('tested_variants', []),
+            next_evaluation=data.get('next_evaluation', True),
+            status=data.get('status', 'ACTIVE'),
         )
     
     def to_json(self, indent: int = 4) -> str:
@@ -506,6 +601,139 @@ class StrategyMemoryManager:
             record.update_version(new_version, change_description)
             self._save_record(record)
             return True
+    
+    # ===== ETAP 5.3.3: STRATEGY PERSISTENCE MEMORY - Nowe metody =====
+    
+    def update_ranking(self, strategy_id: str, position: int) -> bool:
+        """
+        Aktualizacja pozycji rankingowej strategii.
+        
+        Args:
+            strategy_id: ID strategii
+            position: Nowa pozycja w rankingu
+            
+        Returns:
+            True jeśli aktualizacja się powiodła
+        """
+        record = self.get_strategy_memory(strategy_id)
+        if record is None:
+            return False
+        
+        with self._lock:
+            record.update_ranking(position)
+            self._save_record(record)
+            return True
+    
+    def add_tested_variant(self, strategy_id: str, variant_id: str) -> bool:
+        """
+        Dodanie testowanego wariantu do strategii.
+        
+        Args:
+            strategy_id: ID strategii
+            variant_id: ID wariantu
+            
+        Returns:
+            True jeśli dodanie się powiodło
+        """
+        record = self.get_strategy_memory(strategy_id)
+        if record is None:
+            return False
+        
+        with self._lock:
+            record.add_tested_variant(variant_id)
+            self._save_record(record)
+            return True
+    
+    def update_performance(self, strategy_id: str, cycle_data: Dict[str, Any]) -> bool:
+        """
+        Aktualizacja wyniku wydajności strategii.
+        
+        Args:
+            strategy_id: ID strategii
+            cycle_data: Dane z cyklu wydajności
+            
+        Returns:
+            True jeśli aktualizacja się powiodła
+        """
+        record = self.get_strategy_memory(strategy_id)
+        if record is None:
+            return False
+        
+        with self._lock:
+            record.update_performance(cycle_data)
+            self._save_record(record)
+            return True
+    
+    def schedule_evaluation(self, strategy_id: str, required: bool = True) -> bool:
+        """
+        Zaznaczenie strategii do ponownej ewaluacji.
+        
+        Args:
+            strategy_id: ID strategii
+            required: Czy ewaluacja jest wymagana
+            
+        Returns:
+            True jeśli operacja się powiodła
+        """
+        record = self.get_strategy_memory(strategy_id)
+        if record is None:
+            return False
+        
+        with self._lock:
+            record.schedule_evaluation(required)
+            self._save_record(record)
+            return True
+    
+    def set_status(self, strategy_id: str, status: str) -> bool:
+        """
+        Ustawienie statusu strategii.
+        
+        Args:
+            strategy_id: ID strategii
+            status: Nowy status (ACTIVE, INACTIVE, ARCHIVED)
+            
+        Returns:
+            True jeśli operacja się powiodła
+        """
+        record = self.get_strategy_memory(strategy_id)
+        if record is None:
+            return False
+        
+        with self._lock:
+            record.set_status(status)
+            self._save_record(record)
+            return True
+    
+    def get_ranked_strategies(self, limit: int = 10) -> List[StrategyMemoryRecord]:
+        """
+        Pobranie strategii posortowanych po pozycji rankingowej.
+        
+        Args:
+            limit: Maksymalna liczba strategii
+            
+        Returns:
+            Lista posortowanych strategii
+        """
+        with self._lock:
+            active_strategies = [
+                record for record in self._memory_register.values()
+                if record.status == "ACTIVE"
+            ]
+            sorted_strategies = sorted(active_strategies, key=lambda s: s.ranking_position)
+            return sorted_strategies[:limit]
+    
+    def get_strategies_requireing_evaluation(self) -> List[StrategyMemoryRecord]:
+        """
+        Pobranie strategii wymagających ponownej ewaluacji.
+        
+        Returns:
+            Lista strategii do ewaluacji
+        """
+        with self._lock:
+            return [
+                record for record in self._memory_register.values()
+                if record.next_evaluation and record.status == "ACTIVE"
+            ]
     
     def save_to_json(self, file_path: str = None) -> bool:
         """

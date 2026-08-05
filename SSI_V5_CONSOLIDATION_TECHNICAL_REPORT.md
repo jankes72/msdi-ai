@@ -23,13 +23,13 @@
 ### Liczba linii pliku wynikowego:
 | Plik | Liczba linii | Rozmiar (bajty) | Wzrost |
 |------|--------------|-----------------|---------|
-| SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py | **89,900** | ~1.0MB | +0.04% |
+| SSI_V5_SPORTS_WORLD_MODEL_GENERATOR.py | **89,900** | ~1.0MB | +0.04% | dodatkowo jeszcze jako kolejne kody start_ssi_test.py i ZACHASZOWANY start_ssi.py
 
 **Uwaga:** Wzrost liczby linii wynika z:
 - Separatorów między częściami (6 linii na separator × 4 separatory = 24 linie)
 - Nagłówka głównego (11 linii)
 - Nowych linii między sekcjami
-- Dokładne mapowanie: 89,862 (suma źródeł) + 28 (separatory) + 10 (nagłówki) ≈ 89,900 linii
+- Dokładne mapowanie: 89,862 (suma źródeł) + 28 (separatory) + 10 (nagłówki) ≈ 89,900 linii a od tego niejsca 2 kody uruchaniające cały system jeden testowy na 10 pentli 2 docelowy na 5 godzin
 
 ### Liczba importów (szacunkowa):
 - czesc1.py: ~10 unikalne importy

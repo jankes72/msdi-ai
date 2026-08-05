@@ -178,6 +178,9 @@ class ObservationManager:
         self.processed_count = 0
         self.analyzed_count = 0
         
+        # Inicjalizacja typów obserwacji
+        self._initialize_observation_types()
+        
         # Konfiguracja
         self.max_observations_in_memory = 1000
         self.batch_size = 10

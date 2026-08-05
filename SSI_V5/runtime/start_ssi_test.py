@@ -25,13 +25,8 @@ ssi_path = str(Path(__file__).parent.parent)
 if ssi_path not in sys.path:
     sys.path.insert(0, ssi_path)
 
-from SSI_V5.core.pipeline import (
-    SSIPipeline, 
-    PipelineMode, 
-    CycleStatus,
-    CycleMetadata,
-    PipelineStatus
-)
+# Opóźnione importy, aby uniknąć circular imports (pipeline -> runtime -> start_ssi_test -> pipeline)
+# from SSI_V5.core.pipeline import SSIPipeline, PipelineMode, CycleStatus, CycleMetadata, PipelineStatus
 from SSI_V5.core.world_engine import WorldEngine, WorldEngineOutput
 
 
@@ -41,7 +36,7 @@ from SSI_V5.core.world_engine import WorldEngine, WorldEngineOutput
 
 CONFIG_TEST = {
     "mode": "TEST",
-    "pipeline_mode": PipelineMode.TEST,
+    "pipeline_mode": "TEST",  # Changed from PipelineMode.TEST to string to avoid circular import
     "num_cycles": 10,
     "delay_between_cycles": 0.05,  # 50ms opoznienie miedzy cyklami
     "world_name": "SSI_V5_TEST_WORLD",
@@ -184,13 +179,21 @@ class TestLauncher:
         print("SSI V5 TEST LAUNCHER - ETAP 5.2.4 FAZA 3.3.3")
         print("=" * 80)
         
+        # Opóźnione importy, aby uniknąć circular imports
+        from SSI_V5.core.pipeline import SSIPipeline, PipelineMode
+        
         self.start_time = datetime.now()
         self.file_manager = FileManager(config=self.config)
         
         # Inicjalizacja Pipeline z AgentRuntimeManager (aktualna architektura V5)
         try:
+            # Konwersja string mode do PipelineMode enum
+            mode = self.config["pipeline_mode"]
+            if isinstance(mode, str):
+                mode = PipelineMode[mode.upper()]
+            
             self.pipeline = SSIPipeline(
-                mode=self.config["pipeline_mode"],
+                mode=mode,
                 world_name=self.config["world_name"],
                 use_agent_runtime_manager=True  # Użyj AgentRuntimeManager, nie interfejsu
             )

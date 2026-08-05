@@ -1,0 +1,3 @@
+Źródła wiedzy znajdują się w:
+
+DOKUMENTACJA/MIGRATION/GENERATOR_SOURCES/

@@ -1,8 +1,12 @@
 # SSI V5 Runtime Module
-# ETAP 5.2.4 FAZA 3.3.3 - Runtime + Life Cycle Integration
+# ETAP 5.3.1 - Runtime + Life Cycle Integration + Cycle Controller
 
 from .start_ssi_test import TestLauncher, FileManager
 from .start_ssi import ProductionLauncher, RecoveryManager, TimeManager, StateManager
+from .cycle_controller import (
+    CyclePhase, CycleState, ExecutionContext, CycleController,
+    PhaseDetector, WorldState, create_cycle_controller, PHASE_CONTEXTS
+)
 
 __all__ = [
     'TestLauncher',
@@ -10,5 +14,14 @@ __all__ = [
     'ProductionLauncher',
     'RecoveryManager',
     'TimeManager',
-    'StateManager'
+    'StateManager',
+    # ETAP 5.3.1: Cycle Controller
+    'CyclePhase',
+    'CycleState',
+    'ExecutionContext',
+    'CycleController',
+    'PhaseDetector',
+    'WorldState',
+    'create_cycle_controller',
+    'PHASE_CONTEXTS'
 ]

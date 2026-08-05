@@ -25,6 +25,13 @@ from .pipeline import (
     run_test_pipeline
 )
 
+from .feedback import (
+    FeedbackEvent,
+    FeedbackEvents,
+    FeedbackHooks,
+    CycleFeedbackController
+)
+
 __all__ = [
     # World Engine
     'WorldEngineOutput',
@@ -41,5 +48,11 @@ __all__ = [
     'PipelineStatus',
     'AgentRuntimeInterface',
     'create_pipeline',
-    'run_test_pipeline'
+    'run_test_pipeline',
+
+    # Feedback Foundation
+    'FeedbackEvent',
+    'FeedbackEvents',
+    'FeedbackHooks',
+    'CycleFeedbackController'
 ]

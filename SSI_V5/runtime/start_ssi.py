@@ -26,14 +26,15 @@ ssi_path = str(Path(__file__).parent.parent)
 if ssi_path not in sys.path:
     sys.path.insert(0, ssi_path)
 
-from SSI_V5.core.pipeline import (
-    SSIPipeline, 
-    PipelineMode, 
-    CycleStatus,
-    CycleMetadata,
-    PipelineStatus
-)
 from SSI_V5.core.world_engine import WorldEngine, WorldEngineOutput
+
+# ETAP 1.2.7.3: Memory Integration
+from SSI_V5.ifc.registry import IFCRegistry
+from SSI_V5.memory.ecosystem import MemoryEcosystem
+from SSI_V5.memory.integrator import MemoryIntegrator
+
+# Opóźnione importy, aby uniknąć circular imports (pipeline -> runtime -> start_ssi -> pipeline)
+# from SSI_V5.core.pipeline import SSIPipeline, PipelineMode, CycleStatus, CycleMetadata, PipelineStatus
 
 
 # ============================================================================
@@ -42,7 +43,7 @@ from SSI_V5.core.world_engine import WorldEngine, WorldEngineOutput
 
 CONFIG_PRODUCTION = {
     "mode": "PRODUCTION",
-    "pipeline_mode": PipelineMode.PRODUCTION,
+    "pipeline_mode": "PRODUCTION",  # Changed from PipelineMode.PRODUCTION to string to avoid circular import
     "max_runtime_hours": 5,  # Makrymalny czas pracy w godzinach
     "time_buffer_minutes": 5,  # Bufor czasowy przed koncem (minuty)
     "world_name": "SSI_V5_PRODUCTION_WORLD",
@@ -311,7 +312,7 @@ class StateManager:
         self.config = config or CONFIG_PRODUCTION
         self.base_dir.mkdir(parents=True, exist_ok=True)
     
-    def save_runtime_state(self, pipeline: SSIPipeline, 
+    def save_runtime_state(self, pipeline, 
                           time_manager: TimeManager, 
                           additional_data: dict = None) -> bool:
         """
@@ -353,7 +354,7 @@ class StateManager:
             print(f"[ERROR] Nie udalo sie zapisa runtime_state: {e}")
             return False
     
-    def save_cycle_state(self, pipeline: SSIPipeline) -> bool:
+    def save_cycle_state(self, pipeline) -> bool:
         """
         Zapis stanu cyklu.
         
@@ -366,12 +367,13 @@ class StateManager:
         success = True
         
         # Zapis ostatniego cyklu
-        if pipeline.cycle_history:
-            last_cycle = pipeline.cycle_history[-1]
+        cycle_history = pipeline.get_cycle_history() if hasattr(pipeline, 'get_cycle_history') else []
+        if cycle_history:
+            last_cycle = cycle_history[-1]
             try:
                 last_cycle_file = self.base_dir / self.config["files"]["last_cycle"]
                 with open(last_cycle_file, 'w', encoding='utf-8') as f:
-                    json.dump(last_cycle.to_dict(), f, indent=2, ensure_ascii=False, default=str)
+                    json.dump(last_cycle.to_dict() if hasattr(last_cycle, 'to_dict') else last_cycle, f, indent=2, ensure_ascii=False, default=str)
             except Exception as e:
                 print(f"[ERROR] Nie udalo sie zapisa ostatniego cyklu: {e}")
                 success = False
@@ -456,21 +458,31 @@ class ProductionLauncher:
         self.end_time = None
         self.running = False
         
+        # ETAP 1.2.7.3: Memory Integration
+        self.ifc = None
+        self.memory_ecosystem = None
+        self.memory_integrator = None
+        
     def initialize(self) -> dict:
         """
         Inicjalizacja systemu z recovery.
+        
+        ETAP 1.2.7.3: Kolejność bootstrapu:
+        TimeManager -> StateManager -> RecoveryManager -> IFCRegistry ->
+        MemoryEcosystem -> MemoryIntegrator -> SSIPipeline
         
         Returns:
             Status inicjalizacji
         """
         print("=" * 80)
-        print("SSI V5 PRODUCTION LAUNCHER - ETAP 5.2.4 FAZA 3.3.3")
+        print("SSI V5 PRODUCTION LAUNCHER - ETAP 1.2.7.3")
+        print("Adaptive Knowledge Ecosystem")
         print("=" * 80)
         
         self.start_time = datetime.now()
         self.session_id = f"SSI_PROD_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
-        # Inicjalizacja managerow
+        # Inicjalizacja managerow (TimeManager, StateManager, RecoveryManager)
         self.recovery_manager = RecoveryManager(config=self.config)
         self.state_manager = StateManager(config=self.config)
         self.time_manager = TimeManager(
@@ -489,11 +501,81 @@ class ProductionLauncher:
         else:
             print("[INFO] Nowa sesja - brak recovery")
         
-        # Inicjalizacja Pipeline
+        # ETAP 1.2.7.3: Inicjalizacja IFCRegistry
+        # IFC jest magistrala komunikacji - musi istniec przed MemoryEcosystem
         try:
+            self.ifc = IFCRegistry()
+            
+            # Rejestracja IFC w samym sobie (platform/IFC bus)
+            self.ifc.register(
+                "ifc_registry",
+                self.ifc,
+                component_type="system"
+            )
+            print("[INFO] IFCRegistry zainicjalizowany")
+        except Exception as e:
+            return {
+                'status': 'error',
+                'error': f"IFCRegistry initialization failed: {e}",
+                'traceback': traceback.format_exc(),
+                'step': 'ifc_initialization'
+            }
+        
+        # ETAP 1.2.7.3: Inicjalizacja MemoryEcosystem
+        # MemoryEcosystem jest orkiestratorem pamięci, otrzymuje IFC do tez publikacji zdarzeń
+        try:
+            self.memory_ecosystem = MemoryEcosystem(
+                ifc=self.ifc
+            )
+            
+            # Rejestracja w IFC (MemoryEcosystem nie rejestruje się sam)
+            self.ifc.register(
+                "memory_ecosystem",
+                self.memory_ecosystem,
+                component_type="memory"
+            )
+            print("[INFO] MemoryEcosystem zainicjalizowany")
+        except Exception as e:
+            return {
+                'status': 'error',
+                'error': f"MemoryEcosystem initialization failed: {e}",
+                'traceback': traceback.format_exc(),
+                'step': 'memory_ecosystem_initialization'
+            }
+        
+        # ETAP 1.2.7.3: Inicjalizacja MemoryIntegrator
+        # MemoryIntegrator jest warstwa wejscia, otrzymuje MemoryEcosystem i IFC
+        try:
+            self.memory_integrator = MemoryIntegrator(
+                memory_ecosystem=self.memory_ecosystem,
+                ifc=self.ifc
+            )
+            # MemoryIntegrator rejestruje się sam w __init__, nie Hayes celle robimy to drugą raz
+            print("[INFO] MemoryIntegrator zainicjalizowany")
+        except Exception as e:
+            return {
+                'status': 'error',
+                'error': f"MemoryIntegrator initialization failed: {e}",
+                'traceback': traceback.format_exc(),
+                'step': 'memory_integrator_initialization'
+            }
+        
+        # Inicjalizacja Pipeline - otrzymuje IFC i MemoryEcosystem
+        # Pipeline NIE otrzymuje MemoryIntegrator (zgodnie z kontrakcie architektoniczny)
+        try:
+            # Opóźnione importy, aby uniknąć circular imports
+            from SSI_V5.core.pipeline import SSIPipeline, PipelineMode
+            
+            # Konwersja string mode do PipelineMode enum
+            mode = self.config["pipeline_mode"]
+            if isinstance(mode, str):
+                mode = PipelineMode[mode.upper()]
+            
             self.pipeline = SSIPipeline(
-                mode=self.config["pipeline_mode"],
-                world_name=self.config["world_name"]
+                mode=mode,
+                world_name=self.config["world_name"],
+                ifc=self.ifc,
+                memory_ecosystem=self.memory_ecosystem
             )
             
             # Inicjalizacja Pipeline
@@ -505,6 +587,13 @@ class ProductionLauncher:
                     'error': init_result.get('error', 'Unknown initialization error'),
                     'step': 'pipeline_initialization'
                 }
+            
+            # Rejestracja Pipeline w IFC
+            self.ifc.register(
+                "pipeline",
+                self.pipeline,
+                component_type="system"
+            )
             
             # Inicjalizacja czasu
             self.time_manager.initialize(start_time=self.start_time)
@@ -526,10 +615,11 @@ class ProductionLauncher:
             
             return {
                 'status': 'success',
-                'message': 'ProductionLauncher zainicjalizowany pomyslnie',
+                'message': 'ProductionLauncher zainicjalizowany pomyslnie (ETAP 1.2.7.3)',
                 'pipeline_status': init_result,
                 'session_id': self.session_id,
                 'recovery_mode': recovery_needed,
+                'memory_ecosystem_status': self.memory_ecosystem.health() if self.memory_ecosystem else None,
                 'timestamp': datetime.now().isoformat()
             }
             
@@ -669,9 +759,10 @@ class ProductionLauncher:
         
         # Zapis stanu runtime
         time_summary = self.time_manager.get_time_summary()
+        cycle_history = self.pipeline.get_cycle_history() if hasattr(self.pipeline, 'get_cycle_history') else []
         additional_data = {
             'session_id': self.session_id,
-            'cycle_count': len(self.pipeline.cycle_history),
+            'cycle_count': len(cycle_history),
             'time_elapsed': time_summary['elapsed_seconds']
         }
         
@@ -687,6 +778,8 @@ class ProductionLauncher:
         """
         Graceful shutdown systemu.
         
+        ETAP 1.2.7.3: Czyści auch zasoby IFC, MemoryEcosystem, MemoryIntegrator
+        
         Returns:
             Status zamkniecia
         """
@@ -694,6 +787,22 @@ class ProductionLauncher:
         
         self.running = False
         self.end_time = datetime.now()
+        
+        # ETAP 1.2.7.3: Shutdown MemoryIntegrator
+        if self.memory_integrator:
+            try:
+                self.memory_integrator.shutdown()
+                print("[INFO] MemoryIntegrator zamkniety")
+            except Exception as e:
+                print(f"[WARNING] Blad podczas zamykania MemoryIntegrator: {e}")
+        
+        # ETAP 1.2.7.3: Shutdown MemoryEcosystem
+        if self.memory_ecosystem:
+            try:
+                self.memory_ecosystem.shutdown()
+                print("[INFO] MemoryEcosystem zamkniety")
+            except Exception as e:
+                print(f"[WARNING] Blad podczas zamykania MemoryEcosystem: {e}")
         
         # Finalne zapisanie stanu
         self._save_intermediate_state()
